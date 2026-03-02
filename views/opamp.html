@@ -1,0 +1,175 @@
+<div class="view-header">
+  <h2>📐 Amplificador Operacional (Op-Amp)</h2>
+  <p>Configuraciones clásicas con cálculo bidireccional.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="oa-inv">Inversor</button>
+  <button class="tab-btn" data-tab="oa-ninv">No Inversor</button>
+  <button class="tab-btn" data-tab="oa-sum">Sumador</button>
+  <button class="tab-btn" data-tab="oa-diff">Diferenciador</button>
+  <button class="tab-btn" data-tab="oa-comp">Comparador</button>
+</div>
+
+<div id="tab-oa-inv" class="tab-panel active">
+  <div class="formula-box">Av = −Rf / Rin &nbsp;|&nbsp; Vout = −(Rf/Rin) × Vin &nbsp;|&nbsp; Rin ≠ 0</div>
+  <div class="alert alert-info">La salida está invertida (180°). La entrada + va a GND a través de Rin.</div>
+  <div class="card">
+    <div class="card-title">Amplificador Inversor — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="inv-rin">Resistencia entrada (Rin)</label>
+        <div class="input-wrap"><input id="inv-rin" type="number" step="any" placeholder="ej: 10">
+          <select id="inv-rinu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="inv-rf">Resistencia realimentación (Rf)</label>
+        <div class="input-wrap"><input id="inv-rf" type="number" step="any" placeholder="ej: 100">
+          <select id="inv-rfu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="inv-vin">Tensión entrada (Vin) <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap"><input id="inv-vin" type="number" step="any" placeholder="ej: 1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="inv-av">Ganancia deseada (Av) <span class="formula-hint">para calcular Rf</span></label>
+        <div class="input-wrap"><input id="inv-av" type="number" step="any" placeholder="ej: -10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V/V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="inv-calc" class="btn btn-primary">Calcular</button>
+      <button id="inv-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="inv-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ganancia (Av)</div><div class="res-value" id="inv-rav">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia (dB)</div><div class="res-value" id="inv-rdb">—</div></div>
+      <div class="result-item"><div class="res-label">Vout</div><div class="res-value" id="inv-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">Rf calculada</div><div class="res-value" id="inv-rrf">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-oa-ninv" class="tab-panel">
+  <div class="formula-box">Av = 1 + Rf / R1 &nbsp;|&nbsp; Vout = (1 + Rf/R1) × Vin &nbsp;|&nbsp; Av ≥ 1</div>
+  <div class="alert alert-info">La salida está en fase. Ganancia mínima = 1 (seguidor de tensión si Rf=0 o R1=∞).</div>
+  <div class="card">
+    <div class="card-title">Amplificador No Inversor — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ninv-r1">R1 (a GND)</label>
+        <div class="input-wrap"><input id="ninv-r1" type="number" step="any" placeholder="ej: 10">
+          <select id="ninv-r1u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="ninv-rf">Rf (realimentación)</label>
+        <div class="input-wrap"><input id="ninv-rf" type="number" step="any" placeholder="ej: 90">
+          <select id="ninv-rfu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="ninv-vin">Vin <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap"><input id="ninv-vin" type="number" step="any" placeholder="ej: 1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="ninv-av">Ganancia deseada <span class="formula-hint">para calcular Rf</span></label>
+        <div class="input-wrap"><input id="ninv-av" type="number" step="any" placeholder="ej: 10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V/V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="ninv-calc" class="btn btn-primary">Calcular</button>
+      <button id="ninv-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ninv-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ganancia (Av)</div><div class="res-value" id="ninv-rav">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia (dB)</div><div class="res-value" id="ninv-rdb">—</div></div>
+      <div class="result-item"><div class="res-label">Vout</div><div class="res-value" id="ninv-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">Rf calculada</div><div class="res-value" id="ninv-rrf">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-oa-sum" class="tab-panel">
+  <div class="formula-box">Vout = −Rf × (V1/R1 + V2/R2 + V3/R3) &nbsp;(sumador inversor)</div>
+  <div class="card">
+    <div class="card-title">Sumador Inversor (hasta 3 entradas)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="sum-rf">Rf</label>
+        <div class="input-wrap"><input id="sum-rf" type="number" step="any" placeholder="ej: 10">
+          <select id="sum-rfu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="sum-r1">R1</label>
+        <div class="input-wrap"><input id="sum-r1" type="number" step="any" placeholder="ej: 10">
+          <select id="sum-r1u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="sum-v1">V1</label>
+        <div class="input-wrap"><input id="sum-v1" type="number" step="any" placeholder="ej: 1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="sum-r2">R2 <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap"><input id="sum-r2" type="number" step="any" placeholder="ej: 10">
+          <select id="sum-r2u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="sum-v2">V2 <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap"><input id="sum-v2" type="number" step="any" placeholder="ej: 2"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="sum-r3">R3 <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap"><input id="sum-r3" type="number" step="any" placeholder="ej: 10">
+          <select id="sum-r3u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="sum-v3">V3 <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap"><input id="sum-v3" type="number" step="any" placeholder="ej: -1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="sum-calc" class="btn btn-primary">Calcular</button>
+      <button id="sum-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="sum-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big"><div class="res-label">Vout</div><div class="res-value" id="sum-rvout">—</div></div>
+  </div>
+</div>
+
+<div id="tab-oa-diff" class="tab-panel">
+  <div class="formula-box">Vout = (Rf/R1) × (V2 − V1) &nbsp;(con R1=R2 y Rf=R3)</div>
+  <div class="card">
+    <div class="card-title">Amplificador Diferencial</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="diff-r1">R1 = R2</label>
+        <div class="input-wrap"><input id="diff-r1" type="number" step="any" placeholder="ej: 10">
+          <select id="diff-r1u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="diff-rf">Rf = R3</label>
+        <div class="input-wrap"><input id="diff-rf" type="number" step="any" placeholder="ej: 100">
+          <select id="diff-rfu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="diff-v1">V1 (entrada −)</label>
+        <div class="input-wrap"><input id="diff-v1" type="number" step="any" placeholder="ej: 1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="diff-v2">V2 (entrada +)</label>
+        <div class="input-wrap"><input id="diff-v2" type="number" step="any" placeholder="ej: 2"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="diff-calc" class="btn btn-primary">Calcular</button>
+      <button id="diff-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="diff-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ganancia (Av)</div><div class="res-value" id="diff-rav">—</div></div>
+      <div class="result-item"><div class="res-label">Vout</div><div class="res-value" id="diff-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">V2 − V1</div><div class="res-value" id="diff-rdiff">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-oa-comp" class="tab-panel">
+  <div class="formula-box">Si V+ > V− → Vout ≈ Vcc+ &nbsp;|&nbsp; Si V+ < V− → Vout ≈ Vcc−
+  Histéresis: Vhist = Vref × R1/(R1+R2)</div>
+  <div class="card">
+    <div class="card-title">Comparador con histéresis (Schmitt Trigger)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="comp-vref">Tensión de referencia (Vref)</label>
+        <div class="input-wrap"><input id="comp-vref" type="number" step="any" placeholder="ej: 2.5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="comp-vcc">Tensión alimentación (Vcc)</label>
+        <div class="input-wrap"><input id="comp-vcc" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="comp-r1">R1 (a Vout)</label>
+        <div class="input-wrap"><input id="comp-r1" type="number" step="any" placeholder="ej: 10">
+          <select id="comp-r1u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="comp-r2">R2 (a GND)</label>
+        <div class="input-wrap"><input id="comp-r2" type="number" step="any" placeholder="ej: 100">
+          <select id="comp-r2u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="comp-calc" class="btn btn-primary">Calcular</button>
+      <button id="comp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="comp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Umbral alto (VUT)</div><div class="res-value" id="comp-rvut">—</div></div>
+      <div class="result-item"><div class="res-label">Umbral bajo (VLT)</div><div class="res-value" id="comp-rvlt">—</div></div>
+      <div class="result-item"><div class="res-label">Histéresis (ΔV)</div><div class="res-value" id="comp-rhist">—</div></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="view-header">
+  <h2>🔌 Calculadora de Potencia</h2>
+  <p>DC y AC — ingresa cualquier par de valores para calcular los demás.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="pw-dc">Potencia DC</button>
+  <button class="tab-btn" data-tab="pw-ac">Potencia AC</button>
+  <button class="tab-btn" data-tab="pw-eff">Eficiencia</button>
+  <button class="tab-btn" data-tab="pw-heat">Disipación</button>
+</div>
+
+<div id="tab-pw-dc" class="tab-panel active">
+  <div class="formula-box">P = V × I = I² × R = V² / R &nbsp;|&nbsp; V = P/I &nbsp;|&nbsp; I = P/V &nbsp;|&nbsp; R = V²/P</div>
+  <div class="card">
+    <div class="card-title">Completa 2 campos cualquiera</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="pwdc-p">Potencia (P)</label>
+        <div class="input-wrap"><input id="pwdc-p" type="number" step="any" placeholder="W">
+          <select id="pwdc-pu" class="unit-sel"><option value="1" selected>W</option><option value="0.001">mW</option><option value="1000">kW</option></select></div></div>
+      <div class="input-group"><label for="pwdc-v">Tensión (V)</label>
+        <div class="input-wrap"><input id="pwdc-v" type="number" step="any" placeholder="V">
+          <select id="pwdc-vu" class="unit-sel"><option value="1" selected>V</option><option value="0.001">mV</option><option value="1000">kV</option></select></div></div>
+      <div class="input-group"><label for="pwdc-i">Corriente (I)</label>
+        <div class="input-wrap"><input id="pwdc-i" type="number" step="any" placeholder="A">
+          <select id="pwdc-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option><option value="0.000001">μA</option></select></div></div>
+      <div class="input-group"><label for="pwdc-r">Resistencia (R)</label>
+        <div class="input-wrap"><input id="pwdc-r" type="number" step="any" placeholder="Ω">
+          <select id="pwdc-ru" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="pwdc-calc" class="btn btn-primary">⚡ Calcular</button>
+      <button id="pwdc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pwdc-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Potencia (P)</div><div class="res-value" id="pwdc-rp">—</div></div>
+      <div class="result-item"><div class="res-label">Tensión (V)</div><div class="res-value" id="pwdc-rv">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente (I)</div><div class="res-value" id="pwdc-ri">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia (R)</div><div class="res-value" id="pwdc-rr">—</div></div>
+    </div>
+    <div id="pwdc-err" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-pw-ac" class="tab-panel">
+  <div class="formula-box">P_activa = V × I × fp &nbsp;|&nbsp; S = V × I &nbsp;|&nbsp; Q = S × sin(φ) &nbsp;|&nbsp; fp = cos(φ)</div>
+  <div class="card">
+    <div class="card-title">Potencia AC — completa los campos disponibles</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="pwac-v">Tensión RMS (V)</label>
+        <div class="input-wrap"><input id="pwac-v" type="number" step="any" placeholder="ej: 220"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="pwac-i">Corriente RMS (I)</label>
+        <div class="input-wrap"><input id="pwac-i" type="number" step="any" placeholder="ej: 5">
+          <select id="pwac-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="pwac-fp">Factor de potencia (fp)</label>
+        <div class="input-wrap"><input id="pwac-fp" type="number" step="any" min="0" max="1" placeholder="ej: 0.85"><span style="padding:0 10px;color:var(--text-sub);align-self:center">—</span></div></div>
+      <div class="input-group"><label for="pwac-p">Potencia activa (P) — opcional</label>
+        <div class="input-wrap"><input id="pwac-p" type="number" step="any" placeholder="W">
+          <select id="pwac-pu" class="unit-sel"><option value="1" selected>W</option><option value="1000">kW</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="pwac-calc" class="btn btn-primary">Calcular</button>
+      <button id="pwac-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pwac-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">P Activa (W)</div><div class="res-value" id="pwac-rp">—</div></div>
+      <div class="result-item"><div class="res-label">S Aparente (VA)</div><div class="res-value" id="pwac-rs">—</div></div>
+      <div class="result-item"><div class="res-label">Q Reactiva (VAR)</div><div class="res-value" id="pwac-rq">—</div></div>
+      <div class="result-item"><div class="res-label">Factor de potencia</div><div class="res-value" id="pwac-rfp">—</div></div>
+      <div class="result-item"><div class="res-label">Ángulo φ</div><div class="res-value" id="pwac-rphi">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente (I)</div><div class="res-value" id="pwac-ri">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-pw-eff" class="tab-panel">
+  <div class="formula-box">η = Pout / Pin × 100% &nbsp;|&nbsp; Pérdidas = Pin − Pout</div>
+  <div class="card">
+    <div class="card-title">Eficiencia de un sistema</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="pwe-pin">Potencia entrada (Pin)</label>
+        <div class="input-wrap"><input id="pwe-pin" type="number" step="any" placeholder="ej: 100">
+          <select id="pwe-pinu" class="unit-sel"><option value="1" selected>W</option><option value="1000">kW</option></select></div></div>
+      <div class="input-group"><label for="pwe-pout">Potencia salida (Pout)</label>
+        <div class="input-wrap"><input id="pwe-pout" type="number" step="any" placeholder="ej: 85">
+          <select id="pwe-poutu" class="unit-sel"><option value="1" selected>W</option><option value="1000">kW</option></select></div></div>
+      <div class="input-group"><label for="pwe-eta">O ingresa eficiencia (η%)</label>
+        <div class="input-wrap"><input id="pwe-eta" type="number" step="any" min="0" max="100" placeholder="ej: 85"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="pwe-calc" class="btn btn-primary">Calcular</button>
+      <button id="pwe-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pwe-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Eficiencia (η)</div><div class="res-value" id="pwe-reta">—</div></div>
+      <div class="result-item"><div class="res-label">Pérdidas</div><div class="res-value" id="pwe-rloss">—</div></div>
+      <div class="result-item"><div class="res-label">Pin</div><div class="res-value" id="pwe-rpin">—</div></div>
+      <div class="result-item"><div class="res-label">Pout</div><div class="res-value" id="pwe-rpout">—</div></div>
+    </div>
+    <div id="pwe-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-pw-heat" class="tab-panel">
+  <div class="formula-box">P_diss = I² × R = (Vdrop) × I &nbsp;|&nbsp; ΔT = P_diss × Rth (°C/W)</div>
+  <div class="card">
+    <div class="card-title">Disipación de calor en un componente</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="pwheat-i">Corriente (I)</label>
+        <div class="input-wrap"><input id="pwheat-i" type="number" step="any" placeholder="ej: 2">
+          <select id="pwheat-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="pwheat-r">Resistencia / RDS(on) (R)</label>
+        <div class="input-wrap"><input id="pwheat-r" type="number" step="any" placeholder="ej: 0.1">
+          <select id="pwheat-ru" class="unit-sel"><option value="1" selected>Ω</option><option value="0.001">mΩ</option></select></div></div>
+      <div class="input-group"><label for="pwheat-rth">Resistencia térmica Rth <span class="formula-hint">°C/W</span></label>
+        <div class="input-wrap"><input id="pwheat-rth" type="number" step="any" placeholder="ej: 10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C/W</span></div></div>
+      <div class="input-group"><label for="pwheat-ta">Temperatura ambiente (Ta)</label>
+        <div class="input-wrap"><input id="pwheat-ta" type="number" step="any" placeholder="ej: 25"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="pwheat-calc" class="btn btn-primary">Calcular</button>
+      <button id="pwheat-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pwheat-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Potencia disipada</div><div class="res-value" id="pwheat-rp">—</div></div>
+      <div class="result-item"><div class="res-label">ΔT (elevación térmica)</div><div class="res-value" id="pwheat-rdt">—</div></div>
+      <div class="result-item"><div class="res-label">Temperatura del componente</div><div class="res-value" id="pwheat-rtj">—</div></div>
+    </div>
+    <div id="pwheat-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>

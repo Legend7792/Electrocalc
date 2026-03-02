@@ -1,0 +1,148 @@
+<div class="view-header"><h2>⚙️ Motores Eléctricos</h2><p>Motor DC, motor brushless (BLDC), motor AC trifásico — velocidad, torque, potencia y eficiencia.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="mot-dc">Motor DC</button>
+  <button class="tab-btn" data-tab="mot-ac3">Motor AC 3F</button>
+  <button class="tab-btn" data-tab="mot-bldc">BLDC / Brushless</button>
+  <button class="tab-btn" data-tab="mot-ref">Referencia</button>
+</div>
+
+<div id="tab-mot-dc" class="tab-panel active">
+  <div class="formula-box">RPM = Kv × V      (Kv en RPM/V)
+T = Kt × I        (Kt = 60/(2π×Kv))
+P_mec = T × ω     ω = RPM × 2π/60 (rad/s)
+P_elec = V × I    η = P_mec / P_elec × 100%</div>
+  <div class="card"><div class="card-title">Motor DC — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="mdc-v">Tensión de operación (V)</label>
+        <div class="input-wrap"><input id="mdc-v" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="mdc-i">Corriente (I)</label>
+        <div class="input-wrap"><input id="mdc-i" type="number" step="any" placeholder="ej: 2">
+          <select id="mdc-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="mdc-kv">Constante Kv (RPM/V)</label>
+        <div class="input-wrap"><input id="mdc-kv" type="number" step="any" placeholder="ej: 1000"></div></div>
+      <div class="input-group"><label for="mdc-rpm">RPM — o dejar vacío si das Kv+V</label>
+        <div class="input-wrap"><input id="mdc-rpm" type="number" step="any" placeholder="ej: 3000"></div></div>
+      <div class="input-group"><label for="mdc-eta">Eficiencia mecánica (%)</label>
+        <div class="input-wrap"><input id="mdc-eta" type="number" step="any" placeholder="ej: 80" value="80"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="mdc-calc" class="btn btn-primary">Calcular</button>
+      <button id="mdc-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="mdc-result" class="result-panel hidden">
+    <div class="result-title">Resultados Motor DC</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">RPM</div><div class="res-value" id="mdc-rrpm">—</div></div>
+      <div class="result-item"><div class="res-label">ω (rad/s)</div><div class="res-value" id="mdc-rw">—</div></div>
+      <div class="result-item"><div class="res-label">Torque (T)</div><div class="res-value" id="mdc-rt">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia eléctrica</div><div class="res-value" id="mdc-rpelec">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia mecánica</div><div class="res-value" id="mdc-rpmec">—</div></div>
+      <div class="result-item"><div class="res-label">Pérdidas calor</div><div class="res-value" id="mdc-rploss">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mot-ac3" class="tab-panel">
+  <div class="formula-box">Velocidad sincrónica: Ns = 120 × f / P   (P = polos)
+Deslizamiento:      s = (Ns − N) / Ns × 100%
+Potencia mecánica:  P_mec = √3 × VL × IL × cos(φ) × η
+Par:                T = P_mec / ω</div>
+  <div class="card"><div class="card-title">Motor AC Trifásico</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="mac-vl">Tensión de línea (VL)</label>
+        <div class="input-wrap"><input id="mac-vl" type="number" step="any" placeholder="ej: 400" value="400"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="mac-il">Corriente de línea (IL)</label>
+        <div class="input-wrap"><input id="mac-il" type="number" step="any" placeholder="ej: 5">
+          <select id="mac-ilu" class="unit-sel"><option value="1" selected>A</option></select></div></div>
+      <div class="input-group"><label for="mac-fp">Factor de potencia cos(φ)</label>
+        <div class="input-wrap"><input id="mac-fp" type="number" step="any" min="0" max="1" placeholder="ej: 0.85" value="0.85"></div></div>
+      <div class="input-group"><label for="mac-eta">Eficiencia (%)</label>
+        <div class="input-wrap"><input id="mac-eta" type="number" step="any" placeholder="ej: 90" value="90"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+      <div class="input-group"><label for="mac-f">Frecuencia de red</label>
+        <div class="input-wrap"><input id="mac-f" type="number" step="any" placeholder="ej: 50" value="50">
+          <select id="mac-fu" class="unit-sel"><option value="50" selected>Hz (50)</option><option value="60">Hz (60)</option></select></div></div>
+      <div class="input-group"><label for="mac-poles">Número de polos</label>
+        <div class="input-wrap"><select id="mac-poles" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="2">2 polos</option><option value="4" selected>4 polos</option>
+          <option value="6">6 polos</option><option value="8">8 polos</option>
+        </select></div></div>
+      <div class="input-group"><label for="mac-rpm">RPM reales del motor</label>
+        <div class="input-wrap"><input id="mac-rpm" type="number" step="any" placeholder="ej: 1450"></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="mac-calc" class="btn btn-primary">Calcular</button>
+      <button id="mac-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="mac-result" class="result-panel hidden">
+    <div class="result-title">Motor AC 3 Fases</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Velocidad sincrónica</div><div class="res-value" id="mac-rns">—</div></div>
+      <div class="result-item"><div class="res-label">Deslizamiento (%)</div><div class="res-value" id="mac-rs">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia aparente (S)</div><div class="res-value" id="mac-rS">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia activa entrada</div><div class="res-value" id="mac-rPin">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia mecánica</div><div class="res-value" id="mac-rPmec">—</div></div>
+      <div class="result-item"><div class="res-label">Par (torque)</div><div class="res-value" id="mac-rT">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mot-bldc" class="tab-panel">
+  <div class="formula-box">BLDC/Brushless: iguales que DC pero con Kv en RPM/V (sin carga)
+Potencia eléctrica: P = V × I
+Par: T = Kt × I   donde Kt[Nm/A] = 60/(2π × Kv[RPM/V])
+Calor: P_calor = I² × R_bobinado</div>
+  <div class="card"><div class="card-title">Motor Brushless</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bldc-kv">Kv (RPM/V) — del datasheet</label>
+        <div class="input-wrap"><input id="bldc-kv" type="number" step="any" placeholder="ej: 2300"></div></div>
+      <div class="input-group"><label for="bldc-v">Tensión de batería (V)</label>
+        <div class="input-wrap"><input id="bldc-v" type="number" step="any" placeholder="ej: 11.1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bldc-i">Corriente (A)</label>
+        <div class="input-wrap"><input id="bldc-i" type="number" step="any" placeholder="ej: 15"><span style="padding:0 10px;color:var(--text-sub);align-self:center">A</span></div></div>
+      <div class="input-group"><label for="bldc-r">Resistencia bobinado (Rm)</label>
+        <div class="input-wrap"><input id="bldc-r" type="number" step="any" placeholder="ej: 0.1">
+          <select id="bldc-ru" class="unit-sel"><option value="1" selected>Ω</option><option value="0.001">mΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bldc-calc" class="btn btn-primary">Calcular</button>
+    </div>
+  </div>
+  <div id="bldc-result" class="result-panel hidden">
+    <div class="result-title">Brushless</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">RPM (sin carga)</div><div class="res-value" id="bldc-rrpm">—</div></div>
+      <div class="result-item"><div class="res-label">Constante Kt</div><div class="res-value" id="bldc-rkt">—</div></div>
+      <div class="result-item"><div class="res-label">Torque</div><div class="res-value" id="bldc-rt">—</div></div>
+      <div class="result-item"><div class="res-label">P eléctrica</div><div class="res-value" id="bldc-rpe">—</div></div>
+      <div class="result-item"><div class="res-label">P calor bobinas</div><div class="res-value" id="bldc-rpc">—</div></div>
+      <div class="result-item"><div class="res-label">P mecánica estimada</div><div class="res-value" id="bldc-rpm">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mot-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Tipo motor</th><th>Eficiencia típica</th><th>Control</th><th>Mantenimiento</th><th>Aplicación</th></tr></thead>
+    <tbody>
+      <tr><td>DC con escobillas</td><td>65–80%</td><td>Simple (PWM)</td><td>Alto (escobillas)</td><td>Juguetes, taladros, coches RC</td></tr>
+      <tr><td>BLDC (brushless)</td><td>85–95%</td><td>ESC/inversor</td><td>Bajo (sin escobillas)</td><td>Drones, E-bikes, PC fans</td></tr>
+      <tr><td>AC asíncrono 3F</td><td>85–95%</td><td>Variador (VFD)</td><td>Muy bajo</td><td>Industrial, HVAC</td></tr>
+      <tr><td>AC síncrono PMSM</td><td>90–97%</td><td>Inversor vector</td><td>Bajo</td><td>Coches eléctricos, servo</td></tr>
+      <tr><td>Paso a paso (stepper)</td><td>40–60%</td><td>Driver paso a paso</td><td>Bajo</td><td>CNC, impresoras 3D</td></tr>
+      <tr><td>Servo AC</td><td>88–95%</td><td>Servodriver</td><td>Bajo</td><td>Robótica, CNC, automatización</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">Conversión de unidades de potencia mecánica</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>De</th><th>A Watts</th><th>A CV/HP</th><th>A Nm@1000RPM</th></tr></thead>
+      <tbody>
+        <tr><td>1 Watt</td><td>1 W</td><td>0.00136 CV</td><td>0.00955 Nm</td></tr>
+        <tr><td>1 CV (caballo vapor)</td><td>735.5 W</td><td>1 CV</td><td>7.026 Nm</td></tr>
+        <tr><td>1 HP (horsepower)</td><td>745.7 W</td><td>1.014 CV</td><td>7.121 Nm</td></tr>
+        <tr><td>1 Nm @ 1000 RPM</td><td>104.7 W</td><td>0.142 CV</td><td>1 Nm</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

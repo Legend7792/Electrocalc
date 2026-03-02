@@ -1,0 +1,220 @@
+<div class="view-header">
+  <h2>🔀 Filtros RC/LC</h2>
+  <p>Frecuencia de corte, ganancia y atenuación para filtros pasivos.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="flt-lp">Paso Bajo (LP)</button>
+  <button class="tab-btn" data-tab="flt-hp">Paso Alto (HP)</button>
+  <button class="tab-btn" data-tab="flt-lc">Paso Banda LC</button>
+  <button class="tab-btn" data-tab="flt-db">Atenuación dB</button>
+</div>
+
+<!-- Paso Bajo RC -->
+<div id="tab-flt-lp" class="tab-panel active">
+  <div class="formula-box">fc = 1 / (2π × R × C) &nbsp;|&nbsp; A = 1 / √(1 + (f/fc)²)</div>
+  <div class="alert alert-info">Permite frecuencias MENORES a fc. Atenúa las altas frecuencias a −20dB/dec.</div>
+  <div class="card">
+    <div class="card-title">Filtro Paso Bajo RC</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="lp-r">Resistencia (R)</label>
+        <div class="input-wrap">
+          <input id="lp-r" type="number" step="any" placeholder="ej: 10000">
+          <select id="lp-r-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="lp-c">Capacidad (C)</label>
+        <div class="input-wrap">
+          <input id="lp-c" type="number" step="any" placeholder="ej: 100">
+          <select id="lp-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+            <option value="0.000000000001">pF</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="lp-f">Frecuencia test (f) <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap">
+          <input id="lp-f" type="number" step="any" placeholder="ej: 5000">
+          <select id="lp-f-u" class="unit-sel">
+            <option value="1" selected>Hz</option>
+            <option value="1000">kHz</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="lp-calc"  class="btn btn-primary">Calcular</button>
+      <button id="lp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="lp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Frecuencia de corte (fc)</div><div class="res-value" id="lp-res-fc">—</div></div>
+      <div class="result-item"><div class="res-label">ω corte (rad/s)</div><div class="res-value" id="lp-res-wc">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia @ f_test</div><div class="res-value" id="lp-res-g">—</div></div>
+      <div class="result-item"><div class="res-label">Atenuación @ f_test</div><div class="res-value" id="lp-res-db">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Paso Alto RC -->
+<div id="tab-flt-hp" class="tab-panel">
+  <div class="formula-box">fc = 1 / (2π × R × C) &nbsp;|&nbsp; A = (f/fc) / √(1 + (f/fc)²)</div>
+  <div class="alert alert-info">Permite frecuencias MAYORES a fc. Atenúa las bajas frecuencias a −20dB/dec.</div>
+  <div class="card">
+    <div class="card-title">Filtro Paso Alto RC</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="hp-r">Resistencia (R)</label>
+        <div class="input-wrap">
+          <input id="hp-r" type="number" step="any" placeholder="ej: 10000">
+          <select id="hp-r-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="hp-c">Capacidad (C)</label>
+        <div class="input-wrap">
+          <input id="hp-c" type="number" step="any" placeholder="ej: 100">
+          <select id="hp-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+            <option value="0.000000000001">pF</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="hp-f">Frecuencia test (f) <span class="formula-hint">opcional</span></label>
+        <div class="input-wrap">
+          <input id="hp-f" type="number" step="any" placeholder="ej: 100">
+          <select id="hp-f-u" class="unit-sel">
+            <option value="1" selected>Hz</option>
+            <option value="1000">kHz</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="hp-calc"  class="btn btn-primary">Calcular</button>
+      <button id="hp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="hp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Frecuencia de corte (fc)</div><div class="res-value" id="hp-res-fc">—</div></div>
+      <div class="result-item"><div class="res-label">ω corte (rad/s)</div><div class="res-value" id="hp-res-wc">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia @ f_test</div><div class="res-value" id="hp-res-g">—</div></div>
+      <div class="result-item"><div class="res-label">Atenuación @ f_test</div><div class="res-value" id="hp-res-db">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Paso Banda LC -->
+<div id="tab-flt-lc" class="tab-panel">
+  <div class="formula-box">fr = 1 / (2π × √(L × C)) &nbsp;|&nbsp; Q = fr / BW &nbsp;|&nbsp; BW = R / (2π × L)</div>
+  <div class="card">
+    <div class="card-title">Filtro Paso Banda RLC</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="pb-r">Resistencia (R)</label>
+        <div class="input-wrap">
+          <input id="pb-r" type="number" step="any" placeholder="ej: 100">
+          <select id="pb-r-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="pb-l">Inductancia (L)</label>
+        <div class="input-wrap">
+          <input id="pb-l" type="number" step="any" placeholder="ej: 10">
+          <select id="pb-l-u" class="unit-sel">
+            <option value="0.001" selected>mH</option>
+            <option value="0.000001">μH</option>
+            <option value="1">H</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="pb-c">Capacidad (C)</label>
+        <div class="input-wrap">
+          <input id="pb-c" type="number" step="any" placeholder="ej: 100">
+          <select id="pb-c-u" class="unit-sel">
+            <option value="0.000000001" selected>nF</option>
+            <option value="0.000001">μF</option>
+            <option value="0.000000000001">pF</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="pb-calc"  class="btn btn-primary">Calcular</button>
+      <button id="pb-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pb-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Frecuencia de resonancia (fr)</div><div class="res-value" id="pb-res-fr">—</div></div>
+      <div class="result-item"><div class="res-label">Factor Q</div><div class="res-value" id="pb-res-q">—</div></div>
+      <div class="result-item"><div class="res-label">Ancho de banda (BW)</div><div class="res-value" id="pb-res-bw">—</div></div>
+      <div class="result-item"><div class="res-label">f_low (−3dB)</div><div class="res-value" id="pb-res-fl">—</div></div>
+      <div class="result-item"><div class="res-label">f_high (−3dB)</div><div class="res-value" id="pb-res-fh">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Atenuación dB -->
+<div id="tab-flt-db" class="tab-panel">
+  <div class="formula-box">dB = 20 × log₁₀(Vout / Vin) &nbsp;|&nbsp; Vout/Vin = 10^(dB/20)</div>
+  <div class="card">
+    <div class="card-title">Conversor dB ↔ Razón de tensión</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="db-vout">Tensión salida (Vout)</label>
+        <div class="input-wrap">
+          <input id="db-vout" type="number" step="any" placeholder="ej: 0.707">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="db-vin">Tensión entrada (Vin)</label>
+        <div class="input-wrap">
+          <input id="db-vin" type="number" step="any" placeholder="ej: 1">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="db-db">O ingresa dB directamente</label>
+        <div class="input-wrap">
+          <input id="db-db" type="number" step="any" placeholder="ej: -3">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">dB</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="db-calc"  class="btn btn-primary">Calcular</button>
+      <button id="db-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="db-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Atenuación (dB)</div><div class="res-value" id="db-res-db">—</div></div>
+      <div class="result-item"><div class="res-label">Razón Vout/Vin</div><div class="res-value" id="db-res-ratio">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia (dBW)</div><div class="res-value" id="db-res-pow">—</div></div>
+    </div>
+  </div>
+</div>

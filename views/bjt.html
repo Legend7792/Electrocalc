@@ -1,0 +1,150 @@
+<div class="view-header">
+  <h2>🔺 Transistor BJT</h2>
+  <p>Polarización, ganancia, regiones de operación — NPN y PNP.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="bjt-div">Divisor de tensión</button>
+  <button class="tab-btn" data-tab="bjt-ce">Base común (Rb)</button>
+  <button class="tab-btn" data-tab="bjt-gain">Ganancia hFE</button>
+  <button class="tab-btn" data-tab="bjt-sat">Corte y Saturación</button>
+</div>
+
+<div id="tab-bjt-div" class="tab-panel active">
+  <div class="formula-box">VB = Vcc × R2/(R1+R2) &nbsp;|&nbsp; VE = VB − VBE &nbsp;|&nbsp; IC ≈ IE = VE/RE
+  VC = Vcc − IC×RC &nbsp;|&nbsp; VCE = VC − VE</div>
+  <div class="card">
+    <div class="card-title">Polarización por Divisor de Tensión (NPN)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bjt-vcc">Vcc</label>
+        <div class="input-wrap"><input id="bjt-vcc" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bjt-r1">R1 (superior)</label>
+        <div class="input-wrap"><input id="bjt-r1" type="number" step="any" placeholder="ej: 47">
+          <select id="bjt-r1u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="bjt-r2">R2 (inferior)</label>
+        <div class="input-wrap"><input id="bjt-r2" type="number" step="any" placeholder="ej: 10">
+          <select id="bjt-r2u" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="bjt-rc">RC (colector)</label>
+        <div class="input-wrap"><input id="bjt-rc" type="number" step="any" placeholder="ej: 2.2">
+          <select id="bjt-rcu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="bjt-re">RE (emisor)</label>
+        <div class="input-wrap"><input id="bjt-re" type="number" step="any" placeholder="ej: 1">
+          <select id="bjt-reu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="bjt-vbe">VBE <span class="formula-hint">(≈0.7V Si)</span></label>
+        <div class="input-wrap"><input id="bjt-vbe" type="number" step="any" placeholder="0.7" value="0.7"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bjt-calc" class="btn btn-primary">Calcular</button>
+      <button id="bjt-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="bjt-result" class="result-panel hidden">
+    <div class="result-title">Resultados del punto Q</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">VB (base)</div><div class="res-value" id="bjt-rvb">—</div></div>
+      <div class="result-item"><div class="res-label">VE (emisor)</div><div class="res-value" id="bjt-rve">—</div></div>
+      <div class="result-item"><div class="res-label">IC (colector)</div><div class="res-value" id="bjt-ric">—</div></div>
+      <div class="result-item"><div class="res-label">VC (colector)</div><div class="res-value" id="bjt-rvc">—</div></div>
+      <div class="result-item"><div class="res-label">VCE</div><div class="res-value" id="bjt-rvce">—</div></div>
+      <div class="result-item"><div class="res-label">Región</div><div class="res-value" id="bjt-rreg">—</div></div>
+    </div>
+    <div id="bjt-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-bjt-ce" class="tab-panel">
+  <div class="formula-box">IC = β × IB &nbsp;|&nbsp; IB = (Vcc − VBE) / (RB + (1+β)×RE)
+  VCE = Vcc − IC×(RC+RE)</div>
+  <div class="card">
+    <div class="card-title">Polarización por Resistencia de Base (Rb)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ce-vcc">Vcc</label>
+        <div class="input-wrap"><input id="ce-vcc" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="ce-rb">RB</label>
+        <div class="input-wrap"><input id="ce-rb" type="number" step="any" placeholder="ej: 470">
+          <select id="ce-rbu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="ce-rc">RC</label>
+        <div class="input-wrap"><input id="ce-rc" type="number" step="any" placeholder="ej: 2.2">
+          <select id="ce-rcu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="ce-re">RE <span class="formula-hint">0 si no hay</span></label>
+        <div class="input-wrap"><input id="ce-re" type="number" step="any" placeholder="0" value="0">
+          <select id="ce-reu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="ce-beta">β (hFE)</label>
+        <div class="input-wrap"><input id="ce-beta" type="number" step="any" placeholder="ej: 100"><span style="padding:0 10px;color:var(--text-sub);align-self:center">—</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="ce-calc" class="btn btn-primary">Calcular</button>
+      <button id="ce-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ce-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">IB</div><div class="res-value" id="ce-rib">—</div></div>
+      <div class="result-item"><div class="res-label">IC</div><div class="res-value" id="ce-ric">—</div></div>
+      <div class="result-item"><div class="res-label">VCE</div><div class="res-value" id="ce-rvce">—</div></div>
+      <div class="result-item"><div class="res-label">Región</div><div class="res-value" id="ce-rreg">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-bjt-gain" class="tab-panel">
+  <div class="formula-box">β = hFE = IC / IB &nbsp;|&nbsp; IC = β × IB &nbsp;|&nbsp; IB = IC / β</div>
+  <div class="card">
+    <div class="card-title">Ganancia de corriente — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="hfe-ic">IC (colector)</label>
+        <div class="input-wrap"><input id="hfe-ic" type="number" step="any" placeholder="ej: 50">
+          <select id="hfe-icu" class="unit-sel"><option value="0.001" selected>mA</option><option value="1">A</option></select></div></div>
+      <div class="input-group"><label for="hfe-ib">IB (base)</label>
+        <div class="input-wrap"><input id="hfe-ib" type="number" step="any" placeholder="ej: 500">
+          <select id="hfe-ibu" class="unit-sel"><option value="0.000001" selected>μA</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="hfe-beta">β (hFE)</label>
+        <div class="input-wrap"><input id="hfe-beta" type="number" step="any" placeholder="ej: 100"><span style="padding:0 10px;color:var(--text-sub);align-self:center">—</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="hfe-calc" class="btn btn-primary">Calcular</button>
+      <button id="hfe-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="hfe-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">β (hFE)</div><div class="res-value" id="hfe-rbeta">—</div></div>
+      <div class="result-item"><div class="res-label">IC</div><div class="res-value" id="hfe-ric">—</div></div>
+      <div class="result-item"><div class="res-label">IB</div><div class="res-value" id="hfe-rib">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-bjt-sat" class="tab-panel">
+  <div class="formula-box">IC_sat = (Vcc − VCEsat) / RC &nbsp;≈ Vcc/RC &nbsp;|&nbsp; IB_sat = IC_sat / β
+  Corte: IB=0 → IC=0 → VCE=Vcc</div>
+  <div class="card">
+    <div class="card-title">Corrientes de corte y saturación</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="sat-vcc">Vcc</label>
+        <div class="input-wrap"><input id="sat-vcc" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="sat-rc">RC</label>
+        <div class="input-wrap"><input id="sat-rc" type="number" step="any" placeholder="ej: 1">
+          <select id="sat-rcu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="sat-beta">β (hFE)</label>
+        <div class="input-wrap"><input id="sat-beta" type="number" step="any" placeholder="ej: 100"></div></div>
+      <div class="input-group"><label for="sat-rb">RB (para calcular IB real)</label>
+        <div class="input-wrap"><input id="sat-rb" type="number" step="any" placeholder="ej: 10">
+          <select id="sat-rbu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="sat-calc" class="btn btn-primary">Calcular</button>
+      <button id="sat-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="sat-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">IC saturación</div><div class="res-value" id="sat-ricsat">—</div></div>
+      <div class="result-item"><div class="res-label">IB mínima para saturar</div><div class="res-value" id="sat-ribmin">—</div></div>
+      <div class="result-item"><div class="res-label">IB real (con RB)</div><div class="res-value" id="sat-ribreal">—</div></div>
+      <div class="result-item"><div class="res-label">Estado</div><div class="res-value" id="sat-rstate">—</div></div>
+    </div>
+  </div>
+</div>

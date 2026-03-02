@@ -1,0 +1,62 @@
+<div class="view-header"><h2>📡 Resonancia LC</h2><p>Frecuencia de resonancia, factor Q, ancho de banda — bidireccional.</p></div>
+<div class="formula-box">fr = 1/(2π√(LC)) | Q = fr/BW = (1/R)√(L/C) | BW = fr/Q = R/(2πL) | Z_res = L/(RC)</div>
+<div class="card">
+  <div class="card-title">Calcula cualquier incógnita — ingresa los valores disponibles</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="res-l">Inductancia (L)</label>
+      <div class="input-wrap"><input id="res-l" type="number" step="any" placeholder="ej: 10">
+        <select id="res-lu" class="unit-sel"><option value="0.001" selected>mH</option><option value="0.000001">μH</option><option value="1">H</option></select></div></div>
+    <div class="input-group"><label for="res-c">Capacidad (C)</label>
+      <div class="input-wrap"><input id="res-c" type="number" step="any" placeholder="ej: 100">
+        <select id="res-cu" class="unit-sel"><option value="0.000000001" selected>nF</option><option value="0.000001">μF</option><option value="0.000000000001">pF</option></select></div></div>
+    <div class="input-group"><label for="res-r">Resistencia (R) <span class="formula-hint">para Q y BW</span></label>
+      <div class="input-wrap"><input id="res-r" type="number" step="any" placeholder="ej: 10">
+        <select id="res-ru" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    <div class="input-group"><label for="res-fr">O ingresa fr directamente</label>
+      <div class="input-wrap"><input id="res-fr" type="number" step="any" placeholder="ej: 1000">
+        <select id="res-fru" class="unit-sel"><option value="1" selected>Hz</option><option value="1000">kHz</option><option value="1000000">MHz</option></select></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="res-calc" class="btn btn-primary">Calcular</button>
+    <button id="res-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="res-result" class="result-panel hidden">
+  <div class="result-title">Resultados</div>
+  <div class="result-grid">
+    <div class="result-item"><div class="res-label">Frecuencia de resonancia</div><div class="res-value" id="res-rfr">—</div></div>
+    <div class="result-item"><div class="res-label">ω angular (rad/s)</div><div class="res-value" id="res-rw">—</div></div>
+    <div class="result-item"><div class="res-label">Factor Q</div><div class="res-value" id="res-rq">—</div></div>
+    <div class="result-item"><div class="res-label">Ancho de banda (BW)</div><div class="res-value" id="res-rbw">—</div></div>
+    <div class="result-item"><div class="res-label">f1 (−3dB inferior)</div><div class="res-value" id="res-rf1">—</div></div>
+    <div class="result-item"><div class="res-label">f2 (−3dB superior)</div><div class="res-value" id="res-rf2">—</div></div>
+    <div class="result-item"><div class="res-label">Z en resonancia</div><div class="res-value" id="res-rz">—</div></div>
+    <div class="result-item"><div class="res-label">XL = XC en fr</div><div class="res-value" id="res-rxl">—</div></div>
+  </div>
+</div>
+<hr class="divider">
+<div class="card">
+  <div class="card-title">Calcular L o C para una fr deseada</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="resd-fr">Frecuencia deseada</label>
+      <div class="input-wrap"><input id="resd-fr" type="number" step="any" placeholder="ej: 100">
+        <select id="resd-fru" class="unit-sel"><option value="1" selected>Hz</option><option value="1000">kHz</option><option value="1000000">MHz</option></select></div></div>
+    <div class="input-group"><label for="resd-l">L conocida <span class="formula-hint">→ calcula C</span></label>
+      <div class="input-wrap"><input id="resd-l" type="number" step="any" placeholder="ej: 10">
+        <select id="resd-lu" class="unit-sel"><option value="0.001" selected>mH</option><option value="0.000001">μH</option></select></div></div>
+    <div class="input-group"><label for="resd-c">C conocida <span class="formula-hint">→ calcula L</span></label>
+      <div class="input-wrap"><input id="resd-c" type="number" step="any" placeholder="ej: 100">
+        <select id="resd-cu" class="unit-sel"><option value="0.000000001" selected>nF</option><option value="0.000001">μF</option></select></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="resd-calc" class="btn btn-primary">Calcular componente</button>
+    <button id="resd-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="resd-result" class="result-panel hidden">
+  <div class="result-title">Componente calculado</div>
+  <div class="result-grid">
+    <div class="result-item"><div class="res-label">L calculada</div><div class="res-value" id="resd-rl">—</div></div>
+    <div class="result-item"><div class="res-label">C calculada</div><div class="res-value" id="resd-rc">—</div></div>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="view-header">
+  <h2>🎨 Código de Colores</h2>
+  <p>Resistencias de 4, 5 y 6 bandas — bidireccional.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="col-decode">Colores → Valor</button>
+  <button class="tab-btn" data-tab="col-encode">Valor → Colores</button>
+  <button class="tab-btn" data-tab="col-ref">Tabla de referencia</button>
+</div>
+
+<!-- Decodificar -->
+<div id="tab-col-decode" class="tab-panel active">
+  <div class="card">
+    <div class="card-title">Selecciona el número de bandas y los colores</div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:0.85rem;font-weight:600;color:var(--text-sub);">Número de bandas:</label>
+      <div class="btn-group" style="margin-top:6px;">
+        <button class="tab-btn active" id="bands-4" onclick="window._setBands(4)">4 bandas</button>
+        <button class="tab-btn" id="bands-5" onclick="window._setBands(5)">5 bandas</button>
+        <button class="tab-btn" id="bands-6" onclick="window._setBands(6)">6 bandas</button>
+      </div>
+    </div>
+
+    <!-- Resistencia visual -->
+    <div id="col-resistor-visual" style="margin:20px 0;text-align:center;">
+      <canvas id="col-canvas" width="300" height="80" style="max-width:100%;border-radius:8px;"></canvas>
+    </div>
+
+    <div id="col-selects" class="calc-grid">
+      <!-- Generado por JS -->
+    </div>
+
+    <div class="btn-group" style="margin-top:14px;">
+      <button id="col-decode-btn" class="btn btn-primary">Calcular valor</button>
+      <button id="col-clear-btn"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+
+  <div id="col-decode-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Resistencia</div><div class="res-value" id="col-res-r">—</div></div>
+      <div class="result-item"><div class="res-label">Tolerancia</div><div class="res-value" id="col-res-tol">—</div></div>
+      <div class="result-item"><div class="res-label">Rango mínimo</div><div class="res-value" id="col-res-min">—</div></div>
+      <div class="result-item"><div class="res-label">Rango máximo</div><div class="res-value" id="col-res-max">—</div></div>
+      <div class="result-item" id="col-res-tc-wrap" style="display:none;">
+        <div class="res-label">Coef. temperatura</div>
+        <div class="res-value" id="col-res-tc">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Codificar -->
+<div id="tab-col-encode" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Ingresa el valor de la resistencia</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="enc-val">Valor (Ω)</label>
+        <div class="input-wrap">
+          <input id="enc-val" type="number" step="any" placeholder="ej: 4700">
+          <select id="enc-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+            <option value="1000000">MΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="enc-bands">Bandas</label>
+        <div class="input-wrap">
+          <select id="enc-bands" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="4">4 bandas</option>
+            <option value="5" selected>5 bandas</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="enc-calc"  class="btn btn-primary">Obtener colores</button>
+      <button id="enc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="enc-result" class="result-panel hidden">
+    <div class="result-title">Bandas de color</div>
+    <div id="enc-bands-display" style="margin-bottom:12px;"></div>
+    <canvas id="enc-canvas" width="300" height="80" style="max-width:100%;border-radius:8px;display:block;margin:0 auto;"></canvas>
+  </div>
+</div>
+
+<!-- Tabla de referencia -->
+<div id="tab-col-ref" class="tab-panel">
+  <div class="card" style="overflow-x:auto;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Color</th>
+          <th>Muestra</th>
+          <th>Dígito</th>
+          <th>Multiplicador</th>
+          <th>Tolerancia</th>
+          <th>Temp. Coef.</th>
+        </tr>
+      </thead>
+      <tbody id="col-ref-body"></tbody>
+    </table>
+  </div>
+</div>

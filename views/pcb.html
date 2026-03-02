@@ -1,0 +1,172 @@
+<div class="view-header">
+  <h2>🟢 Calculadora PCB</h2>
+  <p>Ancho de pista (corriente máxima), impedancia de traza, pad, vía y caída de tensión.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="pcb-trace">Ancho de pista</button>
+  <button class="tab-btn" data-tab="pcb-imp">Impedancia</button>
+  <button class="tab-btn" data-tab="pcb-via">Vías</button>
+  <button class="tab-btn" data-tab="pcb-ref">Referencia</button>
+</div>
+
+<div id="tab-pcb-trace" class="tab-panel active">
+  <div class="formula-box">IPC-2221A (estándar industria):
+  A = I / (k × ΔT^0.44)   donde k=0.048 (interna) o k=0.048×2.34 (externa)
+  ancho(mm) = A / (espesor_Cu_oz × 0.035 × (corrección_temp))
+  Resistencia: R = ρ × L / (W × T)   ρ_Cu = 1.724×10⁻⁸ Ω·m</div>
+  <div class="card">
+    <div class="card-title">Ancho de pista — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="pcb-i">Corriente máxima (I)</label>
+        <div class="input-wrap"><input id="pcb-i" type="number" step="any" placeholder="ej: 2">
+          <select id="pcb-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="pcb-dt">ΔT permitido sobre ambiente</label>
+        <div class="input-wrap"><input id="pcb-dt" type="number" step="any" placeholder="ej: 10" value="10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+      <div class="input-group"><label for="pcb-cu">Espesor de cobre</label>
+        <div class="input-wrap"><select id="pcb-cu" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="0.035">1 oz (35 μm) — estándar</option>
+          <option value="0.070">2 oz (70 μm) — potencia</option>
+          <option value="0.105">3 oz (105 μm)</option>
+          <option value="0.0175">0.5 oz (17.5 μm) — fino</option>
+        </select></div></div>
+      <div class="input-group"><label for="pcb-layer">Capa</label>
+        <div class="input-wrap"><select id="pcb-layer" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="external" selected>Externa (k=0.048)</option>
+          <option value="internal">Interna (k=0.024 — se calienta más)</option>
+        </select></div></div>
+      <div class="input-group"><label for="pcb-l">Longitud de pista (para R)</label>
+        <div class="input-wrap"><input id="pcb-l" type="number" step="any" placeholder="ej: 50">
+          <select id="pcb-lu" class="unit-sel"><option value="1" selected>mm</option><option value="25.4">in</option><option value="0.001">μm</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="pcb-calc" class="btn btn-primary">Calcular</button>
+      <button id="pcb-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pcb-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ancho mínimo</div><div class="res-value" id="pcb-rw">—</div></div>
+      <div class="result-item"><div class="res-label">Ancho recomendado (+25%)</div><div class="res-value" id="pcb-rwrec">—</div></div>
+      <div class="result-item"><div class="res-label">Sección transversal</div><div class="res-value" id="pcb-ra">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia de pista</div><div class="res-value" id="pcb-rr">—</div></div>
+      <div class="result-item"><div class="res-label">Caída de tensión</div><div class="res-value" id="pcb-rvd">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia disipada</div><div class="res-value" id="pcb-rpd">—</div></div>
+    </div>
+    <div id="pcb-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-pcb-imp" class="tab-panel">
+  <div class="formula-box">Microstrip (pista externa sobre dieléctrico):
+  Z0 ≈ (87 / √(εr+1.41)) × ln(5.98h / (0.8w + t))
+  Stripline (pista interna entre planos de masa):
+  Z0 = (60/√εr) × ln(4b / (0.67π(0.8w + t)))</div>
+  <div class="card">
+    <div class="card-title">Impedancia característica (Z₀)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="imp-w">Ancho de pista (w)</label>
+        <div class="input-wrap"><input id="imp-w" type="number" step="any" placeholder="ej: 1.5">
+          <select id="imp-wu" class="unit-sel"><option value="1" selected>mm</option><option value="0.0254">mil</option></select></div></div>
+      <div class="input-group"><label for="imp-h">Altura dieléctrico (h)</label>
+        <div class="input-wrap"><input id="imp-h" type="number" step="any" placeholder="ej: 1.6">
+          <select id="imp-hu" class="unit-sel"><option value="1" selected>mm</option><option value="0.0254">mil</option></select></div></div>
+      <div class="input-group"><label for="imp-t">Espesor cobre (t)</label>
+        <div class="input-wrap"><input id="imp-t" type="number" step="any" placeholder="ej: 0.035" value="0.035">
+          <select id="imp-tu" class="unit-sel"><option value="1" selected>mm</option></select></div></div>
+      <div class="input-group"><label for="imp-er">Constante dieléctrica (εr)</label>
+        <div class="input-wrap"><select id="imp-er" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="4.3">FR4 — 4.3 (estándar)</option>
+          <option value="3.5">FR4 alta Tg — 3.5</option>
+          <option value="2.2">Rogers 4003 — 2.2</option>
+          <option value="3.55">Rogers 4350 — 3.55</option>
+          <option value="2.5">Teflón PTFE — 2.5</option>
+          <option value="4.7">Cerámica — 4.7</option>
+          <option value="custom">Personalizado</option>
+        </select></div></div>
+      <div class="input-group"><label for="imp-er-custom">εr personalizado</label>
+        <div class="input-wrap"><input id="imp-er-custom" type="number" step="0.01" placeholder="ej: 4.3"></div></div>
+      <div class="input-group"><label for="imp-type">Tipo de traza</label>
+        <div class="input-wrap"><select id="imp-type" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="microstrip" selected>Microstrip (pista exterior)</option>
+          <option value="stripline">Stripline (pista interior)</option>
+        </select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="imp-calc" class="btn btn-primary">Calcular Z₀</button>
+      <button id="imp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="imp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Impedancia Z₀</div><div class="res-value" id="imp-rz">—</div></div>
+      <div class="result-item"><div class="res-label">Velocidad propagación</div><div class="res-value" id="imp-rv">—</div></div>
+      <div class="result-item"><div class="res-label">Retardo (por cm)</div><div class="res-value" id="imp-rtd">—</div></div>
+    </div>
+    <div id="imp-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-pcb-via" class="tab-panel">
+  <div class="formula-box">Corriente máxima de vía: I = k × ΔT^0.44 × d^0.725 × t^0.725
+  Resistencia de vía: R = ρ × L / (π × d × t)   L = espesor_PCB</div>
+  <div class="card">
+    <div class="card-title">Calculadora de vías (vias)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="via-d">Diámetro de taladro</label>
+        <div class="input-wrap"><input id="via-d" type="number" step="any" placeholder="ej: 0.3">
+          <select id="via-du" class="unit-sel"><option value="1" selected>mm</option><option value="0.0254">mil</option></select></div></div>
+      <div class="input-group"><label for="via-pad">Diámetro de pad</label>
+        <div class="input-wrap"><input id="via-pad" type="number" step="any" placeholder="ej: 0.6">
+          <select id="via-padu" class="unit-sel"><option value="1" selected>mm</option><option value="0.0254">mil</option></select></div></div>
+      <div class="input-group"><label for="via-th">Espesor PCB</label>
+        <div class="input-wrap"><input id="via-th" type="number" step="any" placeholder="ej: 1.6" value="1.6">
+          <select id="via-thu" class="unit-sel"><option value="1" selected>mm</option></select></div></div>
+      <div class="input-group"><label for="via-cu">Espesor cobre chapado</label>
+        <div class="input-wrap"><input id="via-cu" type="number" step="any" placeholder="ej: 0.025" value="0.025">
+          <select id="via-cuu" class="unit-sel"><option value="1" selected>mm</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="via-calc" class="btn btn-primary">Calcular</button>
+      <button id="via-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="via-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Corriente máx. (ΔT=10°C)</div><div class="res-value" id="via-ri">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia de vía</div><div class="res-value" id="via-rr">—</div></div>
+      <div class="result-item"><div class="res-label">Annular ring</div><div class="res-value" id="via-rar">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-pcb-ref" class="tab-panel">
+  <div class="card-title" style="padding:0 0 12px">Reglas de diseño comunes (IPC-2221)</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Parámetro</th><th>Clase 1 (consumo)</th><th>Clase 2 (industrial)</th><th>Clase 3 (crítico)</th></tr></thead>
+    <tbody>
+      <tr><td>Ancho mín. pista</td><td>0.15 mm (6 mil)</td><td>0.10 mm (4 mil)</td><td>0.05 mm (2 mil)</td></tr>
+      <tr><td>Espaciado mín.</td><td>0.15 mm</td><td>0.10 mm</td><td>0.05 mm</td></tr>
+      <tr><td>Annular ring mín.</td><td>0.15 mm</td><td>0.10 mm</td><td>0.05 mm</td></tr>
+      <tr><td>Diámetro taladro mín.</td><td>0.3 mm</td><td>0.2 mm</td><td>0.15 mm</td></tr>
+      <tr><td>Pad mín. SMD 0402</td><td>0.5×0.5 mm</td><td>0.5×0.5 mm</td><td>0.4×0.4 mm</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Constantes dieléctricas de materiales PCB</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Material</th><th>εr</th><th>tan δ (pérdidas)</th><th>Tg (°C)</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td>FR4 estándar</td><td>4.3–4.8</td><td>0.020</td><td>130–140</td><td>General ⭐</td></tr>
+        <tr><td>FR4 alta Tg</td><td>3.8–4.2</td><td>0.018</td><td>170–180</td><td>Industrial</td></tr>
+        <tr><td>Rogers RO4003C</td><td>3.55</td><td>0.0027</td><td>280</td><td>RF/microondas ⭐</td></tr>
+        <tr><td>Rogers RO4350B</td><td>3.48</td><td>0.0037</td><td>280</td><td>RF/microondas</td></tr>
+        <tr><td>PTFE / Teflón</td><td>2.1–2.5</td><td>0.0002</td><td>—</td><td>Alta frecuencia, μondas</td></tr>
+        <tr><td>Cerámica (Al₂O₃)</td><td>9–10</td><td>0.0001</td><td>&gt;1000</td><td>Híbridos, alta temperatura</td></tr>
+        <tr><td>Poliimida</td><td>3.5</td><td>0.003</td><td>250+</td><td>Flexibles, alta T</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

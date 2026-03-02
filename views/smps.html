@@ -1,0 +1,147 @@
+<div class="view-header"><h2>⚡ Fuentes Conmutadas (SMPS)</h2><p>Buck, Boost, Buck-Boost — Duty Cycle, ondulación, inductor y condensador de salida.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="smps-buck">Buck (Step-Down)</button>
+  <button class="tab-btn" data-tab="smps-boost">Boost (Step-Up)</button>
+  <button class="tab-btn" data-tab="smps-bb">Buck-Boost</button>
+  <button class="tab-btn" data-tab="smps-ref">Referencia</button>
+</div>
+
+<div id="tab-smps-buck" class="tab-panel active">
+  <div class="formula-box">Vout = Vin × D            D = Vout / Vin
+L_min = (Vin−Vout)×D / (ΔIL×f)    ΔIL típico = 30% de Iout
+C_min = ΔIL / (8×f×ΔVout)         ΔVout típico = 1% de Vout</div>
+  <div class="card"><div class="card-title">Calculadora Buck — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bk-vin">Vin (entrada)</label>
+        <div class="input-wrap"><input id="bk-vin" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bk-vout">Vout (salida)</label>
+        <div class="input-wrap"><input id="bk-vout" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bk-iout">Iout (corriente salida)</label>
+        <div class="input-wrap"><input id="bk-iout" type="number" step="any" placeholder="ej: 2">
+          <select id="bk-iouu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="bk-fsw">Frecuencia switching</label>
+        <div class="input-wrap"><input id="bk-fsw" type="number" step="any" placeholder="ej: 100">
+          <select id="bk-fswu" class="unit-sel"><option value="1000" selected>kHz</option><option value="1000000">MHz</option></select></div></div>
+      <div class="input-group"><label for="bk-dil">Rizado ΔIL (% de Iout)</label>
+        <div class="input-wrap"><input id="bk-dil" type="number" step="any" placeholder="30" value="30"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+      <div class="input-group"><label for="bk-dvout">Rizado ΔVout (% de Vout)</label>
+        <div class="input-wrap"><input id="bk-dvout" type="number" step="any" placeholder="1" value="1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bk-calc" class="btn btn-primary">Calcular</button>
+      <button id="bk-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="bk-result" class="result-panel hidden">
+    <div class="result-title">Resultados Buck</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Duty Cycle (D)</div><div class="res-value" id="bk-rd">—</div></div>
+      <div class="result-item"><div class="res-label">L mínimo</div><div class="res-value" id="bk-rl">—</div></div>
+      <div class="result-item"><div class="res-label">C salida mínimo</div><div class="res-value" id="bk-rc">—</div></div>
+      <div class="result-item"><div class="res-label">Eficiencia ideal</div><div class="res-value" id="bk-reff">—</div></div>
+      <div class="result-item"><div class="res-label">I_L pico</div><div class="res-value" id="bk-rilpk">—</div></div>
+      <div class="result-item"><div class="res-label">Ton / Toff</div><div class="res-value" id="bk-rton">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia entrada</div><div class="res-value" id="bk-rpin">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia salida</div><div class="res-value" id="bk-rpout">—</div></div>
+    </div>
+    <div id="bk-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-smps-boost" class="tab-panel">
+  <div class="formula-box">Vout = Vin / (1 − D)     D = 1 − Vin/Vout
+L_min = Vin×D / (ΔIL×f)    C_min = Iout×D / (ΔVout×f)</div>
+  <div class="card"><div class="card-title">Calculadora Boost</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bo-vin">Vin</label>
+        <div class="input-wrap"><input id="bo-vin" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bo-vout">Vout</label>
+        <div class="input-wrap"><input id="bo-vout" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bo-iout">Iout</label>
+        <div class="input-wrap"><input id="bo-iout" type="number" step="any" placeholder="ej: 1">
+          <select id="bo-iouu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="bo-fsw">Frecuencia</label>
+        <div class="input-wrap"><input id="bo-fsw" type="number" step="any" placeholder="ej: 100">
+          <select id="bo-fswu" class="unit-sel"><option value="1000" selected>kHz</option><option value="1000000">MHz</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bo-calc" class="btn btn-primary">Calcular</button>
+      <button id="bo-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="bo-result" class="result-panel hidden">
+    <div class="result-title">Resultados Boost</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Duty Cycle (D)</div><div class="res-value" id="bo-rd">—</div></div>
+      <div class="result-item"><div class="res-label">L mínimo</div><div class="res-value" id="bo-rl">—</div></div>
+      <div class="result-item"><div class="res-label">C salida mínimo</div><div class="res-value" id="bo-rc">—</div></div>
+      <div class="result-item"><div class="res-label">I_L pico</div><div class="res-value" id="bo-rilpk">—</div></div>
+      <div class="result-item"><div class="res-label">Relación tensión</div><div class="res-value" id="bo-rratio">—</div></div>
+      <div class="result-item"><div class="res-label">Ton / Toff</div><div class="res-value" id="bo-rton">—</div></div>
+    </div>
+    <div id="bo-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-smps-bb" class="tab-panel">
+  <div class="formula-box">Buck-Boost (inversor): |Vout| = Vin × D/(1−D)
+D = |Vout| / (Vin + |Vout|)
+⚠ La salida es negativa respecto a tierra</div>
+  <div class="card"><div class="card-title">Calculadora Buck-Boost</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bb-vin">Vin</label>
+        <div class="input-wrap"><input id="bb-vin" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bb-vout">|Vout| deseado</label>
+        <div class="input-wrap"><input id="bb-vout" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bb-iout">Iout</label>
+        <div class="input-wrap"><input id="bb-iout" type="number" step="any" placeholder="ej: 0.5">
+          <select id="bb-iouu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="bb-fsw">Frecuencia</label>
+        <div class="input-wrap"><input id="bb-fsw" type="number" step="any" placeholder="ej: 100">
+          <select id="bb-fswu" class="unit-sel"><option value="1000" selected>kHz</option><option value="1000000">MHz</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bb-calc" class="btn btn-primary">Calcular</button>
+      <button id="bb-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="bb-result" class="result-panel hidden">
+    <div class="result-title">Resultados Buck-Boost</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Duty Cycle (D)</div><div class="res-value" id="bb-rd">—</div></div>
+      <div class="result-item"><div class="res-label">Vout real</div><div class="res-value" id="bb-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">L mínimo</div><div class="res-value" id="bb-rl">—</div></div>
+      <div class="result-item"><div class="res-label">C salida mínimo</div><div class="res-value" id="bb-rc">—</div></div>
+    </div>
+    <div class="alert alert-warning">La salida es negativa (−Vout). Necesita regulador inversor.</div>
+  </div>
+</div>
+
+<div id="tab-smps-ref" class="tab-panel">
+  <div class="card"><div class="card-title">Comparativa de topologías SMPS</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Tipo</th><th>Relación V</th><th>Duty Cycle</th><th>Eficiencia típica</th><th>Aplicación</th></tr></thead>
+      <tbody>
+        <tr><td><b>Buck</b></td><td>Vout &lt; Vin</td><td>Vout/Vin</td><td>85–96%</td><td>CPU, LDO sustituto</td></tr>
+        <tr><td><b>Boost</b></td><td>Vout &gt; Vin</td><td>1−Vin/Vout</td><td>80–95%</td><td>Baterías, USB-C PD</td></tr>
+        <tr><td><b>Buck-Boost</b></td><td>Cualquiera (inv.)</td><td>|Vout|/(Vin+|Vout|)</td><td>75–90%</td><td>Cargas inversas</td></tr>
+        <tr><td><b>SEPIC</b></td><td>Cualquiera (pos.)</td><td>Variable</td><td>80–92%</td><td>Baterías a tensión fija</td></tr>
+        <tr><td><b>Flyback</b></td><td>Aislada</td><td>&lt;0.5</td><td>75–88%</td><td>Cargadores, telecom</td></tr>
+        <tr><td><b>Forward</b></td><td>Aislada</td><td>&lt;0.5</td><td>80–93%</td><td>Telecomunicaciones</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><div class="card-title">ICs SMPS comunes</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>CI</th><th>Tipo</th><th>Vin</th><th>Iout</th><th>fsw</th></tr></thead>
+      <tbody>
+        <tr><td>LM2596</td><td>Buck</td><td>4–40V</td><td>3A</td><td>150kHz</td></tr>
+        <tr><td>XL4016</td><td>Buck</td><td>5–40V</td><td>8A</td><td>180kHz</td></tr>
+        <tr><td>LM2577</td><td>Boost</td><td>3.5–40V</td><td>3A</td><td>52kHz</td></tr>
+        <tr><td>MT3608</td><td>Boost</td><td>2–24V</td><td>2A</td><td>1.2MHz</td></tr>
+        <tr><td>LM3478</td><td>Boost/SEPIC</td><td>2.97–40V</td><td>1A</td><td>1MHz</td></tr>
+        <tr><td>TPS63000</td><td>Buck-Boost</td><td>1.8–5.5V</td><td>1.2A</td><td>1.5MHz</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

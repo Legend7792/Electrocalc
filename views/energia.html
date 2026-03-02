@@ -1,0 +1,114 @@
+<div class="view-header">
+  <h2>💡 Costo de Electricidad</h2>
+  <p>Calcula el consumo y costo de tus equipos eléctricos — bidireccional.</p>
+</div>
+<div class="formula-box">Energía (kWh) = Potencia(W) × Tiempo(h) / 1000
+Costo = kWh × Tarifa(€/kWh o $/kWh)
+CO₂ equiv. ≈ kWh × 0.233 kg (media europea) / 0.386 kg (media EE.UU.)</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="en-single">Un equipo</button>
+  <button class="tab-btn" data-tab="en-multi">Múltiples equipos</button>
+  <button class="tab-btn" data-tab="en-ref">Consumos típicos</button>
+</div>
+
+<div id="tab-en-single" class="tab-panel active">
+  <div class="card">
+    <div class="card-title">Cálculo de consumo — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="en-p">Potencia del equipo</label>
+        <div class="input-wrap"><input id="en-p" type="number" step="any" placeholder="ej: 1500">
+          <select id="en-pu" class="unit-sel"><option value="1" selected>W</option><option value="1000">kW</option></select></div></div>
+      <div class="input-group"><label for="en-h">Horas de uso por día</label>
+        <div class="input-wrap"><input id="en-h" type="number" step="any" placeholder="ej: 4">
+          <select id="en-hu" class="unit-sel"><option value="1" selected>h/día</option><option value="0.01667">min/día</option></select></div></div>
+      <div class="input-group"><label for="en-days">Días por mes</label>
+        <div class="input-wrap"><input id="en-days" type="number" step="any" placeholder="ej: 30" value="30"><span style="padding:0 10px;color:var(--text-sub);align-self:center">días</span></div></div>
+      <div class="input-group"><label for="en-rate">Tarifa eléctrica</label>
+        <div class="input-wrap"><input id="en-rate" type="number" step="any" placeholder="ej: 0.22" value="0.22">
+          <select id="en-rateu" class="unit-sel">
+            <option value="eur" selected>€/kWh</option>
+            <option value="usd">$/kWh</option>
+          </select>
+        </div></div>
+    </div>
+    <div class="btn-group">
+      <button id="en-calc" class="btn btn-primary">Calcular</button>
+      <button id="en-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="en-result" class="result-panel hidden">
+    <div class="result-title">Resultados de consumo</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Consumo diario</div><div class="res-value" id="en-rkwhd">—</div></div>
+      <div class="result-item"><div class="res-label">Consumo mensual</div><div class="res-value" id="en-rkwhm">—</div></div>
+      <div class="result-item"><div class="res-label">Consumo anual</div><div class="res-value" id="en-rkwhy">—</div></div>
+      <div class="result-item"><div class="res-label">Costo diario</div><div class="res-value" id="en-rcd">—</div></div>
+      <div class="result-item"><div class="res-label">Costo mensual</div><div class="res-value" id="en-rcm">—</div></div>
+      <div class="result-item"><div class="res-label">Costo anual</div><div class="res-value" id="en-rcy">—</div></div>
+      <div class="result-item"><div class="res-label">CO₂ mensual (EU avg)</div><div class="res-value" id="en-rco2">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-en-multi" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Tarifa</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="enm-rate">Precio por kWh</label>
+        <div class="input-wrap"><input id="enm-rate" type="number" step="any" placeholder="0.22" value="0.22">
+          <select id="enm-rateu" class="unit-sel"><option value="eur" selected>€/kWh</option><option value="usd">$/kWh</option></select></div></div>
+    </div>
+  </div>
+  <div id="enm-items">
+    <div class="card" style="margin-bottom:8px" data-idx="0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="card-title" style="margin:0;border:none;padding:0">Equipo 1</span>
+        <button class="btn-danger-sm" onclick="this.closest('[data-idx]').remove();updateMultiTotal()">✕</button>
+      </div>
+      <div class="calc-grid">
+        <div class="input-group"><label>Nombre</label><div class="input-wrap"><input type="text" class="enm-name" placeholder="ej: Lavadora"></div></div>
+        <div class="input-group"><label>Potencia (W)</label><div class="input-wrap"><input type="number" class="enm-p" step="any" placeholder="ej: 2000"></div></div>
+        <div class="input-group"><label>Horas/día</label><div class="input-wrap"><input type="number" class="enm-h" step="any" placeholder="ej: 1.5"></div></div>
+        <div class="input-group"><label>Días/mes</label><div class="input-wrap"><input type="number" class="enm-d" step="any" placeholder="30" value="30"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-group" style="margin-top:8px">
+    <button id="enm-add" class="btn btn-secondary">+ Añadir equipo</button>
+    <button id="enm-calc" class="btn btn-primary">Calcular total</button>
+  </div>
+  <div id="enm-result" class="result-panel hidden">
+    <div class="result-title">Resumen de consumo total</div>
+    <div id="enm-table-wrap" class="table-wrap"><table class="ref-table" id="enm-table"></table></div>
+    <div class="result-grid" style="margin-top:12px">
+      <div class="result-item"><div class="res-label">Total kWh/mes</div><div class="res-value" id="enm-tkwh">—</div></div>
+      <div class="result-item"><div class="res-label">Total costo/mes</div><div class="res-value" id="enm-tcost">—</div></div>
+      <div class="result-item"><div class="res-label">Total costo/año</div><div class="res-value" id="enm-tcosty">—</div></div>
+      <div class="result-item"><div class="res-label">CO₂ mensual (EU)</div><div class="res-value" id="enm-tco2">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-en-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Equipo</th><th>Potencia típica</th><th>kWh/mes (uso típico)</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td>Bombilla LED</td><td>8–12 W</td><td>3–5 kWh</td><td>Sustituye 60W incand.</td></tr>
+      <tr><td>Bombilla fluorescente</td><td>15–25 W</td><td>7–12 kWh</td><td>4h/día</td></tr>
+      <tr><td>Televisor 55" 4K</td><td>100–150 W</td><td>15–22 kWh</td><td>5h/día</td></tr>
+      <tr><td>Frigorífico A++</td><td>30–60 W</td><td>20–40 kWh</td><td>24h/día</td></tr>
+      <tr><td>Lavadora 1400rpm</td><td>1500–2500 W</td><td>15–30 kWh</td><td>1 ciclo/día</td></tr>
+      <tr><td>Lavavajillas</td><td>1200–2000 W</td><td>20–30 kWh</td><td>1 ciclo/día</td></tr>
+      <tr><td>Microondas</td><td>700–1200 W</td><td>4–8 kWh</td><td>15 min/día</td></tr>
+      <tr><td>Horno eléctrico</td><td>2000–3000 W</td><td>20–40 kWh</td><td>1h/día</td></tr>
+      <tr><td>Ordenador desktop</td><td>150–400 W</td><td>30–80 kWh</td><td>8h/día</td></tr>
+      <tr><td>Portátil/laptop</td><td>30–80 W</td><td>7–20 kWh</td><td>8h/día</td></tr>
+      <tr><td>Smartphone (carga)</td><td>5–25 W</td><td>0.5–2 kWh</td><td>1h carga/día</td></tr>
+      <tr><td>Aire acondicionado 1×1</td><td>800–2000 W</td><td>80–200 kWh</td><td>8h/día verano</td></tr>
+      <tr><td>Calefactor eléctrico 1kW</td><td>1000 W</td><td>100 kWh</td><td>4h/día</td></tr>
+      <tr><td>Coche eléctrico (carga)</td><td>7.2–22 kW</td><td>80–200 kWh</td><td>1h carga/día</td></tr>
+      <tr><td>Soldador estaño 40W</td><td>40 W</td><td>2–4 kWh</td><td>2h/día</td></tr>
+      <tr><td>Impresora 3D</td><td>150–300 W</td><td>15–30 kWh</td><td>4h/día</td></tr>
+    </tbody>
+  </table></div>
+</div>

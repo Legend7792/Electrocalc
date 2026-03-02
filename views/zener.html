@@ -1,0 +1,117 @@
+<div class="view-header">
+  <h2>⚡ Diodo Zener</h2>
+  <p>Diseño de regulador Zener, potencia disipada y corriente de trabajo — bidireccional.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="zen-reg">Regulador Zener</button>
+  <button class="tab-btn" data-tab="zen-pot">Potencia y corriente</button>
+  <button class="tab-btn" data-tab="zen-ref">Valores estándar</button>
+</div>
+
+<div id="tab-zen-reg" class="tab-panel active">
+  <div class="formula-box">Vz = tensión de ruptura (valor nominal del Zener)
+Rs = (Vin_min − Vz) / (Iz_max + IL_max)
+Rs ≤ (Vin_max − Vz) / (Iz_min + IL_min)   Iz_min ≈ 10% de Iz_max
+Pz = Vz × Iz_max</div>
+  <div class="alert alert-info">Ingresa los valores conocidos — calcula Rs y potencia del Zener.</div>
+  <div class="card">
+    <div class="card-title">Diseño de regulador Zener</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="zen-vin-min">Vin mínima</label>
+        <div class="input-wrap"><input id="zen-vin-min" type="number" step="any" placeholder="ej: 9"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="zen-vin-max">Vin máxima</label>
+        <div class="input-wrap"><input id="zen-vin-max" type="number" step="any" placeholder="ej: 15"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="zen-vz">Tensión Zener (Vz)</label>
+        <div class="input-wrap"><input id="zen-vz" type="number" step="any" placeholder="ej: 5.1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="zen-il">Corriente de carga (IL)</label>
+        <div class="input-wrap"><input id="zen-il" type="number" step="any" placeholder="ej: 20">
+          <select id="zen-ilu" class="unit-sel"><option value="0.001" selected>mA</option><option value="1">A</option></select></div></div>
+      <div class="input-group"><label for="zen-rs-in">Rs conocida <span class="formula-hint">→ calcula Iz</span></label>
+        <div class="input-wrap"><input id="zen-rs-in" type="number" step="any" placeholder="ej: 470">
+          <select id="zen-rs-u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="zen-calc" class="btn btn-primary">Calcular</button>
+      <button id="zen-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="zen-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Rs mínima (Vin_max)</div><div class="res-value" id="zen-rrs-min">—</div></div>
+      <div class="result-item"><div class="res-label">Rs recomendada</div><div class="res-value" id="zen-rrs">—</div></div>
+      <div class="result-item"><div class="res-label">Iz máxima</div><div class="res-value" id="zen-riz-max">—</div></div>
+      <div class="result-item"><div class="res-label">Iz mínima (seguridad)</div><div class="res-value" id="zen-riz-min">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia Zener (Pz)</div><div class="res-value" id="zen-rpz">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia Rs (Prs)</div><div class="res-value" id="zen-rprs">—</div></div>
+      <div class="result-item"><div class="res-label">Zener std necesario</div><div class="res-value" id="zen-rstd">—</div></div>
+    </div>
+    <div id="zen-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-zen-pot" class="tab-panel">
+  <div class="formula-box">Pz = Vz × Iz   |   Iz = (Vin − Vz) / Rs − IL
+Eficiencia: η = Pload / Pin × 100%   (reguladores Zener típico: 20–50%)</div>
+  <div class="card">
+    <div class="card-title">Potencia y corriente de trabajo</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="zp-vin">Vin</label>
+        <div class="input-wrap"><input id="zp-vin" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="zp-vz">Vz</label>
+        <div class="input-wrap"><input id="zp-vz" type="number" step="any" placeholder="ej: 5.1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="zp-rs">Rs</label>
+        <div class="input-wrap"><input id="zp-rs" type="number" step="any" placeholder="ej: 470">
+          <select id="zp-rsu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="zp-il">IL (corriente de carga)</label>
+        <div class="input-wrap"><input id="zp-il" type="number" step="any" placeholder="ej: 20">
+          <select id="zp-ilu" class="unit-sel"><option value="0.001" selected>mA</option><option value="1">A</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="zp-calc" class="btn btn-primary">Calcular</button>
+      <button id="zp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="zp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Iz (corriente por Zener)</div><div class="res-value" id="zp-riz">—</div></div>
+      <div class="result-item"><div class="res-label">It (corriente total)</div><div class="res-value" id="zp-rit">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia Zener (Pz)</div><div class="res-value" id="zp-rpz">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia Rs</div><div class="res-value" id="zp-rprs">—</div></div>
+      <div class="result-item"><div class="res-label">Eficiencia</div><div class="res-value" id="zp-reta">—</div></div>
+    </div>
+    <div id="zp-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-zen-ref" class="tab-panel">
+  <div class="card-title" style="padding:0 0 12px">Valores Zener estándar (serie 1N47xx BZX55)</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Ref.</th><th>Vz</th><th>Pmax</th><th>Iz típica</th><th>Tol.</th></tr></thead>
+    <tbody>
+      <tr><td>1N4728A / BZX55C3V3</td><td>3.3 V</td><td>1W / 0.5W</td><td>76 mA</td><td>±5%</td></tr>
+      <tr><td>1N4729A / BZX55C3V6</td><td>3.6 V</td><td>1W / 0.5W</td><td>69 mA</td><td>±5%</td></tr>
+      <tr><td>1N4730A / BZX55C3V9</td><td>3.9 V</td><td>1W / 0.5W</td><td>64 mA</td><td>±5%</td></tr>
+      <tr><td>1N4731A / BZX55C4V3</td><td>4.3 V</td><td>1W / 0.5W</td><td>58 mA</td><td>±5%</td></tr>
+      <tr><td>1N4732A / BZX55C4V7</td><td>4.7 V</td><td>1W / 0.5W</td><td>53 mA</td><td>±5%</td></tr>
+      <tr><td>1N4733A / BZX55C5V1</td><td>5.1 V</td><td>1W / 0.5W</td><td>49 mA</td><td>±5%</td></tr>
+      <tr><td>1N4734A / BZX55C5V6</td><td>5.6 V</td><td>1W / 0.5W</td><td>45 mA</td><td>±5%</td></tr>
+      <tr><td>1N4735A / BZX55C6V2</td><td>6.2 V</td><td>1W / 0.5W</td><td>41 mA</td><td>±5%</td></tr>
+      <tr><td>1N4736A / BZX55C6V8</td><td>6.8 V</td><td>1W / 0.5W</td><td>37 mA</td><td>±5%</td></tr>
+      <tr><td>1N4737A / BZX55C7V5</td><td>7.5 V</td><td>1W / 0.5W</td><td>34 mA</td><td>±5%</td></tr>
+      <tr><td>1N4738A / BZX55C8V2</td><td>8.2 V</td><td>1W / 0.5W</td><td>31 mA</td><td>±5%</td></tr>
+      <tr><td>1N4739A / BZX55C9V1</td><td>9.1 V</td><td>1W / 0.5W</td><td>28 mA</td><td>±5%</td></tr>
+      <tr><td>1N4740A / BZX55C10</td><td>10 V</td><td>1W / 0.5W</td><td>25 mA</td><td>±5%</td></tr>
+      <tr><td>1N4741A / BZX55C11</td><td>11 V</td><td>1W / 0.5W</td><td>23 mA</td><td>±5%</td></tr>
+      <tr><td>1N4742A / BZX55C12</td><td>12 V</td><td>1W / 0.5W</td><td>21 mA</td><td>±5%</td></tr>
+      <tr><td>1N4743A / BZX55C13</td><td>13 V</td><td>1W / 0.5W</td><td>19 mA</td><td>±5%</td></tr>
+      <tr><td>1N4744A / BZX55C15</td><td>15 V</td><td>1W / 0.5W</td><td>17 mA</td><td>±5%</td></tr>
+      <tr><td>1N4745A / BZX55C16</td><td>16 V</td><td>1W / 0.5W</td><td>15.5 mA</td><td>±5%</td></tr>
+      <tr><td>1N4746A / BZX55C18</td><td>18 V</td><td>1W / 0.5W</td><td>14 mA</td><td>±5%</td></tr>
+      <tr><td>1N4747A / BZX55C20</td><td>20 V</td><td>1W / 0.5W</td><td>12.5 mA</td><td>±5%</td></tr>
+      <tr><td>1N4748A / BZX55C22</td><td>22 V</td><td>1W / 0.5W</td><td>11.5 mA</td><td>±5%</td></tr>
+      <tr><td>1N4749A / BZX55C24</td><td>24 V</td><td>1W / 0.5W</td><td>10.5 mA</td><td>±5%</td></tr>
+    </tbody>
+  </table></div>
+</div>

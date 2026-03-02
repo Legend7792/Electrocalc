@@ -1,0 +1,91 @@
+<div class="view-header"><h2>⚙️ Motor Trifásico</h2><p>Potencia, corriente, par, velocidad, rendimiento y factor de potencia de motores de inducción trifásicos.</p></div>
+<div class="formula-box">P(W) = √3 × VL × IL × cosφ × η   |   ns = 120×f / p (rpm sinc.)
+Par (N·m) = P / ω = P×60 / (2π×n)   |   Deslizamiento = (ns−n)/ns × 100%</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="mt-pot">Potencia y corriente</button>
+  <button class="tab-btn" data-tab="mt-vel">Velocidad y par</button>
+  <button class="tab-btn" data-tab="mt-ref">Referencia IE</button>
+</div>
+<div id="tab-mt-pot" class="tab-panel active">
+  <div class="card"><div class="card-title">Cálculo bidireccional — ingresa los valores conocidos</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="mt-vl">Tensión de línea (VL)</label>
+        <div class="input-wrap"><input id="mt-vl" type="number" step="any" placeholder="ej: 400"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="mt-il">Corriente de línea (IL)</label>
+        <div class="input-wrap"><input id="mt-il" type="number" step="any" placeholder="ej: 10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">A</span></div></div>
+      <div class="input-group"><label for="mt-cosphi">Factor de potencia (cosφ)</label>
+        <div class="input-wrap"><input id="mt-cosphi" type="number" step="0.01" min="0" max="1" placeholder="ej: 0.85" value="0.85"></div></div>
+      <div class="input-group"><label for="mt-eta">Rendimiento (η)</label>
+        <div class="input-wrap"><input id="mt-eta" type="number" step="0.01" min="0" max="1" placeholder="ej: 0.92" value="0.92"><span style="padding:0 10px;color:var(--text-sub);align-self:center">0–1</span></div></div>
+      <div class="input-group"><label for="mt-kw">O bien, potencia en placa</label>
+        <div class="input-wrap"><input id="mt-kw" type="number" step="any" placeholder="ej: 5.5">
+          <select id="mt-kwu" class="unit-sel"><option value="1" selected>kW</option><option value="0.746">CV/HP</option></select></div></div>
+    </div>
+    <div class="btn-group"><button id="mt-pot-calc" class="btn btn-primary">Calcular</button><button id="mt-pot-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="mt-pot-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Potencia activa (P)</div><div class="res-value" id="mt-rp">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia aparente (S)</div><div class="res-value" id="mt-rs">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia reactiva (Q)</div><div class="res-value" id="mt-rq">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente de línea (IL)</div><div class="res-value" id="mt-ril">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente de fase</div><div class="res-value" id="mt-rif">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia en CV/HP</div><div class="res-value" id="mt-rcv">—</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-mt-vel" class="tab-panel">
+  <div class="card"><div class="card-title">Velocidad, par y deslizamiento</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="mt-f">Frecuencia de red</label>
+        <div class="input-wrap"><input id="mt-f" type="number" step="any" placeholder="50" value="50">
+          <select id="mt-fu" class="unit-sel"><option value="50" selected>50 Hz (EU)</option><option value="60">60 Hz (US)</option></select></div></div>
+      <div class="input-group"><label for="mt-polos">Número de polos</label>
+        <div class="input-wrap"><select id="mt-polos" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="2">2 polos — 3000/3600 rpm</option><option value="4" selected>4 polos — 1500/1800 rpm</option>
+          <option value="6">6 polos — 1000/1200 rpm</option><option value="8">8 polos — 750/900 rpm</option>
+          <option value="10">10 polos — 600/720 rpm</option><option value="12">12 polos — 500/600 rpm</option>
+        </select></div></div>
+      <div class="input-group"><label for="mt-nreal">Velocidad real del motor</label>
+        <div class="input-wrap"><input id="mt-nreal" type="number" step="any" placeholder="ej: 1450"><span style="padding:0 10px;color:var(--text-sub);align-self:center">rpm</span></div></div>
+      <div class="input-group"><label for="mt-pw2">Potencia en eje</label>
+        <div class="input-wrap"><input id="mt-pw2" type="number" step="any" placeholder="ej: 5.5">
+          <select id="mt-pw2u" class="unit-sel"><option value="1" selected>kW</option><option value="0.746">CV/HP</option></select></div></div>
+    </div>
+    <div class="btn-group"><button id="mt-vel-calc" class="btn btn-primary">Calcular</button><button id="mt-vel-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="mt-vel-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Velocidad sincrónica</div><div class="res-value" id="mt-rns">—</div></div>
+      <div class="result-item"><div class="res-label">Deslizamiento</div><div class="res-value" id="mt-rslip">—</div></div>
+      <div class="result-item"><div class="res-label">ω (rad/s)</div><div class="res-value" id="mt-romega">—</div></div>
+      <div class="result-item"><div class="res-label">Par nominal</div><div class="res-value" id="mt-rpar">—</div></div>
+      <div class="result-item"><div class="res-label">Par en kgf·m</div><div class="res-value" id="mt-rkgm">—</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-mt-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Clase IE</th><th>Nombre</th><th>Eficiencia típica 4kW</th><th>Eficiencia típica 11kW</th><th>Norma</th></tr></thead>
+    <tbody>
+      <tr><td style="font-weight:700">IE1</td><td>Estándar</td><td>84.6%</td><td>87.6%</td><td>IEC 60034-30</td></tr>
+      <tr><td style="font-weight:700;color:var(--primary)">IE2</td><td>Alta eficiencia</td><td>86.6%</td><td>89.8%</td><td>IEC 60034-30</td></tr>
+      <tr><td style="font-weight:700;color:var(--success)">IE3</td><td>Eficiencia Premium ⭐</td><td>89.6%</td><td>91.4%</td><td>IEC 60034-30</td></tr>
+      <tr><td style="font-weight:700;color:var(--success)">IE4</td><td>Super Premium</td><td>91.6%</td><td>93.3%</td><td>IEC 60034-30</td></tr>
+      <tr><td style="font-weight:700">IE5</td><td>Ultra Premium</td><td>>91.6%</td><td>>93.3%</td><td>En desarrollo</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:16px"><div class="card-title">Velocidades sincrónicas según polos y frecuencia</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Polos</th><th>50 Hz (EU)</th><th>60 Hz (US)</th><th>rpm real aprox.</th></tr></thead>
+      <tbody>
+        <tr><td>2</td><td>3000 rpm</td><td>3600 rpm</td><td>2850 / 3450 rpm</td></tr>
+        <tr><td>4</td><td>1500 rpm</td><td>1800 rpm</td><td>1450 / 1720 rpm</td></tr>
+        <tr><td>6</td><td>1000 rpm</td><td>1200 rpm</td><td>960 / 1140 rpm</td></tr>
+        <tr><td>8</td><td>750 rpm</td><td>900 rpm</td><td>720 / 870 rpm</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

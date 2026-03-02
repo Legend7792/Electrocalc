@@ -1,0 +1,219 @@
+<div class="view-header"><h2>📚 Referencia General</h2><p>Pinouts, materiales, cables, fórmulas rápidas y normas de seguridad.</p></div>
+<div class="tab-bar" style="flex-wrap:wrap">
+  <button class="tab-btn active" data-tab="ref-pin">Pinouts IC</button>
+  <button class="tab-btn" data-tab="ref-mat">Materiales</button>
+  <button class="tab-btn" data-tab="ref-cable">Cables</button>
+  <button class="tab-btn" data-tab="ref-form">Fórmulas</button>
+  <button class="tab-btn" data-tab="ref-seg">Seguridad</button>
+  <button class="tab-btn" data-tab="ref-sym">Símbolos</button>
+</div>
+
+<div id="tab-ref-pin" class="tab-panel active">
+  <div class="card">
+    <div class="card-title">Selecciona el componente</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="btn btn-secondary pin-sel active" data-pin="ne555">NE555</button>
+      <button class="btn btn-secondary pin-sel" data-pin="lm317">LM317</button>
+      <button class="btn btn-secondary pin-sel" data-pin="lm358">LM358</button>
+      <button class="btn btn-secondary pin-sel" data-pin="lm741">LM741</button>
+      <button class="btn btn-secondary pin-sel" data-pin="bc547">BC547 NPN</button>
+      <button class="btn btn-secondary pin-sel" data-pin="irf540">IRF540 NMOS</button>
+      <button class="btn btn-secondary pin-sel" data-pin="7805">7805</button>
+      <button class="btn btn-secondary pin-sel" data-pin="atmega328">ATmega328P</button>
+    </div>
+    <div id="pinout-display"></div>
+  </div>
+</div>
+
+<div id="tab-ref-mat" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Material</th><th>Resistividad (Ω·m)</th><th>Conductividad (S/m)</th><th>Coef. temp. (ppm/°C)</th><th>Uso típico</th></tr></thead>
+    <tbody>
+      <tr><td>Plata</td><td>1.59×10⁻⁸</td><td>6.30×10⁷</td><td>3900</td><td>Contactos, RF</td></tr>
+      <tr><td>Cobre</td><td>1.68×10⁻⁸</td><td>5.96×10⁷</td><td>3900</td><td>Cables, PCB</td></tr>
+      <tr><td>Oro</td><td>2.44×10⁻⁸</td><td>4.10×10⁷</td><td>3400</td><td>Conectores, pines</td></tr>
+      <tr><td>Aluminio</td><td>2.82×10⁻⁸</td><td>3.54×10⁷</td><td>4300</td><td>Cables, disipadores</td></tr>
+      <tr><td>Tungsteno</td><td>5.60×10⁻⁸</td><td>1.79×10⁷</td><td>4500</td><td>Filamentos</td></tr>
+      <tr><td>Zinc</td><td>5.90×10⁻⁸</td><td>1.69×10⁷</td><td>4200</td><td>Galvanizado</td></tr>
+      <tr><td>Níquel</td><td>6.99×10⁻⁸</td><td>1.43×10⁷</td><td>6000</td><td>Termopares, baterías</td></tr>
+      <tr><td>Hierro</td><td>1.0×10⁻⁷</td><td>1.00×10⁷</td><td>5000</td><td>Núcleos magnéticos</td></tr>
+      <tr><td>Estaño</td><td>1.09×10⁻⁷</td><td>9.17×10⁶</td><td>4500</td><td>Soldadura</td></tr>
+      <tr><td>Plomo</td><td>2.2×10⁻⁷</td><td>4.55×10⁶</td><td>3900</td><td>Soldadura</td></tr>
+      <tr><td>Kanthal (FeCrAl)</td><td>1.4×10⁻⁶</td><td>7.14×10⁵</td><td>~100</td><td>Resistencias calefactoras</td></tr>
+      <tr><td>Nichrome</td><td>1.1×10⁻⁶</td><td>9.09×10⁵</td><td>110</td><td>Resistencias, calefactores</td></tr>
+      <tr><td>Grafito</td><td>3–60×10⁻⁵</td><td>~5×10⁴</td><td>—</td><td>Electrodos, lubricante</td></tr>
+      <tr><td>Silicio (intrínseco)</td><td>640</td><td>1.56×10⁻³</td><td>—</td><td>Semiconductores</td></tr>
+      <tr><td>Vidrio</td><td>10¹⁰–10¹⁴</td><td>~10⁻¹²</td><td>—</td><td>Aislante</td></tr>
+      <tr><td>Aire</td><td>~10¹⁶</td><td>~10⁻¹⁵</td><td>—</td><td>Aislante</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div id="tab-ref-cable" class="tab-panel">
+  <div class="card-title" style="padding:0 0 12px">AWG a mm² — Corriente máxima</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>AWG</th><th>Diámetro (mm)</th><th>Sección (mm²)</th><th>R (Ω/km)</th><th>I máx. (A) chasis</th><th>I máx. (A) pared</th></tr></thead>
+    <tbody>
+      <tr><td>30</td><td>0.255</td><td>0.051</td><td>339</td><td>0.86</td><td>0.52</td></tr>
+      <tr><td>28</td><td>0.321</td><td>0.081</td><td>213</td><td>1.0</td><td>0.83</td></tr>
+      <tr><td>26</td><td>0.405</td><td>0.129</td><td>134</td><td>2.2</td><td>1.3</td></tr>
+      <tr><td>24</td><td>0.511</td><td>0.205</td><td>84.2</td><td>3.5</td><td>2.1</td></tr>
+      <tr><td>22</td><td>0.644</td><td>0.326</td><td>53.5</td><td>7.0</td><td>5.0</td></tr>
+      <tr><td>20</td><td>0.812</td><td>0.518</td><td>33.6</td><td>11</td><td>7.5</td></tr>
+      <tr><td>18</td><td>1.024</td><td>0.823</td><td>21.2</td><td>16</td><td>10</td></tr>
+      <tr><td>16</td><td>1.291</td><td>1.31</td><td>13.3</td><td>22</td><td>13</td></tr>
+      <tr><td>14</td><td>1.628</td><td>2.08</td><td>8.37</td><td>32</td><td>20</td></tr>
+      <tr><td>12</td><td>2.053</td><td>3.31</td><td>5.21</td><td>41</td><td>25</td></tr>
+      <tr><td>10</td><td>2.588</td><td>5.26</td><td>3.28</td><td>55</td><td>35</td></tr>
+      <tr><td>8</td><td>3.264</td><td>8.37</td><td>2.06</td><td>73</td><td>55</td></tr>
+      <tr><td>6</td><td>4.115</td><td>13.3</td><td>1.30</td><td>101</td><td>75</td></tr>
+      <tr><td>4</td><td>5.189</td><td>21.2</td><td>0.815</td><td>135</td><td>95</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card-title" style="padding:16px 0 12px">Código de colores de cables (IEC 60446)</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Función</th><th>Europa (IEC)</th><th>EE.UU (NEC)</th><th>Australia</th></tr></thead>
+    <tbody>
+      <tr><td>Fase L1</td><td>Marrón</td><td>Negro</td><td>Marrón</td></tr>
+      <tr><td>Fase L2</td><td>Negro</td><td>Rojo</td><td>Blanco</td></tr>
+      <tr><td>Fase L3</td><td>Gris</td><td>Azul</td><td>Gris</td></tr>
+      <tr><td>Neutro (N)</td><td>Azul</td><td>Blanco / Gris</td><td>Azul</td></tr>
+      <tr><td>Tierra (PE)</td><td>Verde/Amarillo</td><td>Verde / Verde/Amarillo</td><td>Verde/Amarillo</td></tr>
+      <tr><td>DC+ (12V)</td><td>Rojo</td><td>Rojo</td><td>Rojo</td></tr>
+      <tr><td>DC− (GND)</td><td>Negro</td><td>Negro</td><td>Negro</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div id="tab-ref-form" class="tab-panel">
+  <div class="card">
+    <div class="card-title">⚡ Ley de Ohm y Potencia</div>
+    <div class="formula-box">V = I × R    |    I = V/R    |    R = V/I
+P = V × I = I²×R = V²/R
+En AC: P = V×I×cos(φ)  |  S = V×I  |  Q = V×I×sin(φ)  |  S² = P² + Q²</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔶 Resistencias</div>
+    <div class="formula-box">Serie:    Rt = R1+R2+...+Rn
+Paralelo: 1/Rt = 1/R1+1/R2+...    (2 res: Rt = R1×R2/(R1+R2))
+Divisor V: Vout = Vin × R2/(R1+R2)
+Divisor I: I1 = It × R2/(R1+R2)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">⊣⊢ Condensadores</div>
+    <div class="formula-box">Serie:    1/Ct = 1/C1+1/C2+...
+Paralelo: Ct = C1+C2+...+Cn
+Carga:    Vc(t) = Vcc×(1−e^(−t/τ))    τ = R×C
+Energía:  E = ½×C×V²
+Reactancia: Xc = 1/(2π×f×C)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">〰️ Inductores</div>
+    <div class="formula-box">Serie:    Lt = L1+L2+...
+Paralelo: 1/Lt = 1/L1+1/L2+...
+RL:       iL(t) = (V/R)×(1−e^(−t/τ))    τ = L/R
+Energía:  E = ½×L×I²
+Reactancia: XL = 2π×f×L</div>
+  </div>
+  <div class="card">
+    <div class="card-title">📡 Resonancia y Filtros</div>
+    <div class="formula-box">fr = 1/(2π√(LC))    ω0 = 2π×fr
+Q = ω0×L/R = 1/(ω0×C×R)
+Filtro RC Paso Bajo: fc = 1/(2π×RC)   H = 1/√(1+(f/fc)²)
+Filtro RC Paso Alto: fc = 1/(2π×RC)   H = (f/fc)/√(1+(f/fc)²)
+Atenuación: dB = 20×log10(H)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">⏱ Timer 555</div>
+    <div class="formula-box">Astable:    f = 1.44/((Ra+2×Rb)×C)    Duty = (Ra+Rb)/(Ra+2×Rb)
+Monoestable: t = 1.1×R×C</div>
+  </div>
+  <div class="card">
+    <div class="card-title">📐 Op-Amp</div>
+    <div class="formula-box">Inversor:    Av = −Rf/Rin      Vout = −(Rf/Rin)×Vin
+No inversor: Av = 1+Rf/R1    Vout = (1+Rf/R1)×Vin
+Sumador inv: Vout = −Rf×(V1/R1+V2/R2+...)
+Diferencial: Vout = (Rf/R1)×(V2−V1)
+dB = 20×log10(|Av|)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔺 Transistor BJT</div>
+    <div class="formula-box">IC = β×IB    IE = IC+IB    β = hFE = IC/IB
+VCEsat ≈ 0.2V    VBE ≈ 0.7V (Si)
+Divisor tensión: VB = Vcc×R2/(R1+R2)    VE = VB−VBE    IC = VE/RE</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔄 Transformador (ideal)</div>
+    <div class="formula-box">n = N1/N2 = V1/V2 = I2/I1    P1 = P2 (sin pérdidas)
+η = Pout/Pin × 100%</div>
+  </div>
+</div>
+
+<div id="tab-ref-seg" class="tab-panel">
+  <div class="alert alert-danger">⚡ TENSIONES PELIGROSAS — La corriente a través del cuerpo humano es letal. Voltajes > 50V AC o > 120V DC son peligrosos.</div>
+  <div class="card">
+    <div class="card-title">Efectos de la corriente en el cuerpo humano</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Corriente (mA)</th><th>Efecto</th></tr></thead>
+      <tbody>
+        <tr><td>0.5 – 2</td><td>Hormigueo apenas perceptible</td></tr>
+        <tr><td>2 – 10</td><td>Sensación desagradable</td></tr>
+        <tr><td>10 – 20</td><td>Contracción muscular — puede impedir soltar el conductor</td></tr>
+        <tr><td>20 – 50</td><td>Dolor intenso, dificultad respiratoria</td></tr>
+        <tr><td>50 – 100</td><td style="color:var(--warning)">⚠ Fibrilación ventricular posible</td></tr>
+        <tr><td>&gt; 100</td><td style="color:var(--danger)">🚨 Fibrilación ventricular — riesgo mortal</td></tr>
+        <tr><td>&gt; 200</td><td style="color:var(--danger)">🚨 Quemaduras internas, paro cardíaco</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Categorías de instalación IEC 61010 (CAT)</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>CAT</th><th>Descripción</th><th>Ejemplos</th><th>Tensión transitoria típica</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-primary">CAT I</span></td><td>Circuitos secundarios de baja energía</td><td>Electrónica de consumo, señales</td><td>800V</td></tr>
+        <tr><td><span class="badge badge-primary">CAT II</span></td><td>Circuitos alimentados de toma de corriente</td><td>Electrodomésticos, cargadores</td><td>2500V</td></tr>
+        <tr><td><span class="badge badge-warning">CAT III</span></td><td>Distribución de edificios</td><td>Cuadros, motores fijos, alumbrado</td><td>4000V</td></tr>
+        <tr><td><span class="badge badge-danger" style="background:rgba(248,81,73,.15);color:var(--danger)">CAT IV</span></td><td>Origen de instalación</td><td>Entrada de servicio, contador, línea aérea</td><td>6000V</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Tensiones de seguridad (SELV)</div>
+    <div class="formula-box">SELV (Safety Extra-Low Voltage):
+  AC: ≤ 50V rms    DC: ≤ 120V
+Considerar peligroso por encima de estos límites.
+EPI mínimo recomendado: guantes dieléctricos, botas aislantes, gafas.
+Regla de oro: NUNCA trabajar en tensión. Verificar ausencia de tensión SIEMPRE.</div>
+  </div>
+</div>
+
+<div id="tab-ref-sym" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Prefijos SI</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Prefijo</th><th>Símbolo</th><th>Factor</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Tera</td><td>T</td><td>10¹²</td><td>1 THz = 10¹² Hz</td></tr>
+        <tr><td>Giga</td><td>G</td><td>10⁹</td><td>1 GHz = 10⁹ Hz</td></tr>
+        <tr><td>Mega</td><td>M</td><td>10⁶</td><td>1 MΩ = 10⁶ Ω</td></tr>
+        <tr><td>Kilo</td><td>k</td><td>10³</td><td>1 kΩ = 1000 Ω</td></tr>
+        <tr><td>—</td><td>—</td><td>10⁰</td><td>1 Ω, 1 V, 1 A</td></tr>
+        <tr><td>Mili</td><td>m</td><td>10⁻³</td><td>1 mA = 0.001 A</td></tr>
+        <tr><td>Micro</td><td>μ</td><td>10⁻⁶</td><td>1 μF = 10⁻⁶ F</td></tr>
+        <tr><td>Nano</td><td>n</td><td>10⁻⁹</td><td>1 nF = 10⁻⁹ F</td></tr>
+        <tr><td>Pico</td><td>p</td><td>10⁻¹²</td><td>1 pF = 10⁻¹² F</td></tr>
+        <tr><td>Femto</td><td>f</td><td>10⁻¹⁵</td><td>1 fF = 10⁻¹⁵ F</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Constantes físicas útiles</div>
+    <div class="formula-box">Carga del electrón:  e  = 1.602 × 10⁻¹⁹ C
+Permitividad vacío: ε₀ = 8.854 × 10⁻¹² F/m
+Permeabilidad vacío:μ₀ = 4π × 10⁻⁷ H/m
+Velocidad de la luz: c  = 3.00 × 10⁸ m/s
+Constante de Boltzmann: k = 1.381 × 10⁻²³ J/K
+Tensión térmica (25°C): Vt = kT/q ≈ 25.85 mV</div>
+  </div>
+</div>

@@ -1,0 +1,127 @@
+<div class="view-header"><h2>🔺 MOSFET</h2><p>Pérdidas de conducción, switching, gate driver y selección de MOSFET para tu aplicación.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="mos-cond">Conducción</button>
+  <button class="tab-btn" data-tab="mos-sw">Switching</button>
+  <button class="tab-btn" data-tab="mos-gate">Gate Driver</button>
+  <button class="tab-btn" data-tab="mos-ref">MOSFET comunes</button>
+</div>
+
+<div id="tab-mos-cond" class="tab-panel active">
+  <div class="formula-box">Pcond = Id² × Rds(on) × D   (D = duty cycle)
+Rds(on) aumenta con temperatura: Rds(T) ≈ Rds(25°C) × (T/300)^2.3
+Pérdida total ≈ Pcond + Psw + Pgate</div>
+  <div class="card"><div class="card-title">Pérdidas de conducción</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="mc-id">Corriente de drenaje (Id)</label>
+        <div class="input-wrap"><input id="mc-id" type="number" step="any" placeholder="ej: 5">
+          <select id="mc-idu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="mc-rds">Rds(on) a 25°C</label>
+        <div class="input-wrap"><input id="mc-rds" type="number" step="any" placeholder="ej: 0.05">
+          <select id="mc-rdsu" class="unit-sel"><option value="1" selected>Ω</option><option value="0.001">mΩ</option></select></div></div>
+      <div class="input-group"><label for="mc-d">Duty Cycle</label>
+        <div class="input-wrap"><input id="mc-d" type="number" step="any" placeholder="ej: 50" value="50"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+      <div class="input-group"><label for="mc-top">Temperatura de operación</label>
+        <div class="input-wrap"><input id="mc-top" type="number" step="any" placeholder="ej: 100" value="100"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="mc-calc" class="btn btn-primary">Calcular</button>
+      <button id="mc-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="mc-result" class="result-panel hidden">
+    <div class="result-title">Pérdidas de conducción</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Rds(on) a T_op</div><div class="res-value" id="mc-rrds">—</div></div>
+      <div class="result-item"><div class="res-label">Pcond</div><div class="res-value" id="mc-rpcond">—</div></div>
+      <div class="result-item"><div class="res-label">Pcond (ciclo completo)</div><div class="res-value" id="mc-rpcondd">—</div></div>
+      <div class="result-item"><div class="res-label">I²×Rds</div><div class="res-value" id="mc-rir2">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mos-sw" class="tab-panel">
+  <div class="formula-box">Psw = 0.5 × Vds × Id × (tr + tf) × fsw
+Eon = 0.5 × Vds × Id × tr   |   Eoff = 0.5 × Vds × Id × tf
+Pérdidas totales: Ptot = Pcond + Psw + Pgate</div>
+  <div class="card"><div class="card-title">Pérdidas de switching</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ms-vds">Tensión Vds</label>
+        <div class="input-wrap"><input id="ms-vds" type="number" step="any" placeholder="ej: 24"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="ms-id">Corriente Id</label>
+        <div class="input-wrap"><input id="ms-id" type="number" step="any" placeholder="ej: 5">
+          <select id="ms-idu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="ms-tr">Tiempo de subida (tr)</label>
+        <div class="input-wrap"><input id="ms-tr" type="number" step="any" placeholder="ej: 20">
+          <select id="ms-tru" class="unit-sel"><option value="1e-9" selected>ns</option><option value="1e-6">μs</option></select></div></div>
+      <div class="input-group"><label for="ms-tf">Tiempo de bajada (tf)</label>
+        <div class="input-wrap"><input id="ms-tf" type="number" step="any" placeholder="ej: 30">
+          <select id="ms-tfu" class="unit-sel"><option value="1e-9" selected>ns</option><option value="1e-6">μs</option></select></div></div>
+      <div class="input-group"><label for="ms-fsw">Frecuencia de switching</label>
+        <div class="input-wrap"><input id="ms-fsw" type="number" step="any" placeholder="ej: 100">
+          <select id="ms-fswu" class="unit-sel"><option value="1000" selected>kHz</option><option value="1000000">MHz</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="ms-calc" class="btn btn-primary">Calcular</button>
+      <button id="ms-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ms-result" class="result-panel hidden">
+    <div class="result-title">Pérdidas de switching</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Psw total</div><div class="res-value" id="ms-rpsw">—</div></div>
+      <div class="result-item"><div class="res-label">Eon (encendido)</div><div class="res-value" id="ms-reon">—</div></div>
+      <div class="result-item"><div class="res-label">Eoff (apagado)</div><div class="res-value" id="ms-reof">—</div></div>
+      <div class="result-item"><div class="res-label">Energía por ciclo</div><div class="res-value" id="ms-recyc">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mos-gate" class="tab-panel">
+  <div class="formula-box">Pgate = Qg × Vgs × fsw
+Rgate = (Vdr − Vgs_plateau) / Ig_pico
+Tiempo de encendido: ton ≈ Rg × Ciss
+Recomendado Rg: 4.7–22Ω para reducir EMI</div>
+  <div class="card"><div class="card-title">Gate driver</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="mg-qg">Carga de gate (Qg)</label>
+        <div class="input-wrap"><input id="mg-qg" type="number" step="any" placeholder="ej: 50">
+          <select id="mg-qgu" class="unit-sel"><option value="1e-9" selected>nC</option><option value="1e-12">pC</option></select></div></div>
+      <div class="input-group"><label for="mg-vgs">Tensión Vgs drive</label>
+        <div class="input-wrap"><input id="mg-vgs" type="number" step="any" placeholder="ej: 12" value="12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="mg-fsw">Frecuencia</label>
+        <div class="input-wrap"><input id="mg-fsw" type="number" step="any" placeholder="ej: 100">
+          <select id="mg-fswu" class="unit-sel"><option value="1000" selected>kHz</option><option value="1000000">MHz</option></select></div></div>
+      <div class="input-group"><label for="mg-rg">Rgate</label>
+        <div class="input-wrap"><input id="mg-rg" type="number" step="any" placeholder="ej: 10" value="10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">Ω</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="mg-calc" class="btn btn-primary">Calcular</button>
+    </div>
+  </div>
+  <div id="mg-result" class="result-panel hidden">
+    <div class="result-title">Gate driver</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Pgate</div><div class="res-value" id="mg-rpg">—</div></div>
+      <div class="result-item"><div class="res-label">Ig pico</div><div class="res-value" id="mg-rig">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente driver media</div><div class="res-value" id="mg-riavg">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mos-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>MOSFET</th><th>Tipo</th><th>Vds</th><th>Id</th><th>Rds(on)</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>IRF540N</td><td>N-ch</td><td>100V</td><td>33A</td><td>44mΩ</td><td>Potencia general</td></tr>
+      <tr><td>IRF3205</td><td>N-ch</td><td>55V</td><td>110A</td><td>8mΩ</td><td>Motor, inversor</td></tr>
+      <tr><td>IRLZ44N</td><td>N-ch LG</td><td>55V</td><td>47A</td><td>22mΩ</td><td>Arduino (5V gate)</td></tr>
+      <tr><td>FQP30N06L</td><td>N-ch LG</td><td>60V</td><td>32A</td><td>35mΩ</td><td>Carga baja tensión</td></tr>
+      <tr><td>IRF9540N</td><td>P-ch</td><td>−100V</td><td>−23A</td><td>117mΩ</td><td>High-side</td></tr>
+      <tr><td>BSS138</td><td>N-ch</td><td>50V</td><td>220mA</td><td>3.5Ω</td><td>Level-shifting</td></tr>
+      <tr><td>2N7002</td><td>N-ch</td><td>60V</td><td>300mA</td><td>5Ω</td><td>Señal/control</td></tr>
+      <tr><td>AO3401</td><td>P-ch SOT-23</td><td>−30V</td><td>−4A</td><td>90mΩ</td><td>SMD carga</td></tr>
+      <tr><td>STP36NF06</td><td>N-ch</td><td>60V</td><td>30A</td><td>45mΩ</td><td>Fuentes SMPS</td></tr>
+      <tr><td>IPB60R099CP</td><td>N-ch SiC</td><td>600V</td><td>31A</td><td>99mΩ</td><td>PFC, inversor solar</td></tr>
+    </tbody>
+  </table></div>
+</div>

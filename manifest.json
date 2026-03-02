@@ -1,0 +1,24 @@
+{
+  "name": "ElectroCalc — Calculadora Electrónica",
+  "short_name": "ElectroCalc",
+  "description": "Calculadora electrónica profesional completa. Offline PWA.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "lang": "es",
+  "categories": ["utilities", "education", "productivity"],
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icons/icon.svg",     "sizes": "any",     "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Ley de Ohm",    "url": "./#ohm",      "icons": [{"src":"./icons/icon-192.png","sizes":"192x192"}] },
+    { "name": "Resistencias",  "url": "./#resistors","icons": [{"src":"./icons/icon-192.png","sizes":"192x192"}] },
+    { "name": "Cód. Colores",  "url": "./#colores",  "icons": [{"src":"./icons/icon-192.png","sizes":"192x192"}] },
+    { "name": "Op-Amp",        "url": "./#opamp",    "icons": [{"src":"./icons/icon-192.png","sizes":"192x192"}] }
+  ]
+}

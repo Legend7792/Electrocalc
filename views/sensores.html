@@ -1,0 +1,160 @@
+<div class="view-header"><h2>📡 Sensores y Acondicionamiento</h2><p>NTC, LDR, ADC, divisor resistivo para sensores — cálculos de temperatura, luz y conversión analógica-digital.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="sen-ntc">NTC Termistor</button>
+  <button class="tab-btn" data-tab="sen-ldr">LDR Fotorresistencia</button>
+  <button class="tab-btn" data-tab="sen-adc">ADC / DAC</button>
+  <button class="tab-btn" data-tab="sen-div">Divisor para ADC</button>
+</div>
+
+<div id="tab-sen-ntc" class="tab-panel active">
+  <div class="formula-box">Ecuación Steinhart-Hart simplificada (Beta):
+1/T = 1/T0 + (1/B) × ln(R/R0)
+T(K) = 1 / (1/T0 + ln(R/R0)/B)   T(°C) = T(K) − 273.15
+R(T) = R0 × exp(B × (1/T − 1/T0))
+T0 = 298.15 K (25°C)  |  B típico: 3000–4700 K</div>
+  <div class="card"><div class="card-title">NTC — bidireccional: T↔R</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ntc-r0">R0 (resistencia a 25°C)</label>
+        <div class="input-wrap"><input id="ntc-r0" type="number" step="any" placeholder="ej: 10000" value="10000">
+          <select id="ntc-r0u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="ntc-b">Constante B</label>
+        <div class="input-wrap"><input id="ntc-b" type="number" step="any" placeholder="ej: 3950" value="3950"><span style="padding:0 10px;color:var(--text-sub);align-self:center">K</span></div></div>
+      <div class="input-group"><label for="ntc-r">R medida — dejar vacío para calcular desde T</label>
+        <div class="input-wrap"><input id="ntc-r" type="number" step="any" placeholder="ej: 5000">
+          <select id="ntc-ru" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="ntc-t">T deseada — dejar vacío si das R</label>
+        <div class="input-wrap"><input id="ntc-t" type="number" step="any" placeholder="ej: 50"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="ntc-calc" class="btn btn-primary">Calcular</button>
+      <button id="ntc-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ntc-result" class="result-panel hidden">
+    <div class="result-title">Resultado NTC</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Temperatura</div><div class="res-value" id="ntc-rtemp">—</div></div>
+      <div class="result-item"><div class="res-label">En Kelvin</div><div class="res-value" id="ntc-rtk">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia</div><div class="res-value" id="ntc-rrr">—</div></div>
+      <div class="result-item"><div class="res-label">Sensibilidad (α)</div><div class="res-value" id="ntc-ralpha">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card"><div class="card-title">Tabla de valores NTC 10kΩ B=3950 (típica)</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>T (°C)</th><th>R (Ω)</th><th>T (°C)</th><th>R (Ω)</th><th>T (°C)</th><th>R (Ω)</th></tr></thead>
+      <tbody>
+        <tr><td>−20</td><td>97 700</td><td>20</td><td>12 490</td><td>60</td><td>2 488</td></tr>
+        <tr><td>−10</td><td>55 050</td><td>25</td><td>10 000</td><td>70</td><td>1 900</td></tr>
+        <tr><td>0</td><td>32 650</td><td>30</td><td>8 057</td><td>80</td><td>1 463</td></tr>
+        <tr><td>5</td><td>25 390</td><td>40</td><td>5 327</td><td>100</td><td>878</td></tr>
+        <tr><td>10</td><td>19 900</td><td>50</td><td>3 588</td><td>125</td><td>445</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="tab-sen-ldr" class="tab-panel">
+  <div class="formula-box">R_LDR(Lux) = R_dark × (Lux)^(−γ)   γ ≈ 0.7–0.9 (típico)
+O simplificado: R(Lux) = R0 × (Lux0/Lux)^γ
+En divisor: Vout = Vcc × R2 / (R_LDR + R2)</div>
+  <div class="card"><div class="card-title">Cálculo LDR + divisor</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ldr-r1k">R a 1kLux (datasheet)</label>
+        <div class="input-wrap"><input id="ldr-r1k" type="number" step="any" placeholder="ej: 1000" value="1000">
+          <select id="ldr-r1ku" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="ldr-gamma">Exponente γ</label>
+        <div class="input-wrap"><input id="ldr-gamma" type="number" step="any" placeholder="ej: 0.7" value="0.7"></div></div>
+      <div class="input-group"><label for="ldr-lux">Luminosidad objetivo</label>
+        <div class="input-wrap"><input id="ldr-lux" type="number" step="any" placeholder="ej: 500">
+          <select id="ldr-luxu" class="unit-sel"><option value="1" selected>Lux</option><option value="1000">kLux</option></select></div></div>
+      <div class="input-group"><label for="ldr-rpull">Resistencia pull-down del divisor</label>
+        <div class="input-wrap"><input id="ldr-rpull" type="number" step="any" placeholder="ej: 10000">
+          <select id="ldr-rpu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="ldr-vcc">Vcc del divisor</label>
+        <div class="input-wrap"><input id="ldr-vcc" type="number" step="any" placeholder="ej: 3.3" value="3.3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="ldr-calc" class="btn btn-primary">Calcular</button>
+      <button id="ldr-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ldr-result" class="result-panel hidden">
+    <div class="result-title">Resultado LDR</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">R_LDR a esa luminosidad</div><div class="res-value" id="ldr-rldr">—</div></div>
+      <div class="result-item"><div class="res-label">Vout del divisor</div><div class="res-value" id="ldr-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">% de Vcc</div><div class="res-value" id="ldr-rpct">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-sen-adc" class="tab-panel">
+  <div class="formula-box">counts = Vin × (2^bits − 1) / Vref
+Vin = counts × Vref / (2^bits − 1)
+LSB = Vref / 2^bits   (resolución por bit)
+SNR = 6.02 × bits + 1.76 dB</div>
+  <div class="card"><div class="card-title">Conversor ADC — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="adc-bits">Resolución</label>
+        <div class="input-wrap"><select id="adc-bits" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="8">8 bits (0–255)</option>
+          <option value="10" selected>10 bits (0–1023)</option>
+          <option value="12">12 bits (0–4095)</option>
+          <option value="16">16 bits (0–65535)</option>
+          <option value="24">24 bits (sigma-delta)</option>
+        </select></div></div>
+      <div class="input-group"><label for="adc-vref">Vref</label>
+        <div class="input-wrap"><input id="adc-vref" type="number" step="any" placeholder="ej: 3.3" value="3.3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="adc-vin">Vin — o dejar vacío si das counts</label>
+        <div class="input-wrap"><input id="adc-vin" type="number" step="any" placeholder="ej: 1.65"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="adc-counts">Counts — o dejar vacío si das Vin</label>
+        <div class="input-wrap"><input id="adc-counts" type="number" step="any" min="0" placeholder="ej: 512"></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="adc-calc" class="btn btn-primary">Calcular</button>
+      <button id="adc-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="adc-result" class="result-panel hidden">
+    <div class="result-title">Resultado ADC</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Counts</div><div class="res-value" id="adc-rcounts">—</div></div>
+      <div class="result-item"><div class="res-label">Vin</div><div class="res-value" id="adc-rvin">—</div></div>
+      <div class="result-item"><div class="res-label">LSB (resolución)</div><div class="res-value" id="adc-rlsb">—</div></div>
+      <div class="result-item"><div class="res-label">% de fondo de escala</div><div class="res-value" id="adc-rpct">—</div></div>
+      <div class="result-item"><div class="res-label">SNR ideal</div><div class="res-value" id="adc-rsnr">—</div></div>
+      <div class="result-item"><div class="res-label">Counts máx</div><div class="res-value" id="adc-rmax">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-sen-div" class="tab-panel">
+  <div class="formula-box">Divisor para adaptar sensores a ADC:
+Vout = Vcc × R2 / (R1 + R2)
+Seleccionar R tal que: Vout_max = Vref del ADC
+Regla: R1 + R2 << impedancia de entrada del ADC (>10×)</div>
+  <div class="card"><div class="card-title">Diseñar divisor para sensor</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="div-vin-max">Vout_max del sensor (Vin_max)</label>
+        <div class="input-wrap"><input id="div-vin-max" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="div-vadc">Vref ADC (Vout deseado)</label>
+        <div class="input-wrap"><input id="div-vadc" type="number" step="any" placeholder="ej: 3.3" value="3.3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="div-r1">R1 (si ya tienes una)</label>
+        <div class="input-wrap"><input id="div-r1" type="number" step="any" placeholder="dejar vacío">
+          <select id="div-r1u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="div-calc" class="btn btn-primary">Calcular</button>
+      <button id="div-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="div-result" class="result-panel hidden">
+    <div class="result-title">Resultado divisor para sensor</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Relación R2/(R1+R2)</div><div class="res-value" id="div-rratio">—</div></div>
+      <div class="result-item"><div class="res-label">R2 calculada (con R1 dada)</div><div class="res-value" id="div-rr2">—</div></div>
+      <div class="result-item"><div class="res-label">Sugerencia R1 + R2</div><div class="res-value" id="div-rsugg">—</div></div>
+    </div>
+  </div>
+</div>

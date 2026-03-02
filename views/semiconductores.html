@@ -1,0 +1,99 @@
+<div class="view-header"><h2>🔺 Base de Datos de Semiconductores</h2><p>Diodos, transistores BJT, MOSFETs y CIs reguladores de uso común con parámetros clave.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="sem-diodos">Diodos</button>
+  <button class="tab-btn" data-tab="sem-bjt">Transistores BJT</button>
+  <button class="tab-btn" data-tab="sem-mos">MOSFETs</button>
+  <button class="tab-btn" data-tab="sem-reg">Reguladores CIs</button>
+</div>
+
+<div id="tab-sem-diodos" class="tab-panel active">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Ref.</th><th>Tipo</th><th>Vrrm</th><th>If</th><th>Vf</th><th>trr</th><th>Encapsulado</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">1N4001</td><td>Rectificador</td><td>50V</td><td>1A</td><td>1.1V</td><td>—</td><td>DO-41</td><td>General</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N4004</td><td>Rectificador</td><td>400V</td><td>1A</td><td>1.1V</td><td>—</td><td>DO-41</td><td>⭐ Más usado</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N4007</td><td>Rectificador</td><td>1000V</td><td>1A</td><td>1.1V</td><td>—</td><td>DO-41</td><td>Alta tensión</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N5408</td><td>Rectificador</td><td>1000V</td><td>3A</td><td>1.2V</td><td>—</td><td>DO-27</td><td>3A</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N5819</td><td>Schottky</td><td>40V</td><td>1A</td><td>0.4V</td><td>muy bajo</td><td>DO-41</td><td>Baja Vf</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N5822</td><td>Schottky</td><td>40V</td><td>3A</td><td>0.45V</td><td>muy bajo</td><td>DO-27</td><td>3A Schottky</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">SS34</td><td>Schottky SMD</td><td>40V</td><td>3A</td><td>0.45V</td><td>muy bajo</td><td>DO-214AC</td><td>SMD ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">MBR10100</td><td>Schottky</td><td>100V</td><td>10A</td><td>0.75V</td><td>muy bajo</td><td>TO-220</td><td>Fuentes</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N4148</td><td>Señal</td><td>100V</td><td>200mA</td><td>0.7V</td><td>4 ns</td><td>DO-35</td><td>⭐ Señal general</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1N914</td><td>Señal</td><td>75V</td><td>200mA</td><td>0.7V</td><td>4 ns</td><td>DO-35</td><td>= 1N4148 aprox.</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BAT85</td><td>Schottky señal</td><td>30V</td><td>200mA</td><td>0.3V</td><td>~5 ns</td><td>DO-35</td><td>Señal rápida</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">FR107</td><td>Ultra rápido</td><td>1000V</td><td>1A</td><td>1.3V</td><td>500 ns</td><td>DO-41</td><td>SMPS</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">HER108</td><td>Ultra rápido</td><td>1000V</td><td>1A</td><td>1.3V</td><td>75 ns</td><td>DO-41</td><td>SMPS</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">UF4007</td><td>Ultra rápido</td><td>1000V</td><td>1A</td><td>1.7V</td><td>50 ns</td><td>DO-41</td><td>SMPS alta velocidad</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div id="tab-sem-bjt" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Ref.</th><th>Tipo</th><th>Vceo</th><th>Ic max</th><th>hFE</th><th>fT</th><th>Pcmax</th><th>Encap.</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">BC547</td><td>NPN</td><td>45V</td><td>100mA</td><td>110–800</td><td>300 MHz</td><td>500mW</td><td>TO-92</td><td>⭐ General NPN</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BC548</td><td>NPN</td><td>30V</td><td>100mA</td><td>110–800</td><td>300 MHz</td><td>500mW</td><td>TO-92</td><td>Bajo ruido</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BC557</td><td>PNP</td><td>−45V</td><td>−100mA</td><td>125–800</td><td>150 MHz</td><td>500mW</td><td>TO-92</td><td>⭐ General PNP</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2N2222A</td><td>NPN</td><td>40V</td><td>600mA</td><td>35–300</td><td>300 MHz</td><td>625mW</td><td>TO-92/18</td><td>Clásico NPN</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2N2907A</td><td>PNP</td><td>−60V</td><td>−600mA</td><td>100–300</td><td>200 MHz</td><td>625mW</td><td>TO-92/18</td><td>Clásico PNP</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2N3904</td><td>NPN</td><td>40V</td><td>200mA</td><td>100–300</td><td>300 MHz</td><td>625mW</td><td>TO-92</td><td>Muy común EEUU</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2N3906</td><td>PNP</td><td>−40V</td><td>−200mA</td><td>100–300</td><td>250 MHz</td><td>625mW</td><td>TO-92</td><td>Complemento 2N3904</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BC639</td><td>NPN</td><td>80V</td><td>1A</td><td>40–250</td><td>50 MHz</td><td>800mW</td><td>TO-92</td><td>Conmutación 1A</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">TIP31C</td><td>NPN</td><td>100V</td><td>3A</td><td>25–50</td><td>3 MHz</td><td>40W</td><td>TO-220</td><td>Potencia NPN</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">TIP32C</td><td>PNP</td><td>−100V</td><td>−3A</td><td>25–50</td><td>3 MHz</td><td>40W</td><td>TO-220</td><td>Potencia PNP</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BD139</td><td>NPN</td><td>80V</td><td>1.5A</td><td>40–250</td><td>50 MHz</td><td>8W</td><td>TO-126</td><td>Audio driver</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BD140</td><td>PNP</td><td>−80V</td><td>−1.5A</td><td>40–250</td><td>50 MHz</td><td>8W</td><td>TO-126</td><td>Audio driver PNP</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2SC5200</td><td>NPN</td><td>230V</td><td>15A</td><td>55–160</td><td>30 MHz</td><td>150W</td><td>TO-264</td><td>Amplificador audio hi-fi</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2SA1943</td><td>PNP</td><td>−230V</td><td>−15A</td><td>55–160</td><td>30 MHz</td><td>150W</td><td>TO-264</td><td>Comp. 2SC5200</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">MJE13005</td><td>NPN</td><td>400V</td><td>4A</td><td>8–40</td><td>4 MHz</td><td>75W</td><td>TO-220</td><td>SMPS fuentes</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">S8050</td><td>NPN</td><td>25V</td><td>700mA</td><td>85–300</td><td>100 MHz</td><td>1W</td><td>SOT-23</td><td>SMD general</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div id="tab-sem-mos" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Ref.</th><th>Canal</th><th>Vdss</th><th>Id</th><th>Rds(on)</th><th>Vgs(th)</th><th>Qg</th><th>Encap.</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">IRF540N</td><td>N</td><td>100V</td><td>33A</td><td>44mΩ</td><td>2–4V</td><td>71nC</td><td>TO-220</td><td>⭐ Potencia general</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">IRF3205</td><td>N</td><td>55V</td><td>110A</td><td>8mΩ</td><td>2–4V</td><td>209nC</td><td>TO-220</td><td>Baja Rds, alta Id</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">IRFZ44N</td><td>N</td><td>55V</td><td>49A</td><td>17.5mΩ</td><td>2–4V</td><td>93nC</td><td>TO-220</td><td>Lógica 5V compatible</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">IRL2203N</td><td>N</td><td>30V</td><td>116A</td><td>7mΩ</td><td>1–2V</td><td>170nC</td><td>TO-220</td><td>Logic-level 3.3V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">STP55NF06L</td><td>N</td><td>60V</td><td>55A</td><td>18mΩ</td><td>1–2.5V</td><td>60nC</td><td>TO-220</td><td>Logic-level 5V ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">FQP30N06L</td><td>N</td><td>60V</td><td>32A</td><td>35mΩ</td><td>1–2.5V</td><td>42nC</td><td>TO-220</td><td>Logic-level Arduino ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">2N7000</td><td>N</td><td>60V</td><td>200mA</td><td>5Ω</td><td>0.8–3V</td><td>—</td><td>TO-92</td><td>Señal SMD/DIP</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">BS170</td><td>N</td><td>60V</td><td>500mA</td><td>5Ω</td><td>0.8–3V</td><td>—</td><td>TO-92</td><td>Pequeña señal RF</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">IRF9540N</td><td>P</td><td>−100V</td><td>−23A</td><td>117mΩ</td><td>−2 a −4V</td><td>94nC</td><td>TO-220</td><td>P canal comp. IRF540</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">IRF4905</td><td>P</td><td>−55V</td><td>−74A</td><td>20mΩ</td><td>−2 a −4V</td><td>180nC</td><td>TO-220</td><td>P canal alta corriente</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">AO3402</td><td>N</td><td>30V</td><td>4A</td><td>60mΩ</td><td>0.7–1.5V</td><td>9nC</td><td>SOT-23</td><td>SMD logic 3.3V ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">AO3401A</td><td>P</td><td>−30V</td><td>−4A</td><td>100mΩ</td><td>−0.4 a −1V</td><td>11nC</td><td>SOT-23</td><td>SMD P canal 3.3V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">SPP20N60C3</td><td>N</td><td>600V</td><td>20A</td><td>190mΩ</td><td>2.5–5.5V</td><td>80nC</td><td>TO-220</td><td>Alta tensión SMPS</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">IRFP460</td><td>N</td><td>500V</td><td>20A</td><td>270mΩ</td><td>2–4V</td><td>67nC</td><td>TO-247</td><td>Alta tensión potencia</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div id="tab-sem-reg" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Ref.</th><th>Tipo</th><th>Vin</th><th>Vout</th><th>Imax</th><th>Vdrop</th><th>Encap.</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">7805</td><td>Lineal POS</td><td>7–35V</td><td>5V fijo</td><td>1A</td><td>2V</td><td>TO-220</td><td>⭐ Clásico 5V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">7809</td><td>Lineal POS</td><td>11–35V</td><td>9V fijo</td><td>1A</td><td>2V</td><td>TO-220</td><td>9V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">7812</td><td>Lineal POS</td><td>14–35V</td><td>12V fijo</td><td>1A</td><td>2V</td><td>TO-220</td><td>12V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">7815</td><td>Lineal POS</td><td>17–35V</td><td>15V fijo</td><td>1A</td><td>2V</td><td>TO-220</td><td>15V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">7905</td><td>Lineal NEG</td><td>−7 a −35V</td><td>−5V fijo</td><td>1A</td><td>2V</td><td>TO-220</td><td>Negativo −5V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">7912</td><td>Lineal NEG</td><td>−14 a −35V</td><td>−12V fijo</td><td>1A</td><td>2V</td><td>TO-220</td><td>Negativo −12V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">LM317T</td><td>Lineal POS adj.</td><td>3–40V</td><td>1.25–37V</td><td>1.5A</td><td>3V</td><td>TO-220</td><td>⭐ Ajustable</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">LM337T</td><td>Lineal NEG adj.</td><td>−3 a −40V</td><td>−37 a −1.25V</td><td>1.5A</td><td>3V</td><td>TO-220</td><td>Ajustable neg.</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">LM1117-3.3</td><td>LDO</td><td>2.7–15V</td><td>3.3V</td><td>800mA</td><td>1.1V</td><td>SOT-223/TO-220</td><td>⭐ 3.3V Arduino/Pi</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">LM1117-5.0</td><td>LDO</td><td>4.75–15V</td><td>5.0V</td><td>800mA</td><td>1.1V</td><td>SOT-223</td><td>5V LDO</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">AMS1117-3.3</td><td>LDO</td><td>2.5–12V</td><td>3.3V</td><td>1A</td><td>1.3V</td><td>SOT-223</td><td>SMD muy común ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">MCP1700-3302</td><td>Ultra-LDO</td><td>2.3–6V</td><td>3.3V</td><td>250mA</td><td>178mV</td><td>SOT-23</td><td>Baterías 3.7V→3.3V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">AP2112K-3.3</td><td>Ultra-LDO</td><td>2.5–6V</td><td>3.3V</td><td>600mA</td><td>300mV</td><td>SOT-25</td><td>IoT, baterías ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">XL4016</td><td>Buck DC-DC</td><td>4–40V</td><td>1.25–36V</td><td>8A</td><td>—</td><td>TO-220</td><td>Buck ajustable</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">LM2596</td><td>Buck DC-DC</td><td>4–40V</td><td>1.23–37V</td><td>3A</td><td>—</td><td>TO-263</td><td>⭐ Buck módulo barato</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">LM2577</td><td>Boost DC-DC</td><td>3.5–40V</td><td>Ajustable</td><td>3A</td><td>—</td><td>TO-263</td><td>Boost step-up</td></tr>
+    </tbody>
+  </table></div>
+</div>

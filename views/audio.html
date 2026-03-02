@@ -1,0 +1,170 @@
+<div class="view-header"><h2>🔊 Audio y Acústica</h2><p>dB SPL, potencia en altavoz, amplificadores de audio, crossover y cable de altavoz.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="aud-db">Niveles dB</button>
+  <button class="tab-btn" data-tab="aud-spk">Altavoz / Potencia</button>
+  <button class="tab-btn" data-tab="aud-amp">Amplificador</button>
+  <button class="tab-btn" data-tab="aud-cross">Crossover</button>
+</div>
+
+<div id="tab-aud-db" class="tab-panel active">
+  <div class="formula-box">dB SPL = 20 × log10(P / P_ref)  P_ref = 20 μPa
+dBu  = 20 × log10(V / 0.7746V)   (0dBu = 0.7746V = 600Ω, 1mW)
+dBV  = 20 × log10(V / 1V)         (0dBV = 1V RMS)
+dBm  = 10 × log10(P_mW)           (0dBm = 1mW en 600Ω)
++3dB = doble de potencia | +6dB = doble de voltaje/SPL</div>
+  <div class="card"><div class="card-title">Conversor dB — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="db-type">Tipo de dB</label>
+        <div class="input-wrap"><select id="db-type" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="spl">dB SPL (presión sonora)</option>
+          <option value="dbv">dBV (tensión ref 1V)</option>
+          <option value="dbu">dBu (tensión ref 0.7746V)</option>
+          <option value="dbm">dBm (potencia ref 1mW)</option>
+        </select></div></div>
+      <div class="input-group"><label for="db-db">Nivel en dB</label>
+        <div class="input-wrap"><input id="db-db" type="number" step="any" placeholder="ej: 94"></div></div>
+      <div class="input-group"><label for="db-val">Valor físico (o dejar vacío si das dB)</label>
+        <div class="input-wrap"><input id="db-val" type="number" step="any" placeholder="ej: 1">
+          <span id="db-unit-label" style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="db-zref">Impedancia de referencia (para dBm)</label>
+        <div class="input-wrap"><input id="db-zref" type="number" step="any" placeholder="600" value="600"><span style="padding:0 10px;color:var(--text-sub);align-self:center">Ω</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="db-calc" class="btn btn-primary">Calcular</button>
+      <button id="db-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="db-result" class="result-panel hidden">
+    <div class="result-title">Conversión dB</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Nivel (dB)</div><div class="res-value" id="db-rdb">—</div></div>
+      <div class="result-item"><div class="res-label">Valor físico</div><div class="res-value" id="db-rval">—</div></div>
+      <div class="result-item"><div class="res-label">+3 dB → </div><div class="res-value" id="db-r3">—</div></div>
+      <div class="result-item"><div class="res-label">−3 dB → </div><div class="res-value" id="db-rm3">—</div></div>
+      <div class="result-item"><div class="res-label">+6 dB → </div><div class="res-value" id="db-r6">—</div></div>
+      <div class="result-item"><div class="res-label">−6 dB → </div><div class="res-value" id="db-rm6">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card"><div class="card-title">Niveles de referencia SPL</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>dB SPL</th><th>Fuente</th><th>Daño auditivo</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>Umbral de audición</td><td>No</td></tr>
+        <tr><td>20–30</td><td>Estudio silencioso</td><td>No</td></tr>
+        <tr><td>40–50</td><td>Oficina tranquila</td><td>No</td></tr>
+        <tr><td>60–70</td><td>Conversación normal</td><td>No</td></tr>
+        <tr><td>85</td><td>Tráfico intenso</td><td>Sí (exposición prolongada)</td></tr>
+        <tr><td>94</td><td>Ref. micrófono (1Pa)</td><td>Sí &gt;1h</td></tr>
+        <tr><td>100–110</td><td>Concierto, discoteca</td><td>Sí &gt;15min</td></tr>
+        <tr><td>120</td><td>Umbral del dolor</td><td>Inmediato</td></tr>
+        <tr><td>140+</td><td>Disparo, explosión</td><td>Daño permanente</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="tab-aud-spk" class="tab-panel">
+  <div class="formula-box">P_spk = V²_rms / Z_nom = I²_rms × Z_nom = V_rms × I_rms
+V_pico = V_rms × √2    |    V_rms = V_pico / √2
+SPL estimado = Sensitivity + 10×log10(P_W)  (Sens. en dB@1W@1m)</div>
+  <div class="card"><div class="card-title">Potencia en altavoz — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="spk-z">Impedancia nominal del altavoz</label>
+        <div class="input-wrap"><select id="spk-z" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="4">4 Ω</option><option value="8" selected>8 Ω</option><option value="16">16 Ω</option><option value="2">2 Ω</option><option value="6">6 Ω</option>
+        </select></div></div>
+      <div class="input-group"><label for="spk-vrms">V_rms (o dejar vacío)</label>
+        <div class="input-wrap"><input id="spk-vrms" type="number" step="any" placeholder="ej: 20"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V_rms</span></div></div>
+      <div class="input-group"><label for="spk-vpk">V_pico (o dejar vacío)</label>
+        <div class="input-wrap"><input id="spk-vpk" type="number" step="any" placeholder="ej: 28.3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V_pk</span></div></div>
+      <div class="input-group"><label for="spk-p">Potencia W (o dejar vacío)</label>
+        <div class="input-wrap"><input id="spk-p" type="number" step="any" placeholder="ej: 50"><span style="padding:0 10px;color:var(--text-sub);align-self:center">W</span></div></div>
+      <div class="input-group"><label for="spk-sens">Sensibilidad del altavoz</label>
+        <div class="input-wrap"><input id="spk-sens" type="number" step="any" placeholder="ej: 89" value="89"><span style="padding:0 10px;color:var(--text-sub);align-self:center">dB@1W@1m</span></div></div>
+      <div class="input-group"><label for="spk-dist">Distancia</label>
+        <div class="input-wrap"><input id="spk-dist" type="number" step="any" placeholder="ej: 1" value="1"><span style="padding:0 10px;color:var(--text-sub);align-self:center">m</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="spk-calc" class="btn btn-primary">Calcular</button>
+      <button id="spk-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="spk-result" class="result-panel hidden">
+    <div class="result-title">Altavoz</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">V_rms</div><div class="res-value" id="spk-rvrms">—</div></div>
+      <div class="result-item"><div class="res-label">V_pico</div><div class="res-value" id="spk-rvpk">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia</div><div class="res-value" id="spk-rp">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente RMS</div><div class="res-value" id="spk-ri">—</div></div>
+      <div class="result-item"><div class="res-label">SPL estimado</div><div class="res-value" id="spk-rspl">—</div></div>
+      <div class="result-item"><div class="res-label">SPL a la distancia</div><div class="res-value" id="spk-rspld">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-aud-amp" class="tab-panel">
+  <div class="formula-box">Ganancia tensión: Av = Vout/Vin   Av(dB) = 20×log10(Av)
+Ganancia potencia: Ap = Pout/Pin  Ap(dB) = 10×log10(Ap)
+THD: Distorsión armónica total (% del fundamental)
+SNR: Relación señal/ruido  PSRR: Rechazo de rizado alimentación</div>
+  <div class="card"><div class="card-title">Ganancia de amplificador</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="amp-vin">Vin</label>
+        <div class="input-wrap"><input id="amp-vin" type="number" step="any" placeholder="ej: 0.1">
+          <select id="amp-vinu" class="unit-sel"><option value="0.001" selected>mV</option><option value="1">V</option></select></div></div>
+      <div class="input-group"><label for="amp-vout">Vout</label>
+        <div class="input-wrap"><input id="amp-vout" type="number" step="any" placeholder="ej: 5">
+          <select id="amp-voutu" class="unit-sel"><option value="1" selected>V</option><option value="0.001">mV</option></select></div></div>
+      <div class="input-group"><label for="amp-zin">Impedancia de entrada</label>
+        <div class="input-wrap"><input id="amp-zin" type="number" step="any" placeholder="ej: 10">
+          <select id="amp-zinu" class="unit-sel"><option value="1000" selected>kΩ</option><option value="1">Ω</option></select></div></div>
+      <div class="input-group"><label for="amp-zout">Impedancia de salida</label>
+        <div class="input-wrap"><input id="amp-zout" type="number" step="any" placeholder="ej: 8">
+          <select id="amp-zoutu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="amp-calc" class="btn btn-primary">Calcular</button>
+    </div>
+  </div>
+  <div id="amp-result" class="result-panel hidden">
+    <div class="result-title">Amplificador</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ganancia tensión (Av)</div><div class="res-value" id="amp-rav">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia (dB)</div><div class="res-value" id="amp-ravdb">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia entrada</div><div class="res-value" id="amp-rpin">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia salida</div><div class="res-value" id="amp-rpout">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia potencia (dB)</div><div class="res-value" id="amp-rapdb">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-aud-cross" class="tab-panel">
+  <div class="formula-box">Crossover de 1er orden (6dB/oct):
+  fc = 1/(2π×R×C)    (pasa-bajo)
+  fc = R/(2π×L)      (pasa-alto con inductor)
+Crossover de 2do orden (12dB/oct):
+  fc = 1/(2π×√(L×C))</div>
+  <div class="card"><div class="card-title">Divisor de frecuencia (Crossover 1er orden)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="xo-fc">Frecuencia de corte</label>
+        <div class="input-wrap"><input id="xo-fc" type="number" step="any" placeholder="ej: 3000">
+          <select id="xo-fcu" class="unit-sel"><option value="1" selected>Hz</option><option value="1000">kHz</option></select></div></div>
+      <div class="input-group"><label for="xo-z">Impedancia altavoz</label>
+        <div class="input-wrap"><select id="xo-z" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="4">4 Ω</option><option value="8" selected>8 Ω</option><option value="16">16 Ω</option>
+        </select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="xo-calc" class="btn btn-primary">Calcular componentes</button>
+    </div>
+  </div>
+  <div id="xo-result" class="result-panel hidden">
+    <div class="result-title">Componentes de crossover</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">L (pasa-alto — inductor serie)</div><div class="res-value" id="xo-rl">—</div></div>
+      <div class="result-item"><div class="res-label">C (pasa-bajo — condensador serie)</div><div class="res-value" id="xo-rc">—</div></div>
+      <div class="result-item"><div class="res-label">fc verificada</div><div class="res-value" id="xo-rfc">—</div></div>
+    </div>
+  </div>
+</div>

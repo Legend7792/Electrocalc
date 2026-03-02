@@ -1,0 +1,107 @@
+<div class="view-header"><h2>🌉 Puente de Wheatstone</h2><p>Medición de resistencias desconocidas, condición de equilibrio y tensión de desequilibrio — bidireccional.</p></div>
+<div class="formula-box">Equilibrio: R1/R2 = R3/R4  →  Rx = R3×R2/R1
+Vout (desequilibrio): Vout = Vin × (R4/(R3+R4) − R2/(R1+R2))
+Sensibilidad: S = Vout/ΔR</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="wb-eq">Equilibrio (Rx)</button>
+  <button class="tab-btn" data-tab="wb-uneq">Desequilibrio</button>
+  <button class="tab-btn" data-tab="wb-ref">Referencia</button>
+</div>
+
+<div id="tab-wb-eq" class="tab-panel active">
+  <div class="alert alert-info">El puente está en equilibrio cuando Vout=0. Rx es la resistencia desconocida (R4).</div>
+  <div class="card">
+    <div class="card-title">Cálculo de Rx — cualquier combinación</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="wb-r1">R1 (rama superior izquierda)</label>
+        <div class="input-wrap"><input id="wb-r1" type="number" step="any" placeholder="ej: 1000">
+          <select id="wb-r1u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option><option value="1000000">MΩ</option></select></div></div>
+      <div class="input-group"><label for="wb-r2">R2 (rama inferior izquierda)</label>
+        <div class="input-wrap"><input id="wb-r2" type="number" step="any" placeholder="ej: 1000">
+          <select id="wb-r2u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option><option value="1000000">MΩ</option></select></div></div>
+      <div class="input-group"><label for="wb-r3">R3 (rama superior derecha)</label>
+        <div class="input-wrap"><input id="wb-r3" type="number" step="any" placeholder="ej: 2200">
+          <select id="wb-r3u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option><option value="1000000">MΩ</option></select></div></div>
+      <div class="input-group"><label for="wb-rx">Rx — dejar vacío para calcular</label>
+        <div class="input-wrap"><input id="wb-rx" type="number" step="any" placeholder="desconocido">
+          <select id="wb-rxu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option><option value="1000000">MΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="wb-eq-calc" class="btn btn-primary">Calcular</button>
+      <button id="wb-eq-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="wb-eq-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Rx (desconocida)</div><div class="res-value" id="wb-rrx">—</div></div>
+      <div class="result-item"><div class="res-label">Relación R1/R2</div><div class="res-value" id="wb-ratio">—</div></div>
+      <div class="result-item"><div class="res-label">Verificación equilibrio</div><div class="res-value" id="wb-check">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-wb-uneq" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Tensión de desequilibrio (Vout)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="wbu-vin">Tensión de excitación (Vin)</label>
+        <div class="input-wrap"><input id="wbu-vin" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="wbu-r1">R1</label>
+        <div class="input-wrap"><input id="wbu-r1" type="number" step="any" placeholder="ej: 1000">
+          <select id="wbu-r1u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="wbu-r2">R2</label>
+        <div class="input-wrap"><input id="wbu-r2" type="number" step="any" placeholder="ej: 1000">
+          <select id="wbu-r2u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="wbu-r3">R3</label>
+        <div class="input-wrap"><input id="wbu-r3" type="number" step="any" placeholder="ej: 1000">
+          <select id="wbu-r3u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="wbu-r4">R4 (Rx con variación)</label>
+        <div class="input-wrap"><input id="wbu-r4" type="number" step="any" placeholder="ej: 1050">
+          <select id="wbu-r4u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="wb-uneq-calc" class="btn btn-primary">Calcular Vout</button>
+      <button id="wb-uneq-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="wb-uneq-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Vout (desequilibrio)</div><div class="res-value" id="wbu-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">Va (nodo A)</div><div class="res-value" id="wbu-rva">—</div></div>
+      <div class="result-item"><div class="res-label">Vb (nodo B)</div><div class="res-value" id="wbu-rvb">—</div></div>
+      <div class="result-item"><div class="res-label">Sensibilidad (mV/Ω)</div><div class="res-value" id="wbu-rsen">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-wb-ref" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Esquema del puente de Wheatstone</div>
+    <div class="formula-box">         Vin(+)
+          │
+     R1 ──┬── R3
+          │   │
+    Va    │   │  Vb
+          │   │
+     R2 ──┴── Rx(R4)
+          │
+         GND
+
+Vout = Va − Vb
+Equilibrio: R1×Rx = R2×R3  →  Rx = R2×R3/R1</div>
+  </div>
+  <div class="card"><div class="card-title">Aplicaciones típicas</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Sensor</th><th>Configuración</th><th>ΔR típico</th><th>Aplicación</th></tr></thead>
+      <tbody>
+        <tr><td>Galga extensiométrica</td><td>1/2/4 activos</td><td>0.1–10 Ω</td><td>Pesaje, deformación</td></tr>
+        <tr><td>Termistor NTC</td><td>1 activo</td><td>10–10kΩ/°C</td><td>Temperatura</td></tr>
+        <tr><td>RTD Pt100</td><td>1 o 2 activos</td><td>0.385 Ω/°C</td><td>Temperatura industrial</td></tr>
+        <tr><td>Sensor presión</td><td>4 activos</td><td>1–100 Ω</td><td>Presión, fuerza</td></tr>
+        <tr><td>LDR</td><td>1 activo</td><td>1kΩ–1MΩ</td><td>Luminosidad</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

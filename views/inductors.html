@@ -1,0 +1,192 @@
+<div class="view-header">
+  <h2>〰️ Inductores</h2>
+  <p>Serie, paralelo, reactancia XL, energía y tiempo de respuesta RL.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="ind-serie">Serie</button>
+  <button class="tab-btn" data-tab="ind-par">Paralelo</button>
+  <button class="tab-btn" data-tab="ind-xl">Reactancia XL</button>
+  <button class="tab-btn" data-tab="ind-rl">Circuito RL</button>
+  <button class="tab-btn" data-tab="ind-e">Energía</button>
+</div>
+
+<!-- Serie -->
+<div id="tab-ind-serie" class="tab-panel active">
+  <div class="formula-box">L_total = L1 + L2 + ... (sin acoplamiento mutuo)</div>
+  <div class="card">
+    <div class="card-title">Inductores en serie</div>
+    <div class="calc-grid" id="ind-serie-grid"></div>
+    <div class="btn-group" style="margin-top:10px;">
+      <button id="ind-serie-add"   class="btn btn-secondary btn-sm">+ Agregar</button>
+      <button id="ind-serie-calc"  class="btn btn-primary">Calcular</button>
+      <button id="ind-serie-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ind-serie-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Inductancia Total</div>
+      <div class="res-value" id="ind-serie-val">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Paralelo -->
+<div id="tab-ind-par" class="tab-panel">
+  <div class="formula-box">1/L_total = 1/L1 + 1/L2 + ... (sin acoplamiento mutuo)</div>
+  <div class="card">
+    <div class="card-title">Inductores en paralelo</div>
+    <div class="calc-grid" id="ind-par-grid"></div>
+    <div class="btn-group" style="margin-top:10px;">
+      <button id="ind-par-add"   class="btn btn-secondary btn-sm">+ Agregar</button>
+      <button id="ind-par-calc"  class="btn btn-primary">Calcular</button>
+      <button id="ind-par-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ind-par-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Inductancia Total</div>
+      <div class="res-value" id="ind-par-val">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Reactancia XL -->
+<div id="tab-ind-xl" class="tab-panel">
+  <div class="formula-box">XL = 2π × f × L &nbsp;(aumenta con la frecuencia)</div>
+  <div class="card">
+    <div class="card-title">Reactancia Inductiva</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="xl-f">Frecuencia (f)</label>
+        <div class="input-wrap">
+          <input id="xl-f" type="number" step="any" placeholder="ej: 1000">
+          <select id="xl-f-u" class="unit-sel">
+            <option value="1" selected>Hz</option>
+            <option value="1000">kHz</option>
+            <option value="1000000">MHz</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="xl-l">Inductancia (L)</label>
+        <div class="input-wrap">
+          <input id="xl-l" type="number" step="any" placeholder="ej: 10">
+          <select id="xl-l-u" class="unit-sel">
+            <option value="0.001" selected>mH</option>
+            <option value="0.000001">μH</option>
+            <option value="1">H</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="xl-calc"  class="btn btn-primary">Calcular</button>
+      <button id="xl-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="xl-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Reactancia Inductiva (XL)</div>
+      <div class="res-value" id="xl-res">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- RL -->
+<div id="tab-ind-rl" class="tab-panel">
+  <div class="formula-box">τ = L / R &nbsp;(constante de tiempo)
+  i(t) = (V/R) × (1 − e^(−t/τ)) — crecimiento</div>
+  <div class="card">
+    <div class="card-title">Circuito RL — Constante de tiempo</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="rl-r">Resistencia (R)</label>
+        <div class="input-wrap">
+          <input id="rl-r" type="number" step="any" placeholder="ej: 100">
+          <select id="rl-r-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rl-l">Inductancia (L)</label>
+        <div class="input-wrap">
+          <input id="rl-l" type="number" step="any" placeholder="ej: 10">
+          <select id="rl-l-u" class="unit-sel">
+            <option value="0.001" selected>mH</option>
+            <option value="0.000001">μH</option>
+            <option value="1">H</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rl-v">Tensión (V) <span class="formula-hint">— opcional</span></label>
+        <div class="input-wrap">
+          <input id="rl-v" type="number" step="any" placeholder="ej: 12">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="rl-calc"  class="btn btn-primary">Calcular</button>
+      <button id="rl-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="rl-result" class="result-panel hidden">
+    <div class="result-title">Resultados RL</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Constante τ</div><div class="res-value" id="rl-res-tau">—</div></div>
+      <div class="result-item"><div class="res-label">I_max (V/R)</div><div class="res-value" id="rl-res-imax">—</div></div>
+      <div class="result-item"><div class="res-label">63.2% (1τ)</div><div class="res-value" id="rl-res-1t">—</div></div>
+      <div class="result-item"><div class="res-label">95% (3τ)</div><div class="res-value" id="rl-res-3t">—</div></div>
+      <div class="result-item"><div class="res-label">99% (5τ)</div><div class="res-value" id="rl-res-5t">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Energía -->
+<div id="tab-ind-e" class="tab-panel">
+  <div class="formula-box">E = ½ × L × I²</div>
+  <div class="card">
+    <div class="card-title">Energía almacenada en el campo magnético</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="le-l">Inductancia (L)</label>
+        <div class="input-wrap">
+          <input id="le-l" type="number" step="any" placeholder="ej: 10">
+          <select id="le-l-u" class="unit-sel">
+            <option value="0.001" selected>mH</option>
+            <option value="0.000001">μH</option>
+            <option value="1">H</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="le-i">Corriente (I)</label>
+        <div class="input-wrap">
+          <input id="le-i" type="number" step="any" placeholder="ej: 2">
+          <select id="le-i-u" class="unit-sel">
+            <option value="1" selected>A</option>
+            <option value="0.001">mA</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="le-calc"  class="btn btn-primary">Calcular</button>
+      <button id="le-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="le-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Energía almacenada</div>
+      <div class="res-value" id="le-res">—</div>
+    </div>
+  </div>
+</div>

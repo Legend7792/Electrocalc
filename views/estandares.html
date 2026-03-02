@@ -1,0 +1,50 @@
+<div class="view-header"><h2>📊 Selector de Resistencias Estándar</h2><p>Encuentra el valor E12, E24 o E96 más cercano — con error y rango de tolerancia.</p></div>
+<div class="formula-box">E12: 12 valores/década (±10%) | E24: 24 valores (±5%) | E96: 96 valores (±1%)</div>
+<div class="card">
+  <div class="card-title">Valor ideal → resistencia estándar más cercana</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="est-val">Valor ideal</label>
+      <div class="input-wrap"><input id="est-val" type="number" step="any" placeholder="ej: 4750">
+        <select id="est-u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option><option value="1000000">MΩ</option></select></div></div>
+    <div class="input-group"><label for="est-ser">Series a mostrar</label>
+      <div class="input-wrap">
+        <select id="est-ser" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="all" selected>E12 + E24 + E96</option>
+          <option value="e12">Solo E12</option>
+          <option value="e24">Solo E24</option>
+          <option value="e96">Solo E96</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="btn-group">
+    <button id="est-calc" class="btn btn-primary">Buscar</button>
+    <button id="est-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="est-result" class="result-panel hidden">
+  <div class="result-title">Resultados</div>
+  <div id="est-grid" class="result-grid"></div>
+</div>
+<hr class="divider">
+<div class="card">
+  <div class="card-title">Divisor de tensión con resistencias estándar</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="divr-vin">Vin</label>
+      <div class="input-wrap"><input id="divr-vin" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    <div class="input-group"><label for="divr-vout">Vout deseado</label>
+      <div class="input-wrap"><input id="divr-vout" type="number" step="any" placeholder="ej: 3.3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    <div class="input-group"><label for="divr-ser2">Serie</label>
+      <div class="input-wrap"><select id="divr-ser2" class="unit-sel" style="flex:1;padding:8px 10px;">
+        <option value="24" selected>E24</option><option value="12">E12</option><option value="96">E96</option>
+      </select></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="divr-calc" class="btn btn-primary">Calcular divisor</button>
+    <button id="divr-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="divr-result" class="result-panel hidden">
+  <div class="result-title">Divisor con valores estándar</div>
+  <div id="divr-grid" class="result-grid"></div>
+</div>

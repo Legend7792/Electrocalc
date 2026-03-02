@@ -1,0 +1,115 @@
+<div class="view-header"><h2>🔁 Leyes de Kirchhoff</h2><p>KCL (nodos) y KVL (mallas) — verificador de circuitos con cálculo de corrientes y voltajes desconocidos.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="kir-kcl">KCL — Nodos</button>
+  <button class="tab-btn" data-tab="kir-kvl">KVL — Mallas</button>
+  <button class="tab-btn" data-tab="kir-ref">Teoremas de red</button>
+</div>
+
+<div id="tab-kir-kcl" class="tab-panel active">
+  <div class="formula-box">KCL: Σ I_entrantes = Σ I_salientes (en cualquier nodo)
+Convención: corrientes entrantes (+), salientes (−)
+Suma algebraica = 0</div>
+  <div class="alert alert-info">Ingresa las corrientes conocidas (positivas=entran, negativas=salen). Deja UNO vacío para calcularlo.</div>
+  <div class="card"><div class="card-title">Nodo con hasta 5 ramas</div>
+    <div id="kcl-inputs">
+      <div class="calc-grid">
+        <div class="input-group"><label>I1 (+ entrada / − salida)</label>
+          <div class="input-wrap"><input class="kcl-i" type="number" step="any" placeholder="ej: 3">
+            <select class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+        <div class="input-group"><label>I2</label>
+          <div class="input-wrap"><input class="kcl-i" type="number" step="any" placeholder="ej: 2">
+            <select class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+        <div class="input-group"><label>I3 — dejar vacío para calcular</label>
+          <div class="input-wrap"><input class="kcl-i" type="number" step="any" placeholder="desconocido">
+            <select class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+        <div class="input-group"><label>I4 (opcional)</label>
+          <div class="input-wrap"><input class="kcl-i" type="number" step="any" placeholder="opcional">
+            <select class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+        <div class="input-group"><label>I5 (opcional)</label>
+          <div class="input-wrap"><input class="kcl-i" type="number" step="any" placeholder="opcional">
+            <select class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="kcl-calc" class="btn btn-primary">Calcular</button>
+      <button id="kcl-verify" class="btn btn-secondary">Verificar equilibrio</button>
+      <button id="kcl-clr" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="kcl-result" class="result-panel hidden">
+    <div class="result-title">Resultado KCL</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Corriente desconocida</div><div class="res-value" id="kcl-runk">—</div></div>
+      <div class="result-item"><div class="res-label">Suma total (debe ser 0)</div><div class="res-value" id="kcl-rsum">—</div></div>
+      <div class="result-item"><div class="res-label">Total entrante</div><div class="res-value" id="kcl-rin">—</div></div>
+      <div class="result-item"><div class="res-label">Total saliente</div><div class="res-value" id="kcl-rout">—</div></div>
+    </div>
+    <div id="kcl-warn" class="alert" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<div id="tab-kir-kvl" class="tab-panel">
+  <div class="formula-box">KVL: Σ V = 0 en cualquier lazo cerrado
+Convención: Fuentes según sentido de recorrido: + si avanzan, − si oponen
+Resistencias: siempre negativas en el sentido de la corriente
+Ejemplo: V_bat − V_R1 − V_R2 − V_R3 = 0</div>
+  <div class="card"><div class="card-title">Lazo simple — hasta 4 resistencias</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="kvl-vs">Fuente de tensión (Vs)</label>
+        <div class="input-wrap"><input id="kvl-vs" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="kvl-r1">R1</label>
+        <div class="input-wrap"><input id="kvl-r1" type="number" step="any" placeholder="ej: 100">
+          <select id="kvl-r1u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="kvl-r2">R2</label>
+        <div class="input-wrap"><input id="kvl-r2" type="number" step="any" placeholder="ej: 200">
+          <select id="kvl-r2u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="kvl-r3">R3 (opcional)</label>
+        <div class="input-wrap"><input id="kvl-r3" type="number" step="any" placeholder="opcional">
+          <select id="kvl-r3u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="kvl-r4">R4 (opcional)</label>
+        <div class="input-wrap"><input id="kvl-r4" type="number" step="any" placeholder="opcional">
+          <select id="kvl-r4u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="kvl-calc" class="btn btn-primary">Calcular corriente y caídas</button>
+      <button id="kvl-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="kvl-result" class="result-panel hidden">
+    <div class="result-title">Resultado KVL</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Corriente del lazo (I)</div><div class="res-value" id="kvl-ri">—</div></div>
+      <div class="result-item"><div class="res-label">R total del lazo</div><div class="res-value" id="kvl-rr">—</div></div>
+      <div class="result-item"><div class="res-label">VR1</div><div class="res-value" id="kvl-rv1">—</div></div>
+      <div class="result-item"><div class="res-label">VR2</div><div class="res-value" id="kvl-rv2">—</div></div>
+      <div class="result-item"><div class="res-label">VR3</div><div class="res-value" id="kvl-rv3">—</div></div>
+      <div class="result-item"><div class="res-label">VR4</div><div class="res-value" id="kvl-rv4">—</div></div>
+      <div class="result-item"><div class="res-label">Σ caídas (debe = Vs)</div><div class="res-value" id="kvl-rsum">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia total</div><div class="res-value" id="kvl-rp">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-kir-ref" class="tab-panel">
+  <div class="card"><div class="card-title">Teoremas de análisis de circuitos</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Teorema</th><th>Uso principal</th><th>Procedimiento</th></tr></thead>
+      <tbody>
+        <tr><td><b>Thevenin</b></td><td>Simplificar red compleja en Vth + Rth</td><td>Vth = V en abierto, Rth = R desde terminales (apagando fuentes)</td></tr>
+        <tr><td><b>Norton</b></td><td>Simplificar red compleja en In + Rn</td><td>In = I en cortocircuito, Rn = Rth</td></tr>
+        <tr><td><b>Superposición</b></td><td>Circuitos con varias fuentes</td><td>Resolver con cada fuente sola, sumar resultados</td></tr>
+        <tr><td><b>Máx. transferencia</b></td><td>Máxima potencia a la carga</td><td>R_carga = R_th (Thevenin)</td></tr>
+        <tr><td><b>Millman</b></td><td>Varias ramas en paralelo</td><td>V = Σ(Vi/Ri) / Σ(1/Ri)</td></tr>
+        <tr><td><b>Reciprocidad</b></td><td>Redes lineales</td><td>Si V1→I2, entonces V2→I1 con misma relación</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><div class="card-title">Fórmulas de Millman — tensión de nodo</div>
+    <div class="formula-box">V_nodo = (V1/R1 + V2/R2 + V3/R3 + ...) / (1/R1 + 1/R2 + 1/R3 + ...)
+
+Ejemplo: 3 ramas V1=12V/R1=100Ω, V2=5V/R2=200Ω, V3=0/R3=50Ω
+Numerador: 12/100 + 5/200 + 0/50 = 0.12+0.025+0 = 0.145
+Denominador: 1/100 + 1/200 + 1/50 = 0.01+0.005+0.02 = 0.035
+V_nodo = 0.145/0.035 = 4.14V</div>
+  </div>
+</div>

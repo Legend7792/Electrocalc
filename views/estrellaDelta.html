@@ -1,0 +1,95 @@
+<div class="view-header"><h2>🔺 Estrella ↔ Triángulo (Y-Δ)</h2><p>Conversión bidireccional de redes de impedancias, resistencias o circuitos trifásicos.</p></div>
+<div class="formula-box">Y→Δ: Rab = (Ra×Rb + Rb×Rc + Rc×Ra) / Rc
+Δ→Y: Ra = (Rab×Rca) / (Rab+Rbc+Rca)
+Motor: arranque Y-Δ reduce la corriente de arranque a 1/3 de la corriente en Δ</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="yd-res">Resistencias/Impedancias</button>
+  <button class="tab-btn" data-tab="yd-motor">Arranque Motor Y-Δ</button>
+  <button class="tab-btn" data-tab="yd-ref">Referencia</button>
+</div>
+<div id="tab-yd-res" class="tab-panel active">
+  <div class="card"><div class="card-title">Conversión — selecciona dirección</div>
+    <div class="input-group" style="margin-bottom:12px"><label>Dirección de conversión</label>
+      <div class="input-wrap"><select id="yd-dir" class="unit-sel" style="flex:1;padding:8px 10px;">
+        <option value="YD" selected>Estrella Y → Triángulo Δ</option>
+        <option value="DY">Triángulo Δ → Estrella Y</option>
+      </select></div></div>
+    <div id="yd-inputs-Y">
+      <div class="calc-grid">
+        <div class="input-group"><label for="yd-ra">Ra (Y — nodo A)</label>
+          <div class="input-wrap"><input id="yd-ra" type="number" step="any" placeholder="ej: 100">
+            <select id="yd-rau" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+        <div class="input-group"><label for="yd-rb">Rb (Y — nodo B)</label>
+          <div class="input-wrap"><input id="yd-rb" type="number" step="any" placeholder="ej: 200">
+            <select id="yd-rbu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+        <div class="input-group"><label for="yd-rc">Rc (Y — nodo C)</label>
+          <div class="input-wrap"><input id="yd-rc" type="number" step="any" placeholder="ej: 300">
+            <select id="yd-rcu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      </div>
+    </div>
+    <div id="yd-inputs-D" style="display:none">
+      <div class="calc-grid">
+        <div class="input-group"><label for="yd-rab">Rab (Δ — entre A y B)</label>
+          <div class="input-wrap"><input id="yd-rab" type="number" step="any" placeholder="ej: 300">
+            <select id="yd-rabu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+        <div class="input-group"><label for="yd-rbc">Rbc (Δ — entre B y C)</label>
+          <div class="input-wrap"><input id="yd-rbc" type="number" step="any" placeholder="ej: 300">
+            <select id="yd-rbcu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+        <div class="input-group"><label for="yd-rca">Rca (Δ — entre C y A)</label>
+          <div class="input-wrap"><input id="yd-rca" type="number" step="any" placeholder="ej: 300">
+            <select id="yd-rcau" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      </div>
+    </div>
+    <div class="btn-group"><button id="yd-calc" class="btn btn-primary">Convertir</button><button id="yd-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="yd-result" class="result-panel hidden">
+    <div class="result-title" id="yd-rtitle">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label" id="yd-rl1">R1</div><div class="res-value" id="yd-rr1">—</div></div>
+      <div class="result-item"><div class="res-label" id="yd-rl2">R2</div><div class="res-value" id="yd-rr2">—</div></div>
+      <div class="result-item"><div class="res-label" id="yd-rl3">R3</div><div class="res-value" id="yd-rr3">—</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-yd-motor" class="tab-panel">
+  <div class="alert alert-info">El arranque Y-Δ arranca el motor en estrella (Y) y luego conmuta a triángulo (Δ). La corriente de arranque se reduce a 1/3 y el par de arranque a 1/3 también.</div>
+  <div class="card"><div class="card-title">Parámetros del motor</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ydm-idc">Corriente nominal en Δ (placa)</label>
+        <div class="input-wrap"><input id="ydm-idc" type="number" step="any" placeholder="ej: 10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">A</span></div></div>
+      <div class="input-group"><label for="ydm-iarr">Factor de corriente de arranque</label>
+        <div class="input-wrap"><input id="ydm-iarr" type="number" step="any" placeholder="ej: 6" value="6"><span style="padding:0 10px;color:var(--text-sub);align-self:center">× In</span></div></div>
+      <div class="input-group"><label for="ydm-vl">Tensión de línea</label>
+        <div class="input-wrap"><input id="ydm-vl" type="number" step="any" placeholder="ej: 400"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group"><button id="ydm-calc" class="btn btn-primary">Calcular</button><button id="ydm-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ydm-result" class="result-panel hidden">
+    <div class="result-title">Comparativa Y-Δ</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">I arranque directo (DOL)</div><div class="res-value" id="ydm-ridol">—</div></div>
+      <div class="result-item"><div class="res-label">I arranque en Y</div><div class="res-value" id="ydm-riy">—</div></div>
+      <div class="result-item"><div class="res-label">Reducción de corriente</div><div class="res-value" id="ydm-rred">33.3% de DOL</div></div>
+      <div class="result-item"><div class="res-label">I nominal en Y (servicio)</div><div class="res-value" id="ydm-riny">—</div></div>
+      <div class="result-item"><div class="res-label">I nominal en Δ (servicio)</div><div class="res-value" id="ydm-rind">—</div></div>
+      <div class="result-item"><div class="res-label">Par de arranque Y</div><div class="res-value" id="ydm-rpar">33.3% del par Δ</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-yd-ref" class="tab-panel">
+  <div class="card"><div class="card-title">Diagrama visual Y ↔ Δ</div>
+    <div class="formula-box">     Estrella (Y)              Triángulo (Δ)
+         A                        A
+         │Ra                    /   \
+         N─Rb─B              Rca     Rab
+         │Rc                    \   /
+         C                        B─Rbc─C
+
+Y → Δ:
+  Rab = (Ra·Rb + Rb·Rc + Rc·Ra) / Rc
+  Rbc = (Ra·Rb + Rb·Rc + Rc·Ra) / Ra  
+  Rca = (Ra·Rb + Rb·Rc + Rc·Ra) / Rb
+
+Δ → Y (caso simétrico: Ra=Rb=Rc=RY → Rdelta = 3·RY)</div>
+  </div>
+</div>

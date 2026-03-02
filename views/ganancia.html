@@ -1,0 +1,109 @@
+<div class="view-header"><h2>📈 Ganancia y dB</h2><p>Conversiones de ganancia en tensión, corriente y potencia — dBm, dBV, dBu, dBW y atenuadores.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="gan-conv">Conversor dB</button>
+  <button class="tab-btn" data-tab="gan-atten">Atenuadores</button>
+  <button class="tab-btn" data-tab="gan-ref">Tabla de referencia</button>
+</div>
+
+<div id="tab-gan-conv" class="tab-panel active">
+  <div class="formula-box">Tensión/Corriente: dB = 20 × log10(ratio)     ratio = 10^(dB/20)
+Potencia:         dB = 10 × log10(ratio)     ratio = 10^(dB/10)
+dBm: referencia 1mW    dBW: referencia 1W    dBV: ref 1V    dBu: ref 0.7746V</div>
+  <div class="card"><div class="card-title">Conversor bidireccional — dB ↔ ratio</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="gn-db">Ganancia en dB</label>
+        <div class="input-wrap"><input id="gn-db" type="number" step="any" placeholder="ej: 20"><span style="padding:0 10px;color:var(--text-sub);align-self:center">dB</span></div></div>
+      <div class="input-group"><label for="gn-ratio">O ratio (Vout/Vin)</label>
+        <div class="input-wrap"><input id="gn-ratio" type="number" step="any" min="0" placeholder="ej: 10"></div></div>
+      <div class="input-group"><label for="gn-type">Tipo de ganancia</label>
+        <div class="input-wrap"><select id="gn-type" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="v" selected>Tensión / Corriente (×20)</option>
+          <option value="p">Potencia (×10)</option>
+        </select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="gn-calc" class="btn btn-primary">Calcular</button>
+      <button id="gn-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="gn-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ganancia (dB)</div><div class="res-value" id="gn-rdb">—</div></div>
+      <div class="result-item"><div class="res-label">Ratio (Vout/Vin)</div><div class="res-value" id="gn-rratio">—</div></div>
+      <div class="result-item"><div class="res-label">Atenuación (dB → ratio)</div><div class="res-value" id="gn-ratten">—</div></div>
+      <div class="result-item"><div class="res-label">Efecto</div><div class="res-value" id="gn-reffect">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card"><div class="card-title">Cadena de etapas — ganancia total en dB</div>
+    <div id="gn-chain-inputs" class="calc-grid">
+      <div class="input-group"><label>Etapa 1 (dB)</label><div class="input-wrap"><input class="gn-stage" type="number" step="any" placeholder="ej: 20"></div></div>
+      <div class="input-group"><label>Etapa 2 (dB)</label><div class="input-wrap"><input class="gn-stage" type="number" step="any" placeholder="ej: −6"></div></div>
+      <div class="input-group"><label>Etapa 3 (dB)</label><div class="input-wrap"><input class="gn-stage" type="number" step="any" placeholder="ej: 14"></div></div>
+      <div class="input-group"><label>Etapa 4 (opcional)</label><div class="input-wrap"><input class="gn-stage" type="number" step="any" placeholder="opcional"></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="gn-chain" class="btn btn-primary">Calcular cadena</button>
+    </div>
+  </div>
+  <div id="gn-chain-result" class="result-panel hidden">
+    <div class="result-title">Cadena</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ganancia total (dB)</div><div class="res-value" id="gn-rtot">—</div></div>
+      <div class="result-item"><div class="res-label">Ratio total (V)</div><div class="res-value" id="gn-rratioc">—</div></div>
+      <div class="result-item"><div class="res-label">Ratio total (P)</div><div class="res-value" id="gn-rratiop">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-gan-atten" class="tab-panel">
+  <div class="formula-box">Atenuador en L (R-serie, R-shunt):
+  Atenuación = 20×log10(Rshunt/(Rshunt+Rserie)) dB
+  Rserie = Z_in × (ratio−1)/ratio    Rshunt = Z_out×ratio/(ratio−1) × Z_out
+
+Atenuador en π o T:
+  Diseño para impedancias casadas con atenuación elegida</div>
+  <div class="card"><div class="card-title">Atenuador en L — diseño</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="att-db">Atenuación deseada</label>
+        <div class="input-wrap"><input id="att-db" type="number" step="any" placeholder="ej: 6" min="0"><span style="padding:0 10px;color:var(--text-sub);align-self:center">dB</span></div></div>
+      <div class="input-group"><label for="att-zin">Impedancia de entrada (Zin)</label>
+        <div class="input-wrap"><input id="att-zin" type="number" step="any" placeholder="ej: 600"><span style="padding:0 10px;color:var(--text-sub);align-self:center">Ω</span></div></div>
+      <div class="input-group"><label for="att-zout">Impedancia de salida (Zout)</label>
+        <div class="input-wrap"><input id="att-zout" type="number" step="any" placeholder="ej: 600"><span style="padding:0 10px;color:var(--text-sub);align-self:center">Ω</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="att-calc" class="btn btn-primary">Calcular resistencias</button>
+    </div>
+  </div>
+  <div id="att-result" class="result-panel hidden">
+    <div class="result-title">Componentes del atenuador</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">R_serie</div><div class="res-value" id="att-rs">—</div></div>
+      <div class="result-item"><div class="res-label">R_shunt</div><div class="res-value" id="att-rp">—</div></div>
+      <div class="result-item"><div class="res-label">Atenuación real</div><div class="res-value" id="att-rdb">—</div></div>
+      <div class="result-item"><div class="res-label">Ratio de tensión</div><div class="res-value" id="att-rratio">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-gan-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>dB</th><th>Ratio tensión</th><th>Ratio potencia</th><th>Efecto</th></tr></thead>
+    <tbody>
+      <tr><td>+40</td><td>×100</td><td>×10000</td><td>100× amplificación</td></tr>
+      <tr><td>+20</td><td>×10</td><td>×100</td><td>10× amplificación</td></tr>
+      <tr><td>+14</td><td>×5</td><td>×25</td><td>5× amplificación</td></tr>
+      <tr><td>+6</td><td>×2</td><td>×4</td><td>Doble tensión</td></tr>
+      <tr><td>+3</td><td>×1.414</td><td>×2</td><td>Doble potencia</td></tr>
+      <tr><td>0</td><td>×1</td><td>×1</td><td>Sin cambio</td></tr>
+      <tr><td>−1</td><td>×0.891</td><td>×0.794</td><td>Pérdida cable típica</td></tr>
+      <tr><td>−3</td><td>×0.707</td><td>×0.5</td><td>Mitad de potencia (f_corte)</td></tr>
+      <tr><td>−6</td><td>×0.5</td><td>×0.25</td><td>Mitad de tensión</td></tr>
+      <tr><td>−20</td><td>×0.1</td><td>×0.01</td><td>Atenuación ×10</td></tr>
+      <tr><td>−40</td><td>×0.01</td><td>×0.0001</td><td>Atenuación ×100</td></tr>
+      <tr><td>−60</td><td>×0.001</td><td>×10⁻⁶</td><td>Filtro activo profundo</td></tr>
+    </tbody>
+  </table></div>
+</div>

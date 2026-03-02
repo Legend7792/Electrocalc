@@ -1,0 +1,109 @@
+<div class="view-header">
+  <h2>🔄 Transformadores</h2>
+  <p>Relación de transformación, potencia, eficiencia y corrientes.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="tr-rel">Relación N</button>
+  <button class="tab-btn" data-tab="tr-pow">Potencia</button>
+  <button class="tab-btn" data-tab="tr-eff">Eficiencia</button>
+</div>
+
+<div id="tab-tr-rel" class="tab-panel active">
+  <div class="formula-box">n = N1/N2 = V1/V2 = I2/I1 &nbsp;(transformador ideal)</div>
+  <div class="alert alert-info">Ingresa cualquier par de valores para calcular los demás.</div>
+  <div class="card">
+    <div class="card-title">Relación de transformación — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="tr-n1">Espiras primario (N1)</label>
+        <div class="input-wrap"><input id="tr-n1" type="number" step="any" placeholder="ej: 1000"></div></div>
+      <div class="input-group"><label for="tr-n2">Espiras secundario (N2)</label>
+        <div class="input-wrap"><input id="tr-n2" type="number" step="any" placeholder="ej: 100"></div></div>
+      <div class="input-group"><label for="tr-v1">Tensión primario (V1)</label>
+        <div class="input-wrap"><input id="tr-v1" type="number" step="any" placeholder="ej: 220"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="tr-v2">Tensión secundario (V2)</label>
+        <div class="input-wrap"><input id="tr-v2" type="number" step="any" placeholder="ej: 22"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="tr-i1">Corriente primario (I1)</label>
+        <div class="input-wrap"><input id="tr-i1" type="number" step="any" placeholder="ej: 0.5">
+          <select id="tr-i1u" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="tr-i2">Corriente secundario (I2)</label>
+        <div class="input-wrap"><input id="tr-i2" type="number" step="any" placeholder="ej: 5">
+          <select id="tr-i2u" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="tr-calc" class="btn btn-primary">Calcular</button>
+      <button id="tr-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="tr-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Relación n (N1/N2)</div><div class="res-value" id="tr-rn">—</div></div>
+      <div class="result-item"><div class="res-label">N1</div><div class="res-value" id="tr-rn1">—</div></div>
+      <div class="result-item"><div class="res-label">N2</div><div class="res-value" id="tr-rn2">—</div></div>
+      <div class="result-item"><div class="res-label">V1</div><div class="res-value" id="tr-rv1">—</div></div>
+      <div class="result-item"><div class="res-label">V2</div><div class="res-value" id="tr-rv2">—</div></div>
+      <div class="result-item"><div class="res-label">I1</div><div class="res-value" id="tr-ri1">—</div></div>
+      <div class="result-item"><div class="res-label">I2</div><div class="res-value" id="tr-ri2">—</div></div>
+      <div class="result-item"><div class="res-label">Tipo</div><div class="res-value" id="tr-rtype">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-tr-pow" class="tab-panel">
+  <div class="formula-box">P = V1 × I1 = V2 × I2 &nbsp;(ideal) &nbsp;|&nbsp; VA = voltios × amperios</div>
+  <div class="card">
+    <div class="card-title">Potencia del transformador</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="trp-v">Tensión secundario (V2)</label>
+        <div class="input-wrap"><input id="trp-v" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="trp-i">Corriente secundario (I2)</label>
+        <div class="input-wrap"><input id="trp-i" type="number" step="any" placeholder="ej: 2">
+          <select id="trp-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="trp-vin">Tensión primario (V1)</label>
+        <div class="input-wrap"><input id="trp-vin" type="number" step="any" placeholder="ej: 220"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="trp-calc" class="btn btn-primary">Calcular</button>
+      <button id="trp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="trp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Potencia (VA)</div><div class="res-value" id="trp-rva">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente primario (I1)</div><div class="res-value" id="trp-ri1">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-tr-eff" class="tab-panel">
+  <div class="formula-box">η = Pout/Pin × 100% &nbsp;|&nbsp; Pout = V2 × I2 × fp &nbsp;|&nbsp; Pin = V1 × I1</div>
+  <div class="card">
+    <div class="card-title">Eficiencia del transformador</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="tre-v1">V1 (primario)</label>
+        <div class="input-wrap"><input id="tre-v1" type="number" step="any" placeholder="ej: 220"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="tre-i1">I1 (primario)</label>
+        <div class="input-wrap"><input id="tre-i1" type="number" step="any" placeholder="ej: 0.5">
+          <select id="tre-i1u" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="tre-v2">V2 (secundario)</label>
+        <div class="input-wrap"><input id="tre-v2" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="tre-i2">I2 (secundario)</label>
+        <div class="input-wrap"><input id="tre-i2" type="number" step="any" placeholder="ej: 4">
+          <select id="tre-i2u" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="tre-calc" class="btn btn-primary">Calcular</button>
+      <button id="tre-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="tre-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Eficiencia (η)</div><div class="res-value" id="tre-reta">—</div></div>
+      <div class="result-item"><div class="res-label">Pin</div><div class="res-value" id="tre-rpin">—</div></div>
+      <div class="result-item"><div class="res-label">Pout</div><div class="res-value" id="tre-rpout">—</div></div>
+      <div class="result-item"><div class="res-label">Pérdidas</div><div class="res-value" id="tre-rloss">—</div></div>
+    </div>
+  </div>
+</div>

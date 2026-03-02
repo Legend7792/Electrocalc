@@ -1,0 +1,24 @@
+cat << 'EOF' > .gitignore
+# Sistema / Termux
+.android/
+android-sdk/
+.termux/
+.npm/
+.lesshst
+
+# Logs
+*.log
+
+# Descargas y basura
+downloads/
+storage/
+
+# Build / cache
+dist/
+build/
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+EO

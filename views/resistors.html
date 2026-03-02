@@ -1,0 +1,169 @@
+<div class="view-header">
+  <h2>🔶 Resistencias</h2>
+  <p>Serie, paralelo, divisor de tensión y divisor de corriente.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="serie">Serie</button>
+  <button class="tab-btn" data-tab="paralelo">Paralelo</button>
+  <button class="tab-btn" data-tab="divv">Divisor de Tensión</button>
+  <button class="tab-btn" data-tab="divi">Divisor de Corriente</button>
+</div>
+
+<!-- ── Serie ── -->
+<div id="tab-serie" class="tab-panel active">
+  <div class="formula-box">R_total = R1 + R2 + R3 + ...</div>
+  <div class="card">
+    <div class="card-title">Resistencias en serie</div>
+    <div id="res-serie-inputs">
+      <div class="calc-grid" id="res-serie-grid"></div>
+    </div>
+    <div class="btn-group" style="margin-top:10px;">
+      <button id="res-serie-add" class="btn btn-secondary btn-sm">+ Agregar</button>
+      <button id="res-serie-calc" class="btn btn-primary">Calcular</button>
+      <button id="res-serie-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="res-serie-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Resistencia Total</div>
+      <div class="res-value" id="res-serie-val">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Paralelo ── -->
+<div id="tab-paralelo" class="tab-panel">
+  <div class="formula-box">1/R_total = 1/R1 + 1/R2 + 1/R3 + ...
+  &nbsp;(2 resistencias: R_total = (R1 × R2) / (R1 + R2))</div>
+  <div class="card">
+    <div class="card-title">Resistencias en paralelo</div>
+    <div class="calc-grid" id="res-par-grid"></div>
+    <div class="btn-group" style="margin-top:10px;">
+      <button id="res-par-add"  class="btn btn-secondary btn-sm">+ Agregar</button>
+      <button id="res-par-calc" class="btn btn-primary">Calcular</button>
+      <button id="res-par-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="res-par-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Resistencia Total</div>
+      <div class="res-value" id="res-par-val">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Divisor de tensión ── -->
+<div id="tab-divv" class="tab-panel">
+  <div class="formula-box">Vout = Vin × R2 / (R1 + R2)</div>
+  <div class="card">
+    <div class="card-title">Divisor de Tensión</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="dvt-vin">Tensión entrada (Vin)</label>
+        <div class="input-wrap">
+          <input id="dvt-vin" type="number" step="any" placeholder="ej: 12">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="dvt-r1">R1 (superior)</label>
+        <div class="input-wrap">
+          <input id="dvt-r1" type="number" step="any" placeholder="ej: 10000">
+          <select id="dvt-r1-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+            <option value="1000000">MΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="dvt-r2">R2 (inferior / a GND)</label>
+        <div class="input-wrap">
+          <input id="dvt-r2" type="number" step="any" placeholder="ej: 10000">
+          <select id="dvt-r2-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+            <option value="1000000">MΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="dvt-vout">Vout deseada (opcional)</label>
+        <div class="input-wrap">
+          <input id="dvt-vout" type="number" step="any" placeholder="para calcular R2">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="dvt-calc"  class="btn btn-primary">Calcular</button>
+      <button id="dvt-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="dvt-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Vout</div><div class="res-value" id="dvt-res-vout">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente (I)</div><div class="res-value" id="dvt-res-i">—</div></div>
+      <div class="result-item"><div class="res-label">R2 calculada</div><div class="res-value" id="dvt-res-r2">—</div></div>
+      <div class="result-item"><div class="res-label">R_total</div><div class="res-value" id="dvt-res-rt">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Divisor de corriente ── -->
+<div id="tab-divi" class="tab-panel">
+  <div class="formula-box">I1 = I_total × R2 / (R1 + R2)
+  I2 = I_total × R1 / (R1 + R2)</div>
+  <div class="card">
+    <div class="card-title">Divisor de Corriente (2 ramas)</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="dic-it">Corriente total (I_total)</label>
+        <div class="input-wrap">
+          <input id="dic-it" type="number" step="any" placeholder="ej: 100">
+          <select id="dic-it-u" class="unit-sel">
+            <option value="1">A</option>
+            <option value="0.001" selected>mA</option>
+            <option value="0.000001">μA</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="dic-r1">R1</label>
+        <div class="input-wrap">
+          <input id="dic-r1" type="number" step="any" placeholder="ej: 1000">
+          <select id="dic-r1-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="dic-r2">R2</label>
+        <div class="input-wrap">
+          <input id="dic-r2" type="number" step="any" placeholder="ej: 1000">
+          <select id="dic-r2-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="dic-calc"  class="btn btn-primary">Calcular</button>
+      <button id="dic-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="dic-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">I1 (por R1)</div><div class="res-value" id="dic-res-i1">—</div></div>
+      <div class="result-item"><div class="res-label">I2 (por R2)</div><div class="res-value" id="dic-res-i2">—</div></div>
+      <div class="result-item"><div class="res-label">R_paralelo</div><div class="res-value" id="dic-res-rp">—</div></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="view-header">
+  <h2>⚡ Ley de Ohm</h2>
+  <p>Ingresa dos valores cualesquiera para calcular los otros dos.</p>
+</div>
+
+<div class="formula-box">
+  V = I × R &nbsp;|&nbsp; I = V / R &nbsp;|&nbsp; R = V / I &nbsp;|&nbsp; P = V × I = I² × R = V² / R
+</div>
+
+<div class="card">
+  <div class="card-title">Entradas — completa 2 campos</div>
+  <div class="calc-grid">
+
+    <div class="input-group">
+      <label for="ohm-v">Tensión (V)</label>
+      <div class="input-wrap">
+        <input id="ohm-v" type="number" step="any" placeholder="ej: 12">
+        <span id="ohm-v-unit" style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="ohm-i">Corriente (I)</label>
+      <div class="input-wrap">
+        <input id="ohm-i" type="number" step="any" placeholder="ej: 0.5">
+        <select id="ohm-i-unit" class="unit-sel">
+          <option value="1">A</option>
+          <option value="0.001" selected>mA</option>
+          <option value="0.000001">μA</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="ohm-r">Resistencia (R)</label>
+      <div class="input-wrap">
+        <input id="ohm-r" type="number" step="any" placeholder="ej: 1000">
+        <select id="ohm-r-unit" class="unit-sel">
+          <option value="1" selected>Ω</option>
+          <option value="1000">kΩ</option>
+          <option value="1000000">MΩ</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="ohm-p">Potencia (P)</label>
+      <div class="input-wrap">
+        <input id="ohm-p" type="number" step="any" placeholder="ej: 5">
+        <select id="ohm-p-unit" class="unit-sel">
+          <option value="1" selected>W</option>
+          <option value="0.001">mW</option>
+          <option value="1000">kW</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="btn-group">
+    <button id="ohm-calc" class="btn btn-primary">⚡ Calcular</button>
+    <button id="ohm-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+
+<!-- Resultados -->
+<div id="ohm-result" class="result-panel hidden">
+  <div class="result-title">📊 Resultados</div>
+  <div class="result-grid">
+    <div class="result-item">
+      <div class="res-label">Tensión (V)</div>
+      <div class="res-value" id="ohm-res-v">—</div>
+    </div>
+    <div class="result-item">
+      <div class="res-label">Corriente (I)</div>
+      <div class="res-value" id="ohm-res-i">—</div>
+    </div>
+    <div class="result-item">
+      <div class="res-label">Resistencia (R)</div>
+      <div class="res-value" id="ohm-res-r">—</div>
+    </div>
+    <div class="result-item">
+      <div class="res-label">Potencia (P)</div>
+      <div class="res-value" id="ohm-res-p">—</div>
+    </div>
+  </div>
+  <div id="ohm-error" class="alert alert-warning" style="margin-top:10px;display:none;"></div>
+</div>

@@ -1,0 +1,21 @@
+<div class="view-header"><h2>🧮 Tabla de Verdad</h2><p>Genera tablas de verdad para expresiones booleanas con hasta 4 variables (A, B, C, D).</p></div>
+<div class="formula-box">Operadores: AND(&amp;&amp; o AND), OR(|| o OR), NOT(! o NOT), XOR(^ o XOR), NAND, NOR
+Ejemplo: (A AND B) OR (NOT C) | A NAND B | A XOR B XOR C</div>
+<div class="card">
+  <div class="card-title">Expresión lógica</div>
+  <div class="input-group" style="margin-bottom:12px"><label for="logic-expr">Expresión</label>
+    <div class="input-wrap"><input id="logic-expr" type="text" placeholder="ej: (A AND B) OR (NOT C)" style="font-family:monospace;font-size:0.9rem"></div></div>
+  <div class="input-group" style="margin-bottom:14px"><label>Expresiones predefinidas (clic para cargar)</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px" id="logic-presets"></div>
+  </div>
+  <div class="btn-group">
+    <button id="logic-calc" class="btn btn-primary">Generar tabla</button>
+    <button id="logic-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="logic-result" class="result-panel hidden">
+  <div class="result-title">Tabla de Verdad</div>
+  <div id="logic-stats" style="font-size:0.78rem;color:var(--text-sub);margin-bottom:10px"></div>
+  <div class="table-wrap"><table class="ref-table truth-table" id="logic-table"></table></div>
+  <div id="logic-expr-display" style="font-family:monospace;font-size:0.78rem;color:var(--text-dim);margin-top:10px;padding:8px;background:var(--code-bg);border-radius:4px"></div>
+</div>

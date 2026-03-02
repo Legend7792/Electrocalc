@@ -1,0 +1,213 @@
+<div class="view-header">
+  <h2>🔋 Reguladores de Tensión</h2>
+  <p>LM317, LM337, familia 78xx/79xx — tensión de salida, disipación y eficiencia.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="reg-317">LM317 / LM337</button>
+  <button class="tab-btn" data-tab="reg-78xx">78xx / 79xx</button>
+  <button class="tab-btn" data-tab="reg-eff">Eficiencia</button>
+</div>
+
+<!-- LM317 -->
+<div id="tab-reg-317" class="tab-panel active">
+  <div class="formula-box">Vout = 1.25 × (1 + R2/R1) + Iadj × R2
+  &nbsp;(Iadj ≈ 50μA — generalmente despreciable)
+  Típico: R1 = 240Ω, Vref = 1.25V</div>
+  <div class="card">
+    <div class="card-title">LM317 — Regulador positivo ajustable</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="r317-r1">R1 <span class="formula-hint">(típico 240Ω)</span></label>
+        <div class="input-wrap">
+          <input id="r317-r1" type="number" step="any" placeholder="ej: 240">
+          <select id="r317-r1-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="r317-r2">R2 <span class="formula-hint">(potenciómetro)</span></label>
+        <div class="input-wrap">
+          <input id="r317-r2" type="number" step="any" placeholder="ej: 2400">
+          <select id="r317-r2-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="r317-vin">Tensión de entrada (Vin)</label>
+        <div class="input-wrap">
+          <input id="r317-vin" type="number" step="any" placeholder="ej: 15">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="r317-il">Corriente de carga (IL)</label>
+        <div class="input-wrap">
+          <input id="r317-il" type="number" step="any" placeholder="ej: 500">
+          <select id="r317-il-u" class="unit-sel">
+            <option value="0.001" selected>mA</option>
+            <option value="1">A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="r317-calc"  class="btn btn-primary">Calcular</button>
+      <button id="r317-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="r317-result" class="result-panel hidden">
+    <div class="result-title">Resultados LM317</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Tensión de salida (Vout)</div><div class="res-value" id="r317-res-vout">—</div></div>
+      <div class="result-item"><div class="res-label">Vout/Vin %</div><div class="res-value" id="r317-res-eff">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia disipada</div><div class="res-value" id="r317-res-pd">—</div></div>
+      <div class="result-item"><div class="res-label">Diferencial Vin-Vout</div><div class="res-value" id="r317-res-diff">—</div></div>
+    </div>
+    <div id="r317-warn" class="alert alert-warning" style="margin-top:10px;display:none;"></div>
+  </div>
+
+  <hr class="divider">
+  <div class="card">
+    <div class="card-title">Calcular R2 para una Vout deseada</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="r317-vd">Vout deseada</label>
+        <div class="input-wrap">
+          <input id="r317-vd" type="number" step="any" placeholder="ej: 9">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="r317-r1d">R1</label>
+        <div class="input-wrap">
+          <input id="r317-r1d" type="number" step="any" placeholder="ej: 240">
+          <select id="r317-r1d-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="r317-find-calc"  class="btn btn-primary">Calcular R2</button>
+      <button id="r317-find-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="r317-find-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">R2 necesaria</div>
+      <div class="res-value" id="r317-fr-r2">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- 78xx/79xx -->
+<div id="tab-reg-78xx" class="tab-panel">
+  <div class="formula-box">Familia fija: Vout = fijo (5V, 9V, 12V, 15V, 24V, etc.)
+  Pd = (Vin − Vout) × IL &nbsp;|&nbsp; Vin_min = Vout + Vdrop (≈2–3V)</div>
+  <div class="card">
+    <div class="card-title">Reguladores de tensión fija</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="r78-model">Modelo</label>
+        <div class="input-wrap">
+          <select id="r78-model" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="5">7805 / 7905 — 5V</option>
+            <option value="9">7809 / 7909 — 9V</option>
+            <option value="12" selected>7812 / 7912 — 12V</option>
+            <option value="15">7815 / 7915 — 15V</option>
+            <option value="24">7824 / 7924 — 24V</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="r78-vin">Tensión de entrada (Vin)</label>
+        <div class="input-wrap">
+          <input id="r78-vin" type="number" step="any" placeholder="ej: 18">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="r78-il">Corriente de carga (IL)</label>
+        <div class="input-wrap">
+          <input id="r78-il" type="number" step="any" placeholder="ej: 500">
+          <select id="r78-il-u" class="unit-sel">
+            <option value="0.001" selected>mA</option>
+            <option value="1">A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="r78-calc"  class="btn btn-primary">Calcular</button>
+      <button id="r78-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="r78-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Vout fija</div><div class="res-value" id="r78-res-vout">—</div></div>
+      <div class="result-item"><div class="res-label">Diferencial (Vin−Vout)</div><div class="res-value" id="r78-res-diff">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia disipada</div><div class="res-value" id="r78-res-pd">—</div></div>
+      <div class="result-item"><div class="res-label">Eficiencia</div><div class="res-value" id="r78-res-eff">—</div></div>
+      <div class="result-item"><div class="res-label">Vin mínima recomendada</div><div class="res-value" id="r78-res-vmin">—</div></div>
+    </div>
+    <div id="r78-warn" class="alert alert-danger" style="margin-top:10px;display:none;"></div>
+  </div>
+</div>
+
+<!-- Eficiencia -->
+<div id="tab-reg-eff" class="tab-panel">
+  <div class="formula-box">η = Pout/Pin × 100% = (Vout×IL) / (Vin×IL) × 100% = Vout/Vin × 100%
+  Pd = (Vin − Vout) × IL &nbsp;(calor disipado)</div>
+  <div class="alert alert-warning">Los reguladores lineales son poco eficientes con gran diferencia Vin-Vout. Considera usar un regulador switching (buck/boost) para mayor eficiencia.</div>
+  <div class="card">
+    <div class="card-title">Análisis de eficiencia lineal</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="eff-vin">Tensión entrada (Vin)</label>
+        <div class="input-wrap">
+          <input id="eff-vin" type="number" step="any" placeholder="ej: 15">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="eff-vout">Tensión salida (Vout)</label>
+        <div class="input-wrap">
+          <input id="eff-vout" type="number" step="any" placeholder="ej: 5">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="eff-il">Corriente de carga (IL)</label>
+        <div class="input-wrap">
+          <input id="eff-il" type="number" step="any" placeholder="ej: 1">
+          <select id="eff-il-u" class="unit-sel">
+            <option value="1" selected>A</option>
+            <option value="0.001">mA</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="eff-calc"  class="btn btn-primary">Calcular</button>
+      <button id="eff-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="eff-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Eficiencia (η)</div><div class="res-value" id="eff-res-eta">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia de salida</div><div class="res-value" id="eff-res-pout">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia disipada (calor)</div><div class="res-value" id="eff-res-pd">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia de entrada</div><div class="res-value" id="eff-res-pin">—</div></div>
+    </div>
+    <div id="eff-warn" class="alert alert-warning" style="margin-top:10px;display:none;"></div>
+  </div>
+</div>

@@ -1,0 +1,205 @@
+<div class="view-header">
+  <h2>⊣⊢ Condensadores</h2>
+  <p>Serie, paralelo, circuito RC, energía y reactancia capacitiva.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="cap-serie">Serie</button>
+  <button class="tab-btn" data-tab="cap-par">Paralelo</button>
+  <button class="tab-btn" data-tab="cap-rc">Circuito RC</button>
+  <button class="tab-btn" data-tab="cap-xc">Reactancia Xc</button>
+  <button class="tab-btn" data-tab="cap-e">Energía</button>
+</div>
+
+<!-- Serie -->
+<div id="tab-cap-serie" class="tab-panel active">
+  <div class="formula-box">1/C_total = 1/C1 + 1/C2 + ... &nbsp;(el total siempre es MENOR que el menor)</div>
+  <div class="card">
+    <div class="card-title">Condensadores en serie</div>
+    <div class="calc-grid" id="cap-serie-grid"></div>
+    <div class="btn-group" style="margin-top:10px;">
+      <button id="cap-serie-add"  class="btn btn-secondary btn-sm">+ Agregar</button>
+      <button id="cap-serie-calc" class="btn btn-primary">Calcular</button>
+      <button id="cap-serie-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="cap-serie-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Capacidad Total</div>
+      <div class="res-value" id="cap-serie-val">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Paralelo -->
+<div id="tab-cap-par" class="tab-panel">
+  <div class="formula-box">C_total = C1 + C2 + C3 + ... &nbsp;(el total es la SUMA)</div>
+  <div class="card">
+    <div class="card-title">Condensadores en paralelo</div>
+    <div class="calc-grid" id="cap-par-grid"></div>
+    <div class="btn-group" style="margin-top:10px;">
+      <button id="cap-par-add"  class="btn btn-secondary btn-sm">+ Agregar</button>
+      <button id="cap-par-calc" class="btn btn-primary">Calcular</button>
+      <button id="cap-par-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="cap-par-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Capacidad Total</div>
+      <div class="res-value" id="cap-par-val">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- RC -->
+<div id="tab-cap-rc" class="tab-panel">
+  <div class="formula-box">τ = R × C &nbsp;(tau = constante de tiempo)
+  Vc(t) = V × (1 − e^(−t/τ)) — carga
+  Vc(t) = V × e^(−t/τ)       — descarga</div>
+  <div class="card">
+    <div class="card-title">Circuito RC — Constante de tiempo</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="rc-r">Resistencia (R)</label>
+        <div class="input-wrap">
+          <input id="rc-r" type="number" step="any" placeholder="ej: 10000">
+          <select id="rc-r-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+            <option value="1000000">MΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rc-c">Capacidad (C)</label>
+        <div class="input-wrap">
+          <input id="rc-c" type="number" step="any" placeholder="ej: 100">
+          <select id="rc-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+            <option value="0.000000000001">pF</option>
+            <option value="0.001">mF</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rc-v">Tensión fuente (V)</label>
+        <div class="input-wrap">
+          <input id="rc-v" type="number" step="any" placeholder="ej: 5">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rc-t">Tiempo (t) <span class="formula-hint">— opcional</span></label>
+        <div class="input-wrap">
+          <input id="rc-t" type="number" step="any" placeholder="ej: 0.001">
+          <select id="rc-t-u" class="unit-sel">
+            <option value="1">s</option>
+            <option value="0.001" selected>ms</option>
+            <option value="0.000001">μs</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="rc-calc"  class="btn btn-primary">Calcular</button>
+      <button id="rc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="rc-result" class="result-panel hidden">
+    <div class="result-title">Resultados RC</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Constante τ</div><div class="res-value" id="rc-res-tau">—</div></div>
+      <div class="result-item"><div class="res-label">63.2% (1τ)</div><div class="res-value" id="rc-res-1t">—</div></div>
+      <div class="result-item"><div class="res-label">86.5% (2τ)</div><div class="res-value" id="rc-res-2t">—</div></div>
+      <div class="result-item"><div class="res-label">95% (3τ)</div><div class="res-value" id="rc-res-3t">—</div></div>
+      <div class="result-item"><div class="res-label">99% (~5τ)</div><div class="res-value" id="rc-res-5t">—</div></div>
+      <div class="result-item"><div class="res-label">Vc en t dado</div><div class="res-value" id="rc-res-vt">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Reactancia -->
+<div id="tab-cap-xc" class="tab-panel">
+  <div class="formula-box">Xc = 1 / (2π × f × C)</div>
+  <div class="card">
+    <div class="card-title">Reactancia Capacitiva</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="xc-f">Frecuencia (f)</label>
+        <div class="input-wrap">
+          <input id="xc-f" type="number" step="any" placeholder="ej: 1000">
+          <select id="xc-f-u" class="unit-sel">
+            <option value="1" selected>Hz</option>
+            <option value="1000">kHz</option>
+            <option value="1000000">MHz</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="xc-c">Capacidad (C)</label>
+        <div class="input-wrap">
+          <input id="xc-c" type="number" step="any" placeholder="ej: 100">
+          <select id="xc-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+            <option value="0.000000000001">pF</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="xc-calc"  class="btn btn-primary">Calcular</button>
+      <button id="xc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="xc-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Reactancia Capacitiva (Xc)</div>
+      <div class="res-value" id="xc-res-xc">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Energía -->
+<div id="tab-cap-e" class="tab-panel">
+  <div class="formula-box">E = ½ × C × V²</div>
+  <div class="card">
+    <div class="card-title">Energía almacenada</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="ce-c">Capacidad (C)</label>
+        <div class="input-wrap">
+          <input id="ce-c" type="number" step="any" placeholder="ej: 1000">
+          <select id="ce-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+            <option value="0.001">mF</option>
+            <option value="1">F</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ce-v">Tensión (V)</label>
+        <div class="input-wrap">
+          <input id="ce-v" type="number" step="any" placeholder="ej: 12">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="ce-calc"  class="btn btn-primary">Calcular</button>
+      <button id="ce-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ce-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Energía almacenada</div>
+      <div class="res-value" id="ce-res-e">—</div>
+    </div>
+  </div>
+</div>

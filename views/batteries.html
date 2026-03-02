@@ -1,0 +1,170 @@
+<div class="view-header"><h2>🪫 Baterías</h2><p>Autonomía, efecto Peukert, estado de carga y ciclos de vida.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="bat-aut">Autonomía</button>
+  <button class="tab-btn" data-tab="bat-peu">Peukert</button>
+  <button class="tab-btn" data-tab="bat-soc">Estado de Carga</button>
+  <button class="tab-btn" data-tab="bat-cyc">Ciclos</button>
+  <button class="tab-btn" data-tab="bat-ref">Referencia</button>
+</div>
+
+<div id="tab-bat-aut" class="tab-panel active">
+  <div class="formula-box">t = C / I   (horas) | C = capacidad en Ah | I = corriente de descarga en A</div>
+  <div class="card">
+    <div class="card-title">Autonomía de batería — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="baut-cap">Capacidad (C)</label>
+        <div class="input-wrap"><input id="baut-cap" type="number" step="any" placeholder="ej: 100">
+          <select id="baut-capu" class="unit-sel"><option value="1" selected>Ah</option><option value="0.001">mAh</option></select></div></div>
+      <div class="input-group"><label for="baut-i">Corriente descarga (I)</label>
+        <div class="input-wrap"><input id="baut-i" type="number" step="any" placeholder="ej: 5">
+          <select id="baut-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="baut-t">Tiempo deseado <span class="formula-hint">→ calcula C o I</span></label>
+        <div class="input-wrap"><input id="baut-t" type="number" step="any" placeholder="ej: 8">
+          <select id="baut-tu" class="unit-sel"><option value="1" selected>h</option><option value="0.01667">min</option></select></div></div>
+      <div class="input-group"><label for="baut-dod">Profundidad de descarga (%)</label>
+        <div class="input-wrap"><input id="baut-dod" type="number" step="any" min="1" max="100" placeholder="ej: 80" value="80">
+          <span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="baut-calc" class="btn btn-primary">Calcular</button>
+      <button id="baut-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="baut-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Autonomía total</div><div class="res-value" id="baut-rt">—</div></div>
+      <div class="result-item"><div class="res-label">Autonomía útil (DOD)</div><div class="res-value" id="baut-rtd">—</div></div>
+      <div class="result-item"><div class="res-label">Capacidad necesaria</div><div class="res-value" id="baut-rcap">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente máx. (C/10)</div><div class="res-value" id="baut-ri10">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-bat-peu" class="tab-panel">
+  <div class="formula-box">t = H × (C / (I × H))^n   |   n = coef. Peukert (Pb: 1.1–1.3, Li: ~1.05)
+C_real = C_nominal × (I_ref / I)^(n-1)</div>
+  <div class="alert alert-info">El efecto Peukert explica por qué una batería entrega menos capacidad a corrientes altas. Relevante especialmente para baterías de plomo-ácido.</div>
+  <div class="card">
+    <div class="card-title">Autonomía corregida con Peukert</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bpeu-cap">Capacidad nominal (C)</label>
+        <div class="input-wrap"><input id="bpeu-cap" type="number" step="any" placeholder="ej: 100">
+          <select id="bpeu-capu" class="unit-sel"><option value="1" selected>Ah</option><option value="0.001">mAh</option></select></div></div>
+      <div class="input-group"><label for="bpeu-hr">Horas de referencia (H)</label>
+        <div class="input-wrap"><input id="bpeu-hr" type="number" step="any" placeholder="ej: 20" value="20"><span style="padding:0 10px;color:var(--text-sub);align-self:center">h</span></div></div>
+      <div class="input-group"><label for="bpeu-i">Corriente de descarga (I)</label>
+        <div class="input-wrap"><input id="bpeu-i" type="number" step="any" placeholder="ej: 20">
+          <select id="bpeu-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="bpeu-n">Exp. de Peukert (n)</label>
+        <div class="input-wrap"><input id="bpeu-n" type="number" step="0.01" placeholder="ej: 1.2" value="1.2"><span style="padding:0 10px;color:var(--text-sub);align-self:center">—</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bpeu-calc" class="btn btn-primary">Calcular</button>
+      <button id="bpeu-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="bpeu-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Autonomía Peukert</div><div class="res-value" id="bpeu-rt">—</div></div>
+      <div class="result-item"><div class="res-label">Capacidad real efectiva</div><div class="res-value" id="bpeu-rc">—</div></div>
+      <div class="result-item"><div class="res-label">Autonomía sin corrección</div><div class="res-value" id="bpeu-rn">—</div></div>
+      <div class="result-item"><div class="res-label">Reducción de capacidad</div><div class="res-value" id="bpeu-rred">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-bat-soc" class="tab-panel">
+  <div class="formula-box">SOC (%) = (C_restante / C_total) × 100
+Tensión aproximada: Pb-ácido 12V: 100%≈12.7V 50%≈12.0V 0%≈11.6V
+Li-Ion 3.7V: 100%≈4.2V 50%≈3.7V 0%≈3.0V</div>
+  <div class="card">
+    <div class="card-title">Estado de carga por tensión</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="soc-type">Tipo de batería</label>
+        <div class="input-wrap">
+          <select id="soc-type" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="pb12">Plomo-ácido 12V</option>
+            <option value="pb6">Plomo-ácido 6V</option>
+            <option value="li37">Li-Ion 3.7V</option>
+            <option value="li37x2">Li-Ion 7.4V (2S)</option>
+            <option value="lipo">LiPo 3.7V</option>
+            <option value="lifepo4">LiFePO4 3.2V</option>
+            <option value="nicd">NiCd/NiMH 1.2V</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group"><label for="soc-v">Tensión medida</label>
+        <div class="input-wrap"><input id="soc-v" type="number" step="0.01" placeholder="ej: 12.4"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="soc-calc" class="btn btn-primary">Calcular SOC</button>
+      <button id="soc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="soc-result" class="result-panel hidden">
+    <div class="result-title">Estado de carga</div>
+    <div class="result-big"><div class="res-label">SOC estimado</div><div class="res-value" id="soc-rsoc">—</div></div>
+    <div style="margin-top:10px" id="soc-bar-wrap">
+      <div style="background:var(--surface2);border-radius:20px;overflow:hidden;height:14px;margin-top:8px;">
+        <div id="soc-bar" style="height:100%;width:0%;background:var(--success);transition:width 0.5s;border-radius:20px;"></div>
+      </div>
+    </div>
+    <div id="soc-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-bat-cyc" class="tab-panel">
+  <div class="formula-box">Energía total = Ciclos × C × V_nominal
+Degradación: C_actual = C_inicial × (1 - ciclos/ciclos_max × factor)</div>
+  <div class="card">
+    <div class="card-title">Vida útil y degradación</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="bcyc-cap">Capacidad inicial</label>
+        <div class="input-wrap"><input id="bcyc-cap" type="number" step="any" placeholder="ej: 3000">
+          <select id="bcyc-capu" class="unit-sel"><option value="0.001" selected>mAh</option><option value="1">Ah</option></select></div></div>
+      <div class="input-group"><label for="bcyc-v">Tensión nominal</label>
+        <div class="input-wrap"><input id="bcyc-v" type="number" step="any" placeholder="ej: 3.7"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="bcyc-max">Ciclos máximos (spec)</label>
+        <div class="input-wrap"><input id="bcyc-max" type="number" step="any" placeholder="ej: 500"><span style="padding:0 10px;color:var(--text-sub);align-self:center">ciclos</span></div></div>
+      <div class="input-group"><label for="bcyc-cur">Ciclos actuales</label>
+        <div class="input-wrap"><input id="bcyc-cur" type="number" step="any" placeholder="ej: 200"><span style="padding:0 10px;color:var(--text-sub);align-self:center">ciclos</span></div></div>
+      <div class="input-group"><label for="bcyc-use">Uso diario</label>
+        <div class="input-wrap"><input id="bcyc-use" type="number" step="any" placeholder="ej: 1">
+          <select id="bcyc-useu" class="unit-sel"><option value="1" selected>ciclo/día</option></select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="bcyc-calc" class="btn btn-primary">Calcular</button>
+      <button id="bcyc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="bcyc-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Capacidad actual estimada</div><div class="res-value" id="bcyc-rcap">—</div></div>
+      <div class="result-item"><div class="res-label">Salud (SOH)</div><div class="res-value" id="bcyc-rsoh">—</div></div>
+      <div class="result-item"><div class="res-label">Ciclos restantes</div><div class="res-value" id="bcyc-rrem">—</div></div>
+      <div class="result-item"><div class="res-label">Vida restante estimada</div><div class="res-value" id="bcyc-rlife">—</div></div>
+      <div class="result-item"><div class="res-label">Energía total entregada</div><div class="res-value" id="bcyc-renergy">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-bat-ref" class="tab-panel">
+  <div class="card-title" style="padding:0 0 12px;">Comparativa de tecnologías</div>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Tecnología</th><th>V nominal</th><th>Ciclos típicos</th><th>Densidad Wh/kg</th><th>DoD recomendado</th><th>Usos</th></tr></thead>
+      <tbody>
+        <tr><td>Plomo-ácido</td><td>2V/celda</td><td>300–500</td><td>30–50</td><td>50%</td><td>Autos, UPS, solar</td></tr>
+        <tr><td>NiMH</td><td>1.2V</td><td>500–1000</td><td>60–120</td><td>80%</td><td>AA recargables, híbridos</td></tr>
+        <tr><td>NiCd</td><td>1.2V</td><td>1000–2000</td><td>40–60</td><td>100%</td><td>Herramientas, aviación</td></tr>
+        <tr><td>Li-Ion</td><td>3.6V</td><td>500–1000</td><td>150–250</td><td>80%</td><td>Smartphones, laptops</td></tr>
+        <tr><td>LiPo</td><td>3.7V</td><td>300–500</td><td>150–200</td><td>80%</td><td>Drones, RC, wearables</td></tr>
+        <tr><td>LiFePO4</td><td>3.2V</td><td>2000–5000</td><td>90–120</td><td>100%</td><td>Solar, EV, almacenamiento</td></tr>
+        <tr><td>Li Sólido</td><td>3.8V</td><td>&gt;1000</td><td>300–400</td><td>90%</td><td>EV próxima gen. (en desarrollo)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

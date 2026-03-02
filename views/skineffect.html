@@ -1,0 +1,50 @@
+<div class="view-header"><h2>🌀 Efecto Pelicular (Skin Effect)</h2><p>Profundidad de penetración, resistencia AC efectiva y frecuencia crítica para conductores cilíndricos.</p></div>
+<div class="formula-box">δ = √(2ρ / (ω×μ)) = √(ρ / (π×f×μ₀×μr))   [metros]
+R_AC/R_DC ≈ r/(2δ) para r >> δ   |   f_crítica: δ = r → fc = ρ/(π×μ₀×μr×r²)</div>
+<div class="card"><div class="card-title">Cálculo del skin effect</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="sk-f">Frecuencia</label>
+      <div class="input-wrap"><input id="sk-f" type="number" step="any" placeholder="ej: 50">
+        <select id="sk-fu" class="unit-sel"><option value="1">Hz</option><option value="1e3">kHz</option><option value="1e6" selected>MHz</option></select></div></div>
+    <div class="input-group"><label for="sk-mat">Material conductor</label>
+      <div class="input-wrap"><select id="sk-mat" class="unit-sel" style="flex:1;padding:8px 10px;">
+        <option value="1.724e-8,1" selected>Cobre (Cu) — 1.724×10⁻⁸ Ω·m</option>
+        <option value="2.82e-8,1">Aluminio (Al) — 2.82×10⁻⁸ Ω·m</option>
+        <option value="1.59e-8,1">Plata (Ag) — 1.59×10⁻⁸ Ω·m</option>
+        <option value="2.44e-8,1">Oro (Au) — 2.44×10⁻⁸ Ω·m</option>
+        <option value="9.71e-8,1">Hierro puro — 9.71×10⁻⁸ Ω·m</option>
+        <option value="1.0e-7,200">Ferrita — μr≈200</option>
+      </select></div></div>
+    <div class="input-group"><label for="sk-d">Diámetro del conductor</label>
+      <div class="input-wrap"><input id="sk-d" type="number" step="any" placeholder="ej: 1">
+        <select id="sk-du" class="unit-sel"><option value="1e-3" selected>mm</option><option value="1e-2">cm</option><option value="1">m</option><option value="0.0254e-3">mil (AWG)</option></select></div></div>
+  </div>
+  <div class="btn-group"><button id="sk-calc" class="btn btn-primary">Calcular</button><button id="sk-clr" class="btn btn-secondary">Limpiar</button></div>
+</div>
+<div id="sk-result" class="result-panel hidden">
+  <div class="result-title">Resultados</div>
+  <div class="result-grid">
+    <div class="result-item"><div class="res-label">Profundidad de penetración (δ)</div><div class="res-value" id="sk-rdelta">—</div></div>
+    <div class="result-item"><div class="res-label">% de sección usada</div><div class="res-value" id="sk-rpct">—</div></div>
+    <div class="result-item"><div class="res-label">R_AC / R_DC</div><div class="res-value" id="sk-rrac">—</div></div>
+    <div class="result-item"><div class="res-label">Frecuencia crítica (δ=r)</div><div class="res-value" id="sk-rfc">—</div></div>
+    <div class="result-item"><div class="res-label">¿Efecto relevante?</div><div class="res-value" id="sk-rel">—</div></div>
+  </div>
+</div>
+<hr class="divider">
+<div class="card"><div class="card-title">Profundidad de penetración para Cu a distintas frecuencias</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Frecuencia</th><th>δ Cobre</th><th>δ Aluminio</th><th>Aplicación</th></tr></thead>
+    <tbody>
+      <tr><td>50 Hz</td><td>9.4 mm</td><td>11.5 mm</td><td>Cables de potencia</td></tr>
+      <tr><td>60 Hz</td><td>8.6 mm</td><td>10.5 mm</td><td>Cables de potencia (US)</td></tr>
+      <tr><td>1 kHz</td><td>2.1 mm</td><td>2.6 mm</td><td>Audio de potencia</td></tr>
+      <tr><td>10 kHz</td><td>0.66 mm</td><td>0.81 mm</td><td>Fuentes conmutadas</td></tr>
+      <tr><td>100 kHz</td><td>0.21 mm</td><td>0.26 mm</td><td>Inductores SMPS</td></tr>
+      <tr><td>1 MHz</td><td>66 μm</td><td>81 μm</td><td>RF baja frecuencia</td></tr>
+      <tr><td>100 MHz</td><td>6.6 μm</td><td>8.1 μm</td><td>VHF, conectores</td></tr>
+      <tr><td>1 GHz</td><td>2.1 μm</td><td>2.6 μm</td><td>Microondas, PCB</td></tr>
+      <tr><td>10 GHz</td><td>0.66 μm</td><td>0.81 μm</td><td>Antenas parabólicas</td></tr>
+    </tbody>
+  </table></div>
+</div>

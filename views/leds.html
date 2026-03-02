@@ -1,0 +1,171 @@
+<div class="view-header">
+  <h2>💡 LEDs</h2>
+  <p>Resistencia limitadora, arreglos en serie y paralelo.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="led-one">LED Simple</button>
+  <button class="tab-btn" data-tab="led-serie">LEDs en Serie</button>
+  <button class="tab-btn" data-tab="led-par">LEDs en Paralelo</button>
+</div>
+
+<!-- LED Simple -->
+<div id="tab-led-one" class="tab-panel active">
+  <div class="formula-box">R = (Vcc − Vled) / Iled &nbsp;|&nbsp; P_R = (Vcc − Vled) × Iled</div>
+  <div class="card">
+    <div class="card-title">Resistencia limitadora para un LED</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="led-vcc">Tensión fuente (Vcc)</label>
+        <div class="input-wrap">
+          <input id="led-vcc" type="number" step="any" placeholder="ej: 5">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="led-vf">Caída de tensión LED (Vf)</label>
+        <div class="input-wrap">
+          <input id="led-vf" type="number" step="any" placeholder="ej: 2.0">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+        <span class="input-note">Rojo/Ambar ≈ 2V · Verde/Azul ≈ 3.2V · Blanco ≈ 3.4V</span>
+      </div>
+      <div class="input-group">
+        <label for="led-if">Corriente LED (If)</label>
+        <div class="input-wrap">
+          <input id="led-if" type="number" step="any" placeholder="ej: 20">
+          <select id="led-if-u" class="unit-sel">
+            <option value="0.001" selected>mA</option>
+            <option value="1">A</option>
+          </select>
+        </div>
+        <span class="input-note">LED estándar: 10–20 mA · LED alto brillo: 20–50 mA</span>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="led-calc"  class="btn btn-primary">Calcular</button>
+      <button id="led-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="led-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Resistencia exacta</div><div class="res-value" id="led-res-r">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia E12 más cercana</div><div class="res-value" id="led-res-e12">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia en R</div><div class="res-value" id="led-res-p">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia LED</div><div class="res-value" id="led-res-pled">—</div></div>
+    </div>
+    <div id="led-warn" class="alert alert-warning" style="margin-top:10px;display:none;"></div>
+  </div>
+</div>
+
+<!-- LEDs en Serie -->
+<div id="tab-led-serie" class="tab-panel">
+  <div class="formula-box">R = (Vcc − N × Vf) / If &nbsp;— La misma corriente fluye por todos</div>
+  <div class="alert alert-success">✔ Recomendado. Todos los LEDs tienen la misma corriente. Si uno falla, el circuito se abre.</div>
+  <div class="card">
+    <div class="card-title">Arreglo Serie</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="ls-vcc">Tensión fuente (Vcc)</label>
+        <div class="input-wrap">
+          <input id="ls-vcc" type="number" step="any" placeholder="ej: 12">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ls-vf">Caída LED (Vf)</label>
+        <div class="input-wrap">
+          <input id="ls-vf" type="number" step="any" placeholder="ej: 2.0">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ls-n">Número de LEDs (N)</label>
+        <div class="input-wrap">
+          <input id="ls-n" type="number" step="1" min="1" placeholder="ej: 3">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">uds</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ls-if">Corriente LED (If)</label>
+        <div class="input-wrap">
+          <input id="ls-if" type="number" step="any" placeholder="ej: 20">
+          <select id="ls-if-u" class="unit-sel">
+            <option value="0.001" selected>mA</option>
+            <option value="1">A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="ls-calc"  class="btn btn-primary">Calcular</button>
+      <button id="ls-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ls-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Resistencia exacta</div><div class="res-value" id="ls-res-r">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia E12</div><div class="res-value" id="ls-res-e12">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia en R</div><div class="res-value" id="ls-res-p">—</div></div>
+      <div class="result-item"><div class="res-label">Tensión total LEDs</div><div class="res-value" id="ls-res-vtot">—</div></div>
+    </div>
+    <div id="ls-warn" class="alert alert-danger" style="margin-top:10px;display:none;"></div>
+  </div>
+</div>
+
+<!-- LEDs en Paralelo -->
+<div id="tab-led-par" class="tab-panel">
+  <div class="formula-box">R = (Vcc − Vf) / (N × If) &nbsp;— Cada LED debería tener su propia resistencia</div>
+  <div class="alert alert-warning">⚠ Atención: en paralelo con una sola R, pequeñas variaciones en Vf causan desequilibrio de corrientes. Se recomienda una resistencia por LED.</div>
+  <div class="card">
+    <div class="card-title">Arreglo Paralelo</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="lp2-vcc">Tensión fuente (Vcc)</label>
+        <div class="input-wrap">
+          <input id="lp2-vcc" type="number" step="any" placeholder="ej: 5">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="lp2-vf">Caída LED (Vf)</label>
+        <div class="input-wrap">
+          <input id="lp2-vf" type="number" step="any" placeholder="ej: 2.0">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="lp2-n">Número de LEDs</label>
+        <div class="input-wrap">
+          <input id="lp2-n" type="number" step="1" min="1" placeholder="ej: 3">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">uds</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="lp2-if">Corriente por LED</label>
+        <div class="input-wrap">
+          <input id="lp2-if" type="number" step="any" placeholder="ej: 20">
+          <select id="lp2-if-u" class="unit-sel">
+            <option value="0.001" selected>mA</option>
+            <option value="1">A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="lp2-calc"  class="btn btn-primary">Calcular</button>
+      <button id="lp2-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="lp2-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">R compartida</div><div class="res-value" id="lp2-res-rsh">—</div></div>
+      <div class="result-item"><div class="res-label">R por LED (recomendado)</div><div class="res-value" id="lp2-res-rind">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente total</div><div class="res-value" id="lp2-res-it">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia total</div><div class="res-value" id="lp2-res-pt">—</div></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="view-header"><h2>🔧 Factor de Potencia y Corrección</h2><p>Corrección del factor de potencia con banco de condensadores — ahorro energético e industrial.</p></div>
+<div class="formula-box">Q_C = P × (tanφ₁ − tanφ₂)   |   C = Q_C / (ω × V²)
+cosφ = P/S   |   tanφ = Q/P   |   φ = arccos(cosφ)
+Ahorro: ΔI = I₁ − I₂ = P/(V×cosφ₁) − P/(V×cosφ₂)</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="fp-corr">Corrección cosφ</button>
+  <button class="tab-btn" data-tab="fp-anl">Análisis P/Q/S</button>
+</div>
+<div id="tab-fp-corr" class="tab-panel active">
+  <div class="card"><div class="card-title">Banco de condensadores para corrección de cosφ</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="fp-p">Potencia activa (P)</label>
+        <div class="input-wrap"><input id="fp-p" type="number" step="any" placeholder="ej: 50">
+          <select id="fp-pu" class="unit-sel"><option value="1000" selected>kW</option><option value="1">W</option></select></div></div>
+      <div class="input-group"><label for="fp-cosphi1">cosφ actual</label>
+        <div class="input-wrap"><input id="fp-cosphi1" type="number" step="0.01" min="0.1" max="1" placeholder="ej: 0.65"></div></div>
+      <div class="input-group"><label for="fp-cosphi2">cosφ deseado</label>
+        <div class="input-wrap"><input id="fp-cosphi2" type="number" step="0.01" min="0.1" max="1" placeholder="ej: 0.95" value="0.95"></div></div>
+      <div class="input-group"><label for="fp-v">Tensión de línea</label>
+        <div class="input-wrap"><input id="fp-v" type="number" step="any" placeholder="ej: 400">
+          <select id="fp-vu" class="unit-sel"><option value="1" selected>V</option><option value="1000">kV</option></select></div></div>
+      <div class="input-group"><label for="fp-f">Frecuencia de red</label>
+        <div class="input-wrap"><select id="fp-f" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="50" selected>50 Hz (Europa/Asia)</option><option value="60">60 Hz (América)</option>
+        </select></div></div>
+      <div class="input-group"><label for="fp-fase">Sistema</label>
+        <div class="input-wrap"><select id="fp-fase" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="3" selected>Trifásico (3φ)</option><option value="1">Monofásico (1φ)</option>
+        </select></div></div>
+    </div>
+    <div class="btn-group"><button id="fp-calc" class="btn btn-primary">Calcular banco C</button><button id="fp-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="fp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Q reactiva a compensar</div><div class="res-value" id="fp-rq">—</div></div>
+      <div class="result-item"><div class="res-label">Capacidad total necesaria</div><div class="res-value" id="fp-rc">—</div></div>
+      <div class="result-item"><div class="res-label">C por fase (trifásico)</div><div class="res-value" id="fp-rcf">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente antes</div><div class="res-value" id="fp-ri1">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente después</div><div class="res-value" id="fp-ri2">—</div></div>
+      <div class="result-item"><div class="res-label">Reducción de corriente</div><div class="res-value" id="fp-rdi">—</div></div>
+      <div class="result-item"><div class="res-label">S aparente antes</div><div class="res-value" id="fp-rs1">—</div></div>
+      <div class="result-item"><div class="res-label">S aparente después</div><div class="res-value" id="fp-rs2">—</div></div>
+    </div>
+    <div class="alert alert-info" style="margin-top:10px" id="fp-info"></div>
+  </div>
+</div>
+<div id="tab-fp-anl" class="tab-panel">
+  <div class="card"><div class="card-title">Triángulo de potencias — análisis</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="fpa-p">Potencia activa P</label>
+        <div class="input-wrap"><input id="fpa-p" type="number" step="any" placeholder="ej: 10000"><span style="padding:0 10px;color:var(--text-sub);align-self:center">W</span></div></div>
+      <div class="input-group"><label for="fpa-q">Potencia reactiva Q</label>
+        <div class="input-wrap"><input id="fpa-q" type="number" step="any" placeholder="ej: 7500"><span style="padding:0 10px;color:var(--text-sub);align-self:center">VAR</span></div></div>
+      <div class="input-group"><label for="fpa-s">O potencia aparente S</label>
+        <div class="input-wrap"><input id="fpa-s" type="number" step="any" placeholder="ej: 12500"><span style="padding:0 10px;color:var(--text-sub);align-self:center">VA</span></div></div>
+    </div>
+    <div class="btn-group"><button id="fpa-calc" class="btn btn-primary">Analizar</button><button id="fpa-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="fpa-result" class="result-panel hidden">
+    <div class="result-title">Triángulo de potencias</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">P (activa)</div><div class="res-value" id="fpa-rp">—</div></div>
+      <div class="result-item"><div class="res-label">Q (reactiva)</div><div class="res-value" id="fpa-rq">—</div></div>
+      <div class="result-item"><div class="res-label">S (aparente)</div><div class="res-value" id="fpa-rs">—</div></div>
+      <div class="result-item"><div class="res-label">cosφ</div><div class="res-value" id="fpa-rcosphi">—</div></div>
+      <div class="result-item"><div class="res-label">φ (ángulo)</div><div class="res-value" id="fpa-rphi">—</div></div>
+      <div class="result-item"><div class="res-label">tanφ</div><div class="res-value" id="fpa-rtanphi">—</div></div>
+    </div>
+  </div>
+</div>

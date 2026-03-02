@@ -1,0 +1,88 @@
+<div class="view-header"><h2>📡 Calculadora de Antenas</h2><p>Dipolo, monopolo, Yagi, longitud λ/4, ganancia y diseño — bidireccional.</p></div>
+<div class="formula-box">Dipolo λ/2: L(m) = 142.5/f(MHz) × k   k≈0.95 (factor acortamiento)
+Monopolo λ/4: L(m) = 71.25/f(MHz)
+Yagi: Directividad ≈ 10×log10(N×0.8) dBd para N elementos</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="ant-dipolo">Dipolo / Monopolo</button>
+  <button class="tab-btn" data-tab="ant-yagi">Yagi-Uda</button>
+  <button class="tab-btn" data-tab="ant-ref">Bandas y tipos</button>
+</div>
+<div id="tab-ant-dipolo" class="tab-panel active">
+  <div class="card"><div class="card-title">Longitud de antena — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="ant-f">Frecuencia</label>
+        <div class="input-wrap"><input id="ant-f" type="number" step="any" placeholder="ej: 144">
+          <select id="ant-fu" class="unit-sel"><option value="1">Hz</option><option value="1e3">kHz</option><option value="1e6" selected>MHz</option><option value="1e9">GHz</option></select></div></div>
+      <div class="input-group"><label for="ant-len">O bien, longitud conocida</label>
+        <div class="input-wrap"><input id="ant-len" type="number" step="any" placeholder="ej: 0.98">
+          <select id="ant-lenu" class="unit-sel"><option value="1" selected>m</option><option value="0.01">cm</option><option value="0.001">mm</option></select></div></div>
+      <div class="input-group"><label for="ant-k">Factor de acortamiento (k)</label>
+        <div class="input-wrap"><select id="ant-k" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="0.95" selected>0.95 — Dipolo hilo en aire</option>
+          <option value="0.96">0.96 — Dipolo con aisladores pequeños</option>
+          <option value="0.98">0.98 — Dipolo en espacio libre</option>
+          <option value="0.66">0.66 — Cable coaxial RG-58</option>
+          <option value="0.70">0.70 — Cable coaxial RG-213</option>
+          <option value="0.85">0.85 — PCB (FR4)</option>
+        </select></div></div>
+      <div class="input-group"><label for="ant-tipo">Tipo de antena</label>
+        <div class="input-wrap"><select id="ant-tipo" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="dipolo" selected>Dipolo λ/2 (total)</option>
+          <option value="monopolo">Monopolo λ/4 (vertical)</option>
+          <option value="loop">Loop λ (onda completa)</option>
+        </select></div></div>
+    </div>
+    <div class="btn-group"><button id="ant-calc" class="btn btn-primary">Calcular</button><button id="ant-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ant-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Longitud total</div><div class="res-value" id="ant-rl">—</div></div>
+      <div class="result-item"><div class="res-label">Cada brazo (dipolo)</div><div class="res-value" id="ant-rarm">—</div></div>
+      <div class="result-item"><div class="res-label">Longitud de onda (λ)</div><div class="res-value" id="ant-rlam">—</div></div>
+      <div class="result-item"><div class="res-label">Frecuencia</div><div class="res-value" id="ant-rf">—</div></div>
+      <div class="result-item"><div class="res-label">Impedancia nominal</div><div class="res-value" id="ant-rz">—</div></div>
+      <div class="result-item"><div class="res-label">Ganancia</div><div class="res-value" id="ant-rgain">—</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-ant-yagi" class="tab-panel">
+  <div class="formula-box">Yagi diseño simplificado (Viezbicke ARRL):
+  Reflector: 1.04 × λ/2   |   Director 1: 0.95 × λ/2
+  Directores siguientes: 0.93–0.91 × λ/2   |   Spacing: 0.25λ</div>
+  <div class="card"><div class="card-title">Diseño Yagi</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="yagi-f">Frecuencia</label>
+        <div class="input-wrap"><input id="yagi-f" type="number" step="any" placeholder="ej: 144">
+          <select id="yagi-fu" class="unit-sel"><option value="1e3">kHz</option><option value="1e6" selected>MHz</option><option value="1e9">GHz</option></select></div></div>
+      <div class="input-group"><label for="yagi-n">Número de elementos</label>
+        <div class="input-wrap"><input id="yagi-n" type="number" step="1" min="2" max="20" placeholder="ej: 5" value="5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">elem.</span></div></div>
+    </div>
+    <div class="btn-group"><button id="yagi-calc" class="btn btn-primary">Diseñar Yagi</button><button id="yagi-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="yagi-result" class="result-panel hidden">
+    <div class="result-title">Elementos Yagi</div>
+    <div id="yagi-table-wrap" class="table-wrap"></div>
+    <div class="result-grid" style="margin-top:12px">
+      <div class="result-item"><div class="res-label">Ganancia estimada</div><div class="res-value" id="yagi-rgain">—</div></div>
+      <div class="result-item"><div class="res-label">Longitud boom</div><div class="res-value" id="yagi-rboom">—</div></div>
+      <div class="result-item"><div class="res-label">Impedancia alimentación</div><div class="res-value" id="yagi-rz">~50 Ω (con gamma match)</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-ant-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Tipo</th><th>Ganancia</th><th>Impedancia</th><th>Polarización</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>Dipolo λ/2</td><td>2.15 dBi</td><td>73 Ω</td><td>Lineal</td><td>HF, VHF general</td></tr>
+      <tr><td>Monopolo λ/4</td><td>5.19 dBi</td><td>36.5 Ω</td><td>Vertical</td><td>CB, VHF, UHF</td></tr>
+      <tr><td>Dipolo plegado</td><td>2.15 dBi</td><td>300 Ω</td><td>Lineal</td><td>TV, FM, Yagi</td></tr>
+      <tr><td>Yagi 3 elem.</td><td>7–8 dBi</td><td>50–75 Ω</td><td>Lineal</td><td>VHF/UHF comunicación</td></tr>
+      <tr><td>Yagi 5 elem.</td><td>9–10 dBi</td><td>50 Ω</td><td>Lineal</td><td>Amateur, punto a punto</td></tr>
+      <tr><td>Yagi 10 elem.</td><td>13–14 dBi</td><td>50 Ω</td><td>Lineal</td><td>Larga distancia</td></tr>
+      <tr><td>Parabólica 1m</td><td>30–33 dBi</td><td>50 Ω</td><td>Lineal/circular</td><td>Satélite, microondas</td></tr>
+      <tr><td>Helicoidal</td><td>10–15 dBi</td><td>140 Ω</td><td>Circular</td><td>Satélite LEO, GPS</td></tr>
+      <tr><td>Loop magnético</td><td>0–2 dBi</td><td>Varía</td><td>Horizontal</td><td>HF en espacio reducido</td></tr>
+    </tbody>
+  </table></div>
+</div>

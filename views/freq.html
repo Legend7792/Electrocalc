@@ -1,0 +1,82 @@
+<div class="view-header">
+  <h2>〜 Frecuencia / Período / Longitud de Onda</h2>
+  <p>Conversión bidireccional entre frecuencia, período, longitud de onda y velocidad de propagación.</p>
+</div>
+<div class="formula-box">f = 1/T   |   T = 1/f   |   λ = v/f   |   v = λ×f
+En el vacío: v = c = 2.998×10⁸ m/s
+ω = 2π×f (rad/s)   |   f_Nyquist = f_muestreo / 2</div>
+<div class="card">
+  <div class="card-title">Conversor — ingresa uno o más valores</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="fq-f">Frecuencia (f)</label>
+      <div class="input-wrap"><input id="fq-f" type="number" step="any" placeholder="ej: 2.4e9">
+        <select id="fq-fu" class="unit-sel">
+          <option value="1e-3">mHz</option><option value="1">Hz</option>
+          <option value="1e3">kHz</option><option value="1e6" selected>MHz</option><option value="1e9">GHz</option>
+        </select></div></div>
+    <div class="input-group"><label for="fq-t">Período (T)</label>
+      <div class="input-wrap"><input id="fq-t" type="number" step="any" placeholder="ej: 416.7">
+        <select id="fq-tu" class="unit-sel">
+          <option value="1e-12">ps</option><option value="1e-9">ns</option>
+          <option value="1e-6" selected>μs</option><option value="1e-3">ms</option><option value="1">s</option>
+        </select></div></div>
+    <div class="input-group"><label for="fq-w">Vel. de propagación</label>
+      <div class="input-wrap">
+        <select id="fq-medium" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="299792458" selected>Vacío (c)</option>
+          <option value="200000000">Cable coaxial (~0.667c)</option>
+          <option value="213000000">FR4 PCB (~0.71c)</option>
+          <option value="150000000">Fibra óptica monomodo</option>
+          <option value="343">Sonido en aire (20°C)</option>
+          <option value="1480">Sonido en agua</option>
+          <option value="custom">Personalizada</option>
+        </select>
+      </div></div>
+    <div class="input-group"><label for="fq-v-custom">Vel. personalizada (m/s)</label>
+      <div class="input-wrap"><input id="fq-v-custom" type="number" step="any" placeholder="ej: 200000000"></div></div>
+    <div class="input-group"><label for="fq-lam">Longitud de onda (λ)</label>
+      <div class="input-wrap"><input id="fq-lam" type="number" step="any" placeholder="ej: 0.125">
+        <select id="fq-lamu" class="unit-sel">
+          <option value="1e-9">nm</option><option value="1e-6">μm</option>
+          <option value="1e-3">mm</option><option value="1e-2">cm</option>
+          <option value="1" selected>m</option><option value="1e3">km</option>
+        </select></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="fq-calc" class="btn btn-primary">Calcular</button>
+    <button id="fq-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="fq-result" class="result-panel hidden">
+  <div class="result-title">Resultados</div>
+  <div class="result-grid">
+    <div class="result-item"><div class="res-label">Frecuencia</div><div class="res-value" id="fq-rf">—</div></div>
+    <div class="result-item"><div class="res-label">Período</div><div class="res-value" id="fq-rt">—</div></div>
+    <div class="result-item"><div class="res-label">Longitud de onda</div><div class="res-value" id="fq-rl">—</div></div>
+    <div class="result-item"><div class="res-label">ω (rad/s)</div><div class="res-value" id="fq-rw">—</div></div>
+    <div class="result-item"><div class="res-label">λ/2 (semi-onda)</div><div class="res-value" id="fq-rl2">—</div></div>
+    <div class="result-item"><div class="res-label">λ/4 (cuarto de onda)</div><div class="res-value" id="fq-rl4">—</div></div>
+    <div class="result-item"><div class="res-label">Banda de radio</div><div class="res-value" id="fq-rband">—</div></div>
+    <div class="result-item"><div class="res-label">Frec. Nyquist (dato)</div><div class="res-value" id="fq-rnyq">—</div></div>
+  </div>
+</div>
+<hr class="divider">
+<div class="card">
+  <div class="card-title">Bandas de radiofrecuencia (ITU)</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Banda</th><th>Nombre</th><th>Rango</th><th>Longitud de onda</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>ELF</td><td>Extra Low Freq.</td><td>3–30 Hz</td><td>10–100 Mm</td><td>Submarinos</td></tr>
+      <tr><td>SLF</td><td>Super Low Freq.</td><td>30–300 Hz</td><td>1–10 Mm</td><td>Comunicaciones submar.</td></tr>
+      <tr><td>VLF</td><td>Very Low Freq.</td><td>3–30 kHz</td><td>10–100 km</td><td>Navegación, marina</td></tr>
+      <tr><td>LF</td><td>Low Freq.</td><td>30–300 kHz</td><td>1–10 km</td><td>AM onda larga, NDB</td></tr>
+      <tr><td>MF</td><td>Medium Freq.</td><td>300–3000 kHz</td><td>100–1000 m</td><td>AM radio</td></tr>
+      <tr><td>HF</td><td>High Freq. (onda corta)</td><td>3–30 MHz</td><td>10–100 m</td><td>Radio SW, CB</td></tr>
+      <tr><td>VHF</td><td>Very High Freq.</td><td>30–300 MHz</td><td>1–10 m</td><td>FM, TV, aviación, VOR</td></tr>
+      <tr><td>UHF</td><td>Ultra High Freq.</td><td>300–3000 MHz</td><td>10–100 cm</td><td>4G, WiFi, TV UHF, GPS</td></tr>
+      <tr><td>SHF</td><td>Super High Freq.</td><td>3–30 GHz</td><td>1–10 cm</td><td>WiFi 5G, satélite, radar</td></tr>
+      <tr><td>EHF</td><td>Extra High Freq. (mm)</td><td>30–300 GHz</td><td>1–10 mm</td><td>5G mm-wave, radioastr.</td></tr>
+      <tr><td>THF</td><td>Terahertz</td><td>0.3–3 THz</td><td>0.1–1 mm</td><td>Imágenes médicas, inv.</td></tr>
+    </tbody>
+  </table></div>
+</div>

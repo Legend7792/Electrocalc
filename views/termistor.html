@@ -1,0 +1,93 @@
+<div class="view-header"><h2>🌡️ Termistores NTC / PTC</h2><p>Temperatura a partir de resistencia, curva B, divisor de tensión con NTC y selección de termistor.</p></div>
+<div class="formula-box">NTC (Steinhart-Hart): 1/T = A + B×ln(R) + C×(ln(R))³
+Aproximación β: R(T) = R25 × e^[β×(1/T − 1/T25)]   T en Kelvin
+Inversión: T = β / (ln(R/R25) + β/T25)</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="th-ntc">NTC — R→Temperatura</button>
+  <button class="tab-btn" data-tab="th-div">Divisor con NTC</button>
+  <button class="tab-btn" data-tab="th-ptc">PTC Referencia</button>
+</div>
+<div id="tab-th-ntc" class="tab-panel active">
+  <div class="card"><div class="card-title">Temperatura desde resistencia NTC (ecuación β) — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="th-r25">R25 (resistencia a 25°C)</label>
+        <div class="input-wrap"><input id="th-r25" type="number" step="any" placeholder="ej: 10000" value="10000">
+          <select id="th-r25u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="th-beta">Coeficiente β (B)</label>
+        <div class="input-wrap"><input id="th-beta" type="number" step="any" placeholder="ej: 3950" value="3950"><span style="padding:0 10px;color:var(--text-sub);align-self:center">K</span></div></div>
+      <div class="input-group"><label for="th-rm">Resistencia medida (Rm)</label>
+        <div class="input-wrap"><input id="th-rm" type="number" step="any" placeholder="ej: 5000">
+          <select id="th-rmu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="th-tc">O temperatura conocida</label>
+        <div class="input-wrap"><input id="th-tc" type="number" step="any" placeholder="ej: 50"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group"><button id="th-calc" class="btn btn-primary">Calcular</button><button id="th-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="th-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Temperatura</div><div class="res-value" id="th-rtemp">—</div></div>
+      <div class="result-item"><div class="res-label">En Kelvin</div><div class="res-value" id="th-rtk">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia</div><div class="res-value" id="th-rres">—</div></div>
+      <div class="result-item"><div class="res-label">Sensibilidad (dR/dT)</div><div class="res-value" id="th-rsen">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card"><div class="card-title">Valores β típicos de NTC comunes</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Referencia</th><th>R25</th><th>β (K)</th><th>Rango</th><th>Aplicación</th></tr></thead>
+      <tbody>
+        <tr><td>NTC 10kΩ 1%</td><td>10 kΩ</td><td>3435</td><td>−55 a +125°C</td><td>General, Arduino</td></tr>
+        <tr><td>NTC 10kΩ MF52</td><td>10 kΩ</td><td>3950</td><td>−20 a +105°C</td><td>Temperatura ambiente</td></tr>
+        <tr><td>NTC 100kΩ</td><td>100 kΩ</td><td>4250</td><td>−40 a +130°C</td><td>Industrial</td></tr>
+        <tr><td>B57703M103</td><td>10 kΩ</td><td>3988</td><td>−40 a +150°C</td><td>Automoción</td></tr>
+        <tr><td>NTCLE100E3</td><td>10 kΩ</td><td>3977</td><td>−40 a +125°C</td><td>Vishay estándar</td></tr>
+        <tr><td>NTC 1kΩ</td><td>1 kΩ</td><td>3380</td><td>−55 a +150°C</td><td>Corrientes de carga</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+<div id="tab-th-div" class="tab-panel">
+  <div class="formula-box">Vout = Vin × R_pull / (R_ntc + R_pull)
+  R_pull arriba: Vout ↑ con T   |   R_pull abajo: Vout ↓ con T</div>
+  <div class="card"><div class="card-title">Divisor resistivo con NTC</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="thd-vin">Vin</label>
+        <div class="input-wrap"><input id="thd-vin" type="number" step="any" placeholder="ej: 3.3" value="3.3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="thd-rp">Resistencia pull-down</label>
+        <div class="input-wrap"><input id="thd-rp" type="number" step="any" placeholder="ej: 10000" value="10000">
+          <select id="thd-rpu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="thd-r25b">R25 del NTC</label>
+        <div class="input-wrap"><input id="thd-r25b" type="number" step="any" placeholder="ej: 10000" value="10000">
+          <select id="thd-r25bu" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option></select></div></div>
+      <div class="input-group"><label for="thd-betab">β del NTC</label>
+        <div class="input-wrap"><input id="thd-betab" type="number" step="any" placeholder="ej: 3950" value="3950"></div></div>
+      <div class="input-group"><label for="thd-temp">Temperatura a simular</label>
+        <div class="input-wrap"><input id="thd-temp" type="number" step="any" placeholder="ej: 50"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group"><button id="thd-calc" class="btn btn-primary">Calcular</button><button id="thd-clr" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="thd-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">R_NTC a esa temperatura</div><div class="res-value" id="thd-rntc">—</div></div>
+      <div class="result-item"><div class="res-label">Vout del divisor</div><div class="res-value" id="thd-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">Código ADC 10bit (0–1023)</div><div class="res-value" id="thd-radc">—</div></div>
+      <div class="result-item"><div class="res-label">Código ADC 12bit (0–4095)</div><div class="res-value" id="thd-radc12">—</div></div>
+    </div>
+  </div>
+</div>
+<div id="tab-th-ptc" class="tab-panel">
+  <div class="alert alert-info">Los PTC (Positive Temperature Coefficient) aumentan drásticamente su resistencia a partir de una temperatura de umbral (Curie), usados como fusibles auto-rearmables.</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Tipo PTC</th><th>Característica</th><th>Temp. Curie aprox.</th><th>Aplicación</th></tr></thead>
+    <tbody>
+      <tr><td>PTCSL0016</td><td>60mA hold / 120mA trip</td><td>—</td><td>USB, circuitos bajo consumo</td></tr>
+      <tr><td>MF-MSMF050</td><td>500mA hold / 1A trip</td><td>—</td><td>Protección USB 5V</td></tr>
+      <tr><td>MF-R110</td><td>1.1A hold / 2.2A trip</td><td>—</td><td>Protección baterías</td></tr>
+      <tr><td>MF-R250</td><td>2.5A hold / 5A trip</td><td>—</td><td>Fuentes 12V</td></tr>
+      <tr><td>BariStor cerámica</td><td>R baja→alta a Tc</td><td>80–150°C</td><td>Desmagnetización CRT, auto</td></tr>
+      <tr><td>Silistor (Si)</td><td>R aumenta +0.7%/°C</td><td>—</td><td>Compensación lineal</td></tr>
+    </tbody>
+  </table></div>
+</div>

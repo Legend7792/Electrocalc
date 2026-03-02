@@ -1,0 +1,199 @@
+<div class="view-header">
+  <h2>⏱ Timer 555</h2>
+  <p>Modo astable (oscilador) y monoestable (disparo único).</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="t555-ast">Astable</button>
+  <button class="tab-btn" data-tab="t555-mon">Monoestable</button>
+</div>
+
+<!-- Astable -->
+<div id="tab-t555-ast" class="tab-panel active">
+  <div class="formula-box">
+    f = 1.44 / ((Ra + 2×Rb) × C)
+    T_high = 0.693 × (Ra + Rb) × C
+    T_low  = 0.693 × Rb × C
+    Duty   = (Ra + Rb) / (Ra + 2×Rb) × 100%
+  </div>
+  <div class="alert alert-info">El 555 astable no puede generar duty cycle < 50% con el circuito clásico. Para &lt;50% se necesita un diodo.</div>
+  <div class="card">
+    <div class="card-title">Modo Astable — Oscilador</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="ast-ra">Resistencia Ra</label>
+        <div class="input-wrap">
+          <input id="ast-ra" type="number" step="any" placeholder="ej: 10">
+          <select id="ast-ra-u" class="unit-sel">
+            <option value="1000" selected>kΩ</option>
+            <option value="1">Ω</option>
+            <option value="1000000">MΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ast-rb">Resistencia Rb</label>
+        <div class="input-wrap">
+          <input id="ast-rb" type="number" step="any" placeholder="ej: 10">
+          <select id="ast-rb-u" class="unit-sel">
+            <option value="1000" selected>kΩ</option>
+            <option value="1">Ω</option>
+            <option value="1000000">MΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ast-c">Condensador C</label>
+        <div class="input-wrap">
+          <input id="ast-c" type="number" step="any" placeholder="ej: 10">
+          <select id="ast-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+            <option value="0.001">mF</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="ast-calc"  class="btn btn-primary">Calcular</button>
+      <button id="ast-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ast-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Frecuencia (f)</div><div class="res-value" id="ast-res-f">—</div></div>
+      <div class="result-item"><div class="res-label">Periodo (T)</div><div class="res-value" id="ast-res-t">—</div></div>
+      <div class="result-item"><div class="res-label">Duty Cycle</div><div class="res-value" id="ast-res-duty">—</div></div>
+      <div class="result-item"><div class="res-label">T_high (salida en 1)</div><div class="res-value" id="ast-res-th">—</div></div>
+      <div class="result-item"><div class="res-label">T_low (salida en 0)</div><div class="res-value" id="ast-res-tl">—</div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="card">
+    <div class="card-title">Calcular componentes para una frecuencia deseada</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="ast-tf">Frecuencia deseada</label>
+        <div class="input-wrap">
+          <input id="ast-tf" type="number" step="any" placeholder="ej: 1000">
+          <select id="ast-tf-u" class="unit-sel">
+            <option value="1" selected>Hz</option>
+            <option value="1000">kHz</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ast-tc">Condensador C</label>
+        <div class="input-wrap">
+          <input id="ast-tc" type="number" step="any" placeholder="ej: 10">
+          <select id="ast-tc-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="ast-tdc">Duty Cycle deseado (%)</label>
+        <div class="input-wrap">
+          <input id="ast-tdc" type="number" step="any" min="50" max="99" placeholder="ej: 50">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">%</span>
+        </div>
+        <span class="input-note">Mín. 50% con circuito clásico</span>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="ast-find-calc"  class="btn btn-primary">Calcular R</button>
+      <button id="ast-find-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="ast-find-result" class="result-panel hidden">
+    <div class="result-title">Componentes calculados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ra</div><div class="res-value" id="ast-fr-ra">—</div></div>
+      <div class="result-item"><div class="res-label">Rb</div><div class="res-value" id="ast-fr-rb">—</div></div>
+      <div class="result-item"><div class="res-label">Frecuencia real</div><div class="res-value" id="ast-fr-f">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Monoestable -->
+<div id="tab-t555-mon" class="tab-panel">
+  <div class="formula-box">t = 1.1 × R × C &nbsp;(ancho del pulso de salida)</div>
+  <div class="card">
+    <div class="card-title">Modo Monoestable — Pulso único</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="mon-r">Resistencia R</label>
+        <div class="input-wrap">
+          <input id="mon-r" type="number" step="any" placeholder="ej: 100">
+          <select id="mon-r-u" class="unit-sel">
+            <option value="1000" selected>kΩ</option>
+            <option value="1">Ω</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="mon-c">Condensador C</label>
+        <div class="input-wrap">
+          <input id="mon-c" type="number" step="any" placeholder="ej: 10">
+          <select id="mon-c-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="mon-calc"  class="btn btn-primary">Calcular</button>
+      <button id="mon-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="mon-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Ancho del pulso (t)</div>
+      <div class="res-value" id="mon-res-t">—</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="card">
+    <div class="card-title">Calcular componentes para tiempo deseado</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="mon-tt">Tiempo deseado (t)</label>
+        <div class="input-wrap">
+          <input id="mon-tt" type="number" step="any" placeholder="ej: 100">
+          <select id="mon-tt-u" class="unit-sel">
+            <option value="1">s</option>
+            <option value="0.001" selected>ms</option>
+            <option value="0.000001">μs</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="mon-tc">Condensador C</label>
+        <div class="input-wrap">
+          <input id="mon-tc" type="number" step="any" placeholder="ej: 10">
+          <select id="mon-tc-u" class="unit-sel">
+            <option value="0.000001" selected>μF</option>
+            <option value="0.000000001">nF</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="mon-find-calc"  class="btn btn-primary">Calcular R</button>
+      <button id="mon-find-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="mon-find-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big">
+      <div class="res-label">Resistencia R necesaria</div>
+      <div class="res-value" id="mon-fr-r">—</div>
+    </div>
+  </div>
+</div>

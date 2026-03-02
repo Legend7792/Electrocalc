@@ -1,0 +1,225 @@
+<div class="view-header"><h2>🔌 Pinouts de Conectores</h2><p>Referencia completa de 15+ conectores: USB, HDMI, RJ45, DB9, I²C, SPI, UART, CAN, XLR, Jack, GPIO Raspberry Pi, Arduino, XT60.</p></div>
+<div class="tab-bar" style="flex-wrap:wrap">
+  <button class="tab-btn active" data-tab="con-usb">USB</button>
+  <button class="tab-btn" data-tab="con-hdmi">HDMI</button>
+  <button class="tab-btn" data-tab="con-rj45">RJ45/Ethernet</button>
+  <button class="tab-btn" data-tab="con-db9">DB9 / RS-232</button>
+  <button class="tab-btn" data-tab="con-proto">I²C/SPI/UART</button>
+  <button class="tab-btn" data-tab="con-can">CAN bus</button>
+  <button class="tab-btn" data-tab="con-audio">XLR / Jack</button>
+  <button class="tab-btn" data-tab="con-gpio">GPIO (Pi/Arduino)</button>
+</div>
+
+<div id="tab-con-usb" class="tab-panel active">
+  <div class="card"><div class="card-title">USB Type-A y Type-B (USB 2.0)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre</th><th>Color cable</th><th>Función</th></tr></thead><tbody>
+      <tr><td>1</td><td>VBUS</td><td style="color:#cc0000;font-weight:700">Rojo</td><td>+5V alimentación (500mA USB2 / 900mA USB3)</td></tr>
+      <tr><td>2</td><td>D−</td><td style="color:#fff;background:#444;font-weight:700">Blanco</td><td>Datos diferencial negativo</td></tr>
+      <tr><td>3</td><td>D+</td><td style="color:#228B22;font-weight:700">Verde</td><td>Datos diferencial positivo</td></tr>
+      <tr><td>4</td><td>GND</td><td style="color:#555;font-weight:700">Negro</td><td>Masa de señal y alimentación</td></tr>
+      <tr><td>Shield</td><td>GND</td><td>Malla</td><td>Blindaje / tierra chassis</td></tr>
+    </tbody></table></div></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">USB Type-C — pines clave</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre</th><th>Función</th></tr></thead><tbody>
+      <tr><td>A4/B4, A9/B9</td><td>VBUS</td><td>+5V (hasta 20V con PD) — 4 pines en paralelo</td></tr>
+      <tr><td>A1/B1, A12/B12</td><td>GND</td><td>Masa — 4 pines en paralelo</td></tr>
+      <tr><td>A6, B6</td><td>D+</td><td>USB 2.0 datos +</td></tr>
+      <tr><td>A7, B7</td><td>D−</td><td>USB 2.0 datos −</td></tr>
+      <tr><td>A5</td><td>CC1</td><td>Configuration Channel 1 — orientación, PD</td></tr>
+      <tr><td>B5</td><td>CC2</td><td>Configuration Channel 2</td></tr>
+      <tr><td>A2/B11</td><td>TX1+/TX2+</td><td>SuperSpeed TX diferencial (USB3.1)</td></tr>
+      <tr><td>A3/B10</td><td>TX1−/TX2−</td><td>SuperSpeed TX diferencial (USB3.1)</td></tr>
+      <tr><td>A10/B3</td><td>RX2+/RX1+</td><td>SuperSpeed RX diferencial (USB3.1)</td></tr>
+      <tr><td>A11/B2</td><td>RX2−/RX1−</td><td>SuperSpeed RX diferencial (USB3.1)</td></tr>
+    </tbody></table></div></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">USB Power Delivery — voltajes estándar</div>
+    <div class="formula-box">SPR (Standard Power Range): 5V, 9V, 15V, 20V @ hasta 5A = 100W
+EPR (Extended Power Range, USB PD 3.1): hasta 28V, 36V, 48V @ 5A = 240W
+Perfiles de carga rápida Quick Charge: 5V/9V/12V/20V según versión QC</div>
+  </div>
+</div>
+
+<div id="tab-con-hdmi" class="tab-panel">
+  <div class="card"><div class="card-title">HDMI Tipo A — 19 pines</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre</th><th>Pin</th><th>Nombre</th></tr></thead><tbody>
+      <tr><td>1</td><td>TMDS Data2+</td><td>2</td><td>TMDS Data2 Shield</td></tr>
+      <tr><td>3</td><td>TMDS Data2−</td><td>4</td><td>TMDS Data1+</td></tr>
+      <tr><td>5</td><td>TMDS Data1 Shield</td><td>6</td><td>TMDS Data1−</td></tr>
+      <tr><td>7</td><td>TMDS Data0+</td><td>8</td><td>TMDS Data0 Shield</td></tr>
+      <tr><td>9</td><td>TMDS Data0−</td><td>10</td><td>TMDS Clock+</td></tr>
+      <tr><td>11</td><td>TMDS Clock Shield</td><td>12</td><td>TMDS Clock−</td></tr>
+      <tr><td>13</td><td>CEC</td><td>14</td><td>Reservado (ARC en v1.4)</td></tr>
+      <tr><td>15</td><td>SCL (DDC/EDID)</td><td>16</td><td>SDA (DDC/EDID)</td></tr>
+      <tr><td>17</td><td>DDC/CEC GND</td><td>18</td><td>+5V (max 50mA)</td></tr>
+      <tr><td>19</td><td>Hot Plug Detect</td><td>Shield</td><td>Masa / blindaje</td></tr>
+    </tbody></table></div></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">Versiones HDMI y capacidades</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Versión</th><th>Bandwidth</th><th>Resolución max.</th><th>Característica clave</th></tr></thead><tbody>
+      <tr><td>HDMI 1.4</td><td>10.2 Gbps</td><td>4K@30Hz</td><td>3D, ARC, Canal Ethernet</td></tr>
+      <tr><td>HDMI 2.0</td><td>18 Gbps</td><td>4K@60Hz HDR</td><td>HDR10, 32 canales audio</td></tr>
+      <tr><td>HDMI 2.1</td><td>48 Gbps</td><td>8K@60Hz / 4K@120Hz</td><td>eARC, VRR, ALLM, DSC</td></tr>
+    </tbody></table></div></div>
+</div>
+
+<div id="tab-con-rj45" class="tab-panel">
+  <div class="card"><div class="card-title">RJ45 — T568A vs T568B (estándar EIA/TIA)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>T568B (más común)</th><th>T568A</th><th>Función (GbE)</th></tr></thead><tbody>
+      <tr><td>1</td><td style="color:#FF8C00;font-weight:700">Blanco/Naranja</td><td style="color:#228B22;font-weight:700">Blanco/Verde</td><td>TX+ (par 2)</td></tr>
+      <tr><td>2</td><td style="color:#FF8C00;font-weight:700">Naranja</td><td style="color:#228B22;font-weight:700">Verde</td><td>TX− (par 2)</td></tr>
+      <tr><td>3</td><td style="color:#228B22;font-weight:700">Blanco/Verde</td><td style="color:#FF8C00;font-weight:700">Blanco/Naranja</td><td>RX+ (par 3)</td></tr>
+      <tr><td>4</td><td style="color:#0000cc;font-weight:700">Azul</td><td style="color:#0000cc;font-weight:700">Azul</td><td>BI_D3+ (par 1, PoE)</td></tr>
+      <tr><td>5</td><td style="color:#0000cc;font-weight:700">Blanco/Azul</td><td style="color:#0000cc;font-weight:700">Blanco/Azul</td><td>BI_D3− (par 1, PoE)</td></tr>
+      <tr><td>6</td><td style="color:#228B22;font-weight:700">Verde</td><td style="color:#FF8C00;font-weight:700">Naranja</td><td>RX− (par 3)</td></tr>
+      <tr><td>7</td><td style="color:#8B4513;font-weight:700">Blanco/Marrón</td><td style="color:#8B4513;font-weight:700">Blanco/Marrón</td><td>BI_D4+ (par 4, PoE)</td></tr>
+      <tr><td>8</td><td style="color:#8B4513;font-weight:700">Marrón</td><td style="color:#8B4513;font-weight:700">Marrón</td><td>BI_D4− (par 4, PoE)</td></tr>
+    </tbody></table></div></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">PoE (Power over Ethernet) — IEEE 802.3</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Estándar</th><th>Potencia</th><th>Voltaje</th><th>Pares usados</th></tr></thead><tbody>
+      <tr><td>PoE (802.3af)</td><td>15.4 W</td><td>44–57 V</td><td>2 pares (1+2 / 3+6)</td></tr>
+      <tr><td>PoE+ (802.3at)</td><td>30 W</td><td>50–57 V</td><td>2 pares</td></tr>
+      <tr><td>PoE++ (802.3bt Tipo 3)</td><td>60 W</td><td>50–57 V</td><td>4 pares</td></tr>
+      <tr><td>PoE++ (802.3bt Tipo 4)</td><td>100 W</td><td>52–57 V</td><td>4 pares</td></tr>
+    </tbody></table></div></div>
+</div>
+
+<div id="tab-con-db9" class="tab-panel">
+  <div class="card"><div class="card-title">DB9 — RS-232 (DTE = PC)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre</th><th>Dir. DTE</th><th>Función</th></tr></thead><tbody>
+      <tr><td>1</td><td>DCD</td><td>← IN</td><td>Data Carrier Detect</td></tr>
+      <tr><td>2</td><td>RXD</td><td>← IN</td><td>Receive Data (datos del dispositivo al PC)</td></tr>
+      <tr><td>3</td><td>TXD</td><td>→ OUT</td><td>Transmit Data (datos del PC al dispositivo)</td></tr>
+      <tr><td>4</td><td>DTR</td><td>→ OUT</td><td>Data Terminal Ready</td></tr>
+      <tr><td>5</td><td>GND</td><td>—</td><td>Signal Ground (masa de señal)</td></tr>
+      <tr><td>6</td><td>DSR</td><td>← IN</td><td>Data Set Ready</td></tr>
+      <tr><td>7</td><td>RTS</td><td>→ OUT</td><td>Request To Send</td></tr>
+      <tr><td>8</td><td>CTS</td><td>← IN</td><td>Clear To Send</td></tr>
+      <tr><td>9</td><td>RI</td><td>← IN</td><td>Ring Indicator</td></tr>
+    </tbody></table></div></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">Niveles de tensión RS-232</div>
+    <div class="formula-box">Lógica invertida (negativa = 1):
+  '1' lógico (MARK): −3V a −15V
+  '0' lógico (SPACE): +3V a +15V
+  Zona indefinida: −3V a +3V
+  Velocidades estándar: 300, 1200, 2400, 9600, 19200, 38400, 57600, 115200 bps</div>
+  </div>
+</div>
+
+<div id="tab-con-proto" class="tab-panel">
+  <div class="card"><div class="card-title">I²C (Inter-Integrated Circuit)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre</th><th>Función</th><th>Pull-up</th></tr></thead><tbody>
+      <tr><td>SDA</td><td>Serial Data</td><td>Datos bidireccionales (open-drain)</td><td>4.7 kΩ a VCC típico</td></tr>
+      <tr><td>SCL</td><td>Serial Clock</td><td>Reloj generado por Master (open-drain)</td><td>4.7 kΩ a VCC típico</td></tr>
+      <tr><td>GND</td><td>Ground</td><td>Masa común obligatoria</td><td>—</td></tr>
+      <tr><td>VCC</td><td>Alimentación</td><td>3.3V o 5V según dispositivos</td><td>—</td></tr>
+    </tbody></table></div>
+    <div class="formula-box">Velocidades: Standard 100 kHz | Fast 400 kHz | Fast+ 1 MHz | High-speed 3.4 MHz
+Direcciones: 7 bits (0x00–0x7F, reservados 0x00–0x07 y 0x78–0x7F)
+Máx. carga capacitiva: 400 pF (standard) → limita longitud del bus</div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="card-title">SPI (Serial Peripheral Interface)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre alternativo</th><th>Dirección</th><th>Función</th></tr></thead><tbody>
+      <tr><td>SCK / SCLK</td><td>CLK</td><td>Master→Slave</td><td>Señal de reloj (generada por Master)</td></tr>
+      <tr><td>MOSI / SDO</td><td>COPI, DI, SI</td><td>Master→Slave</td><td>Master Out Slave In — datos del Master</td></tr>
+      <tr><td>MISO / SDI</td><td>CIPO, DO, SO</td><td>Slave→Master</td><td>Master In Slave Out — datos del Slave</td></tr>
+      <tr><td>CS / CE / SS</td><td>NSS, SSEL</td><td>Master→Slave</td><td>Chip Select — activo bajo (uno por esclavo)</td></tr>
+      <tr><td>GND</td><td>—</td><td>—</td><td>Masa común</td></tr>
+    </tbody></table></div>
+    <div class="formula-box">Modos SPI (CPOL/CPHA):
+  Modo 0: CPOL=0 CPHA=0 — reloj idle LOW, muestrea en flanco de subida
+  Modo 1: CPOL=0 CPHA=1 — reloj idle LOW, muestrea en flanco de bajada
+  Modo 2: CPOL=1 CPHA=0 — reloj idle HIGH, muestrea en flanco de bajada
+  Modo 3: CPOL=1 CPHA=1 — reloj idle HIGH, muestrea en flanco de subida</div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="card-title">UART (Universal Asynchronous Receiver-Transmitter)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Dirección</th><th>Función</th><th>Nota</th></tr></thead><tbody>
+      <tr><td>TX</td><td>OUT</td><td>Transmit — conectar al RX del otro</td><td>Lógica 3.3V o 5V (TTL)</td></tr>
+      <tr><td>RX</td><td>IN</td><td>Receive — conectar al TX del otro</td><td>Lógica 3.3V o 5V (TTL)</td></tr>
+      <tr><td>GND</td><td>—</td><td>Masa común obligatoria</td><td>Siempre necesaria</td></tr>
+      <tr><td>RTS</td><td>OUT</td><td>Request to Send (control de flujo HW)</td><td>Opcional</td></tr>
+      <tr><td>CTS</td><td>IN</td><td>Clear to Send (control de flujo HW)</td><td>Opcional</td></tr>
+    </tbody></table></div>
+    <div class="formula-box">Frame UART estándar: [START(1)] [DATA(5-9 bits)] [PARIDAD(opt)] [STOP(1-2)]
+Bauds comunes: 9600, 19200, 38400, 57600, 115200, 230400, 921600, 1000000
+⚠ TX del dispositivo A → RX del dispositivo B (cables cruzados)</div>
+  </div>
+</div>
+
+<div id="tab-con-can" class="tab-panel">
+  <div class="card"><div class="card-title">CAN Bus (Controller Area Network) — ISO 11898</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin (DB9)</th><th>Nombre</th><th>Función</th></tr></thead><tbody>
+      <tr><td>2</td><td>CAN_L</td><td>CAN Low — lógica diferencial (dominante = bajo)</td></tr>
+      <tr><td>3</td><td>GND</td><td>Masa de señal</td></tr>
+      <tr><td>7</td><td>CAN_H</td><td>CAN High — lógica diferencial (dominante = alto)</td></tr>
+      <tr><td>9</td><td>VCC (opt)</td><td>Alimentación opcional 5V–24V</td></tr>
+    </tbody></table></div>
+    <div class="formula-box">Niveles CAN:
+  Recesivo ('1'): CAN_H = CAN_L ≈ 2.5V (diferencial ≈ 0V)
+  Dominante ('0'): CAN_H ≈ 3.5V, CAN_L ≈ 1.5V (diferencial ≈ 2V)
+  Resistencia de terminación: 120Ω en cada extremo del bus
+Velocidades: 10kbps (25km) | 125kbps (500m) | 250kbps | 500kbps | 1Mbps (25m)
+CAN FD: hasta 5–8 Mbps en fase de datos</div>
+  </div>
+</div>
+
+<div id="tab-con-audio" class="tab-panel">
+  <div class="card"><div class="card-title">XLR Cannon — 3 pines (balanceado)</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Nombre</th><th>Función</th><th>Color cable</th></tr></thead><tbody>
+      <tr><td>1</td><td>GND / Shield</td><td>Masa y blindaje</td><td>Negro / Malla</td></tr>
+      <tr><td>2</td><td>HOT (+)</td><td>Señal positiva / en fase</td><td>Blanco o Rojo</td></tr>
+      <tr><td>3</td><td>COLD (−)</td><td>Señal negativa / invertida</td><td>Rojo o Negro</td></tr>
+    </tbody></table></div>
+    <div class="formula-box">Phantom Power (+48V): entre Pin 2 y Pin 1, y entre Pin 3 y Pin 1
+  Se usa para alimentar micrófonos de condensador
+  ⚠ No conectar micrófonos dinámicos a +48V (daño posible en algunos modelos)</div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="card-title">Jack 3.5mm TRS y TRRS</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Segmento</th><th>TRS Estéreo</th><th>TRRS CTIA (smartphones)</th><th>TRRS OMTP (antiguo)</th></tr></thead><tbody>
+      <tr><td>Tip (T)</td><td>Canal Izquierdo</td><td>Canal Izquierdo</td><td>Canal Izquierdo</td></tr>
+      <tr><td>Ring 1 (R)</td><td>Canal Derecho</td><td>Canal Derecho</td><td>Canal Derecho</td></tr>
+      <tr><td>Ring 2 (R2)</td><td>—</td><td>GND</td><td>Micrófono</td></tr>
+      <tr><td>Sleeve (S)</td><td>GND</td><td>Micrófono</td><td>GND</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<div id="tab-con-gpio" class="tab-panel">
+  <div class="card"><div class="card-title">Raspberry Pi 4/5 — GPIO 40 pines (BCM)</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Físico</th><th>BCM</th><th>Función</th><th>Físico</th><th>BCM</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>—</td><td>3.3V</td><td>2</td><td>—</td><td>5V</td></tr>
+        <tr><td>3</td><td>GPIO2</td><td>SDA1 (I²C)</td><td>4</td><td>—</td><td>5V</td></tr>
+        <tr><td>5</td><td>GPIO3</td><td>SCL1 (I²C)</td><td>6</td><td>—</td><td>GND</td></tr>
+        <tr><td>7</td><td>GPIO4</td><td>GPCLK0</td><td>8</td><td>GPIO14</td><td>UART TX</td></tr>
+        <tr><td>9</td><td>—</td><td>GND</td><td>10</td><td>GPIO15</td><td>UART RX</td></tr>
+        <tr><td>11</td><td>GPIO17</td><td>GPIO</td><td>12</td><td>GPIO18</td><td>PCM CLK / PWM0</td></tr>
+        <tr><td>13</td><td>GPIO27</td><td>GPIO</td><td>14</td><td>—</td><td>GND</td></tr>
+        <tr><td>15</td><td>GPIO22</td><td>GPIO</td><td>16</td><td>GPIO23</td><td>GPIO</td></tr>
+        <tr><td>17</td><td>—</td><td>3.3V</td><td>18</td><td>GPIO24</td><td>GPIO</td></tr>
+        <tr><td>19</td><td>GPIO10</td><td>SPI0 MOSI</td><td>20</td><td>—</td><td>GND</td></tr>
+        <tr><td>21</td><td>GPIO9</td><td>SPI0 MISO</td><td>22</td><td>GPIO25</td><td>GPIO</td></tr>
+        <tr><td>23</td><td>GPIO11</td><td>SPI0 SCLK</td><td>24</td><td>GPIO8</td><td>SPI0 CE0</td></tr>
+        <tr><td>25</td><td>—</td><td>GND</td><td>26</td><td>GPIO7</td><td>SPI0 CE1</td></tr>
+        <tr><td>27</td><td>GPIO0</td><td>ID_SD (EEPROM)</td><td>28</td><td>GPIO1</td><td>ID_SC (EEPROM)</td></tr>
+        <tr><td>29</td><td>GPIO5</td><td>GPIO</td><td>30</td><td>—</td><td>GND</td></tr>
+        <tr><td>31</td><td>GPIO6</td><td>GPIO</td><td>32</td><td>GPIO12</td><td>PWM0</td></tr>
+        <tr><td>33</td><td>GPIO13</td><td>PWM1</td><td>34</td><td>—</td><td>GND</td></tr>
+        <tr><td>35</td><td>GPIO19</td><td>SPI1 MISO / PCM FS</td><td>36</td><td>GPIO16</td><td>SPI1 CE0</td></tr>
+        <tr><td>37</td><td>GPIO26</td><td>GPIO</td><td>38</td><td>GPIO20</td><td>SPI1 MOSI</td></tr>
+        <tr><td>39</td><td>—</td><td>GND</td><td>40</td><td>GPIO21</td><td>SPI1 SCLK / PCM DOUT</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="card-title">Arduino Uno — Pines principales</div>
+    <div class="table-wrap"><table class="ref-table"><thead><tr><th>Pin</th><th>Función</th><th>Pin</th><th>Función</th></tr></thead><tbody>
+      <tr><td>Vin</td><td>Entrada 7–12V</td><td>5V</td><td>Salida 5V regulada</td></tr>
+      <tr><td>3.3V</td><td>Salida 3.3V (150mA)</td><td>GND</td><td>Masa (3 pines)</td></tr>
+      <tr><td>A0–A5</td><td>Analógico 10bit (0–5V)</td><td>AREF</td><td>Referencia ADC externa</td></tr>
+      <tr><td>D0 (RX)</td><td>UART RX — ¡USB comparte!</td><td>D1 (TX)</td><td>UART TX — ¡USB comparte!</td></tr>
+      <tr><td>D2, D3</td><td>Interrupción externa INT0/INT1</td><td>D13</td><td>LED onboard + SCK SPI</td></tr>
+      <tr><td>D3,D5,D6,D9,D10,D11</td><td>PWM 8bit 490/980 Hz</td><td>D10–D13</td><td>SPI (SS, MOSI, MISO, SCK)</td></tr>
+      <tr><td>A4 (SDA)</td><td>I²C Data</td><td>A5 (SCL)</td><td>I²C Clock</td></tr>
+      <tr><td>RESET</td><td>Reset activo bajo</td><td>ICSP</td><td>Programación ISP (6 pines)</td></tr>
+    </tbody></table></div>
+  </div>
+</div>

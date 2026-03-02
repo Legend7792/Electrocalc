@@ -1,0 +1,57 @@
+<div class="view-header">
+  <h2>🔢 Conversor de Bases Numéricas</h2>
+  <p>Decimal, Binario, Hexadecimal, Octal y BCD — conversión instantánea en todas las direcciones.</p>
+</div>
+<div class="formula-box">DEC ↔ BIN ↔ HEX ↔ OCT ↔ BCD
+Signed (complemento a 2): para representar negativos en binario</div>
+<div class="card">
+  <div class="card-title">Conversor universal — escribe en cualquier campo</div>
+  <div class="calc-grid">
+    <div class="input-group"><label for="nb-dec">Decimal (base 10)</label>
+      <div class="input-wrap"><input id="nb-dec" type="text" placeholder="ej: 255" style="font-family:monospace;font-size:1rem;font-weight:700"></div></div>
+    <div class="input-group"><label for="nb-bin">Binario (base 2)</label>
+      <div class="input-wrap"><input id="nb-bin" type="text" placeholder="ej: 11111111" style="font-family:monospace;font-size:1rem;font-weight:700;letter-spacing:.05em"></div></div>
+    <div class="input-group"><label for="nb-hex">Hexadecimal (base 16)</label>
+      <div class="input-wrap">
+        <span style="padding:0 8px;color:var(--text-dim);align-self:center;font-family:monospace">0x</span>
+        <input id="nb-hex" type="text" placeholder="ej: FF" style="font-family:monospace;font-size:1rem;font-weight:700;text-transform:uppercase">
+      </div></div>
+    <div class="input-group"><label for="nb-oct">Octal (base 8)</label>
+      <div class="input-wrap"><input id="nb-oct" type="text" placeholder="ej: 377" style="font-family:monospace;font-size:1rem;font-weight:700"></div></div>
+    <div class="input-group"><label for="nb-bcd">BCD (Binary Coded Decimal)</label>
+      <div class="input-wrap"><input id="nb-bcd" type="text" placeholder="ej: 0010 0101 0101" style="font-family:monospace;font-size:1rem;font-weight:700;letter-spacing:.05em"></div></div>
+    <div class="input-group"><label for="nb-bits">Tamaño de palabra</label>
+      <div class="input-wrap"><select id="nb-bits" class="unit-sel" style="flex:1;padding:8px 10px;">
+        <option value="8" selected>8 bits (byte)</option>
+        <option value="16">16 bits (word)</option>
+        <option value="32">32 bits (dword)</option>
+        <option value="64">64 bits (qword)</option>
+      </select></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="nb-calc" class="btn btn-primary">Convertir todo</button>
+    <button id="nb-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="nb-result" class="result-panel hidden">
+  <div class="result-title">Detalles</div>
+  <div class="result-grid">
+    <div class="result-item"><div class="res-label">Decimal</div><div class="res-value" id="nb-rdec">—</div></div>
+    <div class="result-item"><div class="res-label">Decimal (signed)</div><div class="res-value" id="nb-rsigned">—</div></div>
+    <div class="result-item"><div class="res-label">Binario (agrupado)</div><div class="res-value" id="nb-rbin" style="font-size:0.85rem;letter-spacing:.05em;font-family:monospace">—</div></div>
+    <div class="result-item"><div class="res-label">Hexadecimal</div><div class="res-value" id="nb-rhex" style="font-family:monospace">—</div></div>
+    <div class="result-item"><div class="res-label">Octal</div><div class="res-value" id="nb-roct">—</div></div>
+    <div class="result-item"><div class="res-label">BCD</div><div class="res-value" id="nb-rbcd" style="font-family:monospace;font-size:0.85rem">—</div></div>
+    <div class="result-item"><div class="res-label">ASCII (si imprimible)</div><div class="res-value" id="nb-rascii">—</div></div>
+    <div class="result-item"><div class="res-label">Complemento a 1</div><div class="res-value" id="nb-rc1" style="font-family:monospace;font-size:0.85rem">—</div></div>
+    <div class="result-item"><div class="res-label">Complemento a 2</div><div class="res-value" id="nb-rc2" style="font-family:monospace;font-size:0.85rem">—</div></div>
+  </div>
+</div>
+<hr class="divider">
+<div class="card">
+  <div class="card-title">📋 Tabla ASCII completa — caracteres imprimibles</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Dec</th><th>Hex</th><th>Bin</th><th>Char</th><th>Dec</th><th>Hex</th><th>Bin</th><th>Char</th><th>Dec</th><th>Hex</th><th>Bin</th><th>Char</th></tr></thead>
+    <tbody id="ascii-tbody"></tbody>
+  </table></div>
+</div>

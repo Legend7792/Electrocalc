@@ -1,0 +1,141 @@
+<div class="view-header">
+  <h2>〰️ Código de Colores de Inductores</h2>
+  <p>Decodifica y codifica inductores de 4 bandas (μH). Sistema similar al de resistencias.</p>
+</div>
+<div class="formula-box">Sistema de 4 bandas (μH):
+  Banda 1+2: dígitos significativos
+  Banda 3: multiplicador (×10^n)
+  Banda 4: tolerancia
+Inductores SMD: código de 3 dígitos → igual que resistencias pero en μH
+  Ej: 101 = 100 μH | 2R2 = 2.2 μH | 470 = 47 μH</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="lc-color">Código de colores</button>
+  <button class="tab-btn" data-tab="lc-smd">Código SMD</button>
+  <button class="tab-btn" data-tab="lc-ref">Tabla de referencia</button>
+</div>
+
+<div id="tab-lc-color" class="tab-panel active">
+  <div class="card">
+    <div class="card-title">Selector de bandas (4 bandas — valor en μH)</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Banda 1 (1er dígito)</label>
+        <div class="input-wrap"><select id="lc-b1" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="0">Negro — 0</option><option value="1">Marrón — 1</option>
+          <option value="2">Rojo — 2</option><option value="3">Naranja — 3</option>
+          <option value="4">Amarillo — 4</option><option value="5" selected>Verde — 5</option>
+          <option value="6">Azul — 6</option><option value="7">Violeta — 7</option>
+          <option value="8">Gris — 8</option><option value="9">Blanco — 9</option>
+        </select></div></div>
+      <div class="input-group"><label>Banda 2 (2do dígito)</label>
+        <div class="input-wrap"><select id="lc-b2" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="0">Negro — 0</option><option value="1" selected>Marrón — 1</option>
+          <option value="2">Rojo — 2</option><option value="3">Naranja — 3</option>
+          <option value="4">Amarillo — 4</option><option value="5">Verde — 5</option>
+          <option value="6">Azul — 6</option><option value="7">Violeta — 7</option>
+          <option value="8">Gris — 8</option><option value="9">Blanco — 9</option>
+        </select></div></div>
+      <div class="input-group"><label>Banda 3 (multiplicador)</label>
+        <div class="input-wrap"><select id="lc-b3" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="1">Negro — ×1</option><option value="10" selected>Marrón — ×10</option>
+          <option value="100">Rojo — ×100</option><option value="1000">Naranja — ×1000</option>
+          <option value="10000">Amarillo — ×10000</option>
+          <option value="0.1">Dorado — ×0.1</option><option value="0.01">Plata — ×0.01</option>
+        </select></div></div>
+      <div class="input-group"><label>Banda 4 (tolerancia)</label>
+        <div class="input-wrap"><select id="lc-b4" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="±1%">Marrón — ±1%</option><option value="±2%">Rojo — ±2%</option>
+          <option value="±5%" selected>Dorado — ±5%</option><option value="±10%">Plata — ±10%</option>
+          <option value="±20%">Sin banda / Negro — ±20%</option>
+        </select></div></div>
+    </div>
+    <div id="lc-preview" style="display:flex;gap:6px;margin:10px 0;height:36px;align-items:stretch"></div>
+    <div class="btn-group">
+      <button id="lc-calc" class="btn btn-primary">Calcular</button>
+      <button id="lc-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="lc-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big"><div class="res-label">Inductancia</div><div class="res-value" id="lc-rval">—</div></div>
+    <div class="result-grid" style="margin-top:12px">
+      <div class="result-item"><div class="res-label">En μH</div><div class="res-value" id="lc-ruh">—</div></div>
+      <div class="result-item"><div class="res-label">En mH</div><div class="res-value" id="lc-rmh">—</div></div>
+      <div class="result-item"><div class="res-label">En H</div><div class="res-value"  id="lc-rh">—</div></div>
+      <div class="result-item"><div class="res-label">Tolerancia</div><div class="res-value" id="lc-rtol">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card">
+    <div class="card-title">Codificador inverso — valor a bandas</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="lc-enc-val">Valor de inductancia</label>
+        <div class="input-wrap">
+          <input id="lc-enc-val" type="number" step="any" placeholder="ej: 100">
+          <select id="lc-enc-u" class="unit-sel"><option value="1" selected>μH</option><option value="1000">mH</option><option value="1000000">H</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="lc-enc-btn" class="btn btn-primary">Ver bandas</button>
+    </div>
+  </div>
+  <div id="lc-enc-result" class="result-panel hidden">
+    <div class="result-title">Bandas de color</div>
+    <div id="lc-enc-preview" style="display:flex;gap:8px;margin:10px 0;height:40px;align-items:stretch"></div>
+    <div id="lc-enc-names" style="font-size:0.8rem;color:var(--text-sub);margin-top:4px"></div>
+  </div>
+</div>
+
+<div id="tab-lc-smd" class="tab-panel">
+  <div class="formula-box">SMD código 3 dígitos (valor en μH):
+  XYZ = XY × 10^Z μH    ej: 101 = 10 × 10¹ = 100 μH
+  2R2 = 2.2 μH    4R7 = 4.7 μH    100 = 10 μH
+  
+SMD código con letras (nH):
+  R = punto decimal (en nH): 1R5 = 1.5 nH
+  N = punto decimal (en nH): 3N3 = 3.3 nH</div>
+  <div class="card">
+    <div class="card-title">Decodificador SMD</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="lc-smd-code">Código SMD</label>
+        <div class="input-wrap">
+          <input id="lc-smd-code" type="text" placeholder="ej: 101, 2R2, 4N7, 100" style="font-family:monospace;font-size:1.1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase">
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="lc-smd-btn" class="btn btn-primary">Decodificar</button>
+      <button id="lc-smd-clr" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="lc-smd-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big"><div class="res-label">Inductancia</div><div class="res-value" id="lc-smd-rval">—</div></div>
+    <div class="result-grid" style="margin-top:12px">
+      <div class="result-item"><div class="res-label">En nH</div><div class="res-value" id="lc-smd-rnh">—</div></div>
+      <div class="result-item"><div class="res-label">En μH</div><div class="res-value" id="lc-smd-ruh">—</div></div>
+      <div class="result-item"><div class="res-label">En mH</div><div class="res-value" id="lc-smd-rmh">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-lc-ref" class="tab-panel">
+  <div class="card-title" style="padding:0 0 12px">Tabla de colores — inductores 4 bandas (μH)</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Color</th><th>Dígito</th><th>Multiplicador (μH)</th><th>Tolerancia</th></tr></thead>
+    <tbody>
+      <tr><td><span class="color-swatch" style="background:#000"></span>Negro</td><td>0</td><td>×1</td><td>±20%</td></tr>
+      <tr><td><span class="color-swatch" style="background:#8B4513"></span>Marrón</td><td>1</td><td>×10</td><td>±1%</td></tr>
+      <tr><td><span class="color-swatch" style="background:#f00"></span>Rojo</td><td>2</td><td>×100</td><td>±2%</td></tr>
+      <tr><td><span class="color-swatch" style="background:#FF8C00"></span>Naranja</td><td>3</td><td>×1000</td><td>—</td></tr>
+      <tr><td><span class="color-swatch" style="background:#FFD700;border:1px solid #aaa"></span>Amarillo</td><td>4</td><td>×10000</td><td>—</td></tr>
+      <tr><td><span class="color-swatch" style="background:#228B22"></span>Verde</td><td>5</td><td>—</td><td>±0.5%</td></tr>
+      <tr><td><span class="color-swatch" style="background:#00f"></span>Azul</td><td>6</td><td>—</td><td>±0.25%</td></tr>
+      <tr><td><span class="color-swatch" style="background:#8B008B"></span>Violeta</td><td>7</td><td>—</td><td>±0.1%</td></tr>
+      <tr><td><span class="color-swatch" style="background:#808080"></span>Gris</td><td>8</td><td>—</td><td>—</td></tr>
+      <tr><td><span class="color-swatch" style="background:#f5f5f5;border:1px solid #aaa"></span>Blanco</td><td>9</td><td>—</td><td>—</td></tr>
+      <tr><td><span class="color-swatch" style="background:linear-gradient(90deg,#c8a400,#ffe680,#c8a400)"></span>Dorado</td><td>—</td><td>×0.1</td><td>±5%</td></tr>
+      <tr><td><span class="color-swatch" style="background:linear-gradient(90deg,#aaa,#eee,#aaa)"></span>Plata</td><td>—</td><td>×0.01</td><td>±10%</td></tr>
+    </tbody>
+  </table></div>
+</div>

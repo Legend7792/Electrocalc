@@ -1,0 +1,118 @@
+<div class="view-header">
+  <h2>🔌 Calculadora de Cables</h2>
+  <p>AWG ↔ mm², corriente máxima, caída de tensión, potencia perdida.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="cab-awg">AWG ↔ mm²</button>
+  <button class="tab-btn" data-tab="cab-drop">Caída de tensión</button>
+  <button class="tab-btn" data-tab="cab-size">Seleccionar sección</button>
+</div>
+
+<div id="tab-cab-awg" class="tab-panel active">
+  <div class="formula-box">d(mm) = 0.127 × 92^((36−AWG)/39)   |   A(mm²) = π/4 × d²
+R(Ω/km) = ρ_Cu / A_mm² × 1000   ρ_Cu = 0.01724 Ω·mm²/m</div>
+  <div class="card">
+    <div class="card-title">Conversor AWG ↔ mm² — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="awg-n">Número AWG</label>
+        <div class="input-wrap"><input id="awg-n" type="number" step="1" min="0" max="40" placeholder="ej: 22"><span style="padding:0 10px;color:var(--text-sub);align-self:center">AWG</span></div></div>
+      <div class="input-group"><label for="awg-mm">O sección (mm²)</label>
+        <div class="input-wrap"><input id="awg-mm" type="number" step="any" placeholder="ej: 0.5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">mm²</span></div></div>
+      <div class="input-group"><label for="awg-mat">Material</label>
+        <div class="input-wrap"><select id="awg-mat" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="0.01724" selected>Cobre (Cu)</option>
+          <option value="0.02826">Aluminio (Al)</option>
+          <option value="0.01600">Cobre plateado</option>
+        </select></div></div>
+      <div class="input-group"><label for="awg-temp">Temperatura (para derating)</label>
+        <div class="input-wrap"><input id="awg-temp" type="number" step="1" placeholder="25" value="25"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="awg-calc" class="btn btn-primary">Calcular</button>
+      <button id="awg-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="awg-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">AWG</div><div class="res-value" id="awg-rn">—</div></div>
+      <div class="result-item"><div class="res-label">Diámetro conductor</div><div class="res-value" id="awg-rd">—</div></div>
+      <div class="result-item"><div class="res-label">Sección</div><div class="res-value" id="awg-ra">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia (Ω/km)</div><div class="res-value" id="awg-rr">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia (Ω/m)</div><div class="res-value" id="awg-rrm">—</div></div>
+      <div class="result-item"><div class="res-label">I máx. al aire libre</div><div class="res-value" id="awg-ri">—</div></div>
+      <div class="result-item"><div class="res-label">I máx. en pared/canaleta</div><div class="res-value" id="awg-riw">—</div></div>
+      <div class="result-item"><div class="res-label">I máx. (temp. ajustada)</div><div class="res-value" id="awg-rit">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-cab-drop" class="tab-panel">
+  <div class="formula-box">Vdrop = I × R_total = I × 2 × (ρ × L / A)   (ida y vuelta)
+%Vdrop = Vdrop / Vin × 100
+Recomendación: &lt;3% en circuitos de potencia, &lt;1% en señal</div>
+  <div class="card">
+    <div class="card-title">Caída de tensión en cable</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="drop-vin">Tensión de línea (Vin)</label>
+        <div class="input-wrap"><input id="drop-vin" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="drop-i">Corriente (I)</label>
+        <div class="input-wrap"><input id="drop-i" type="number" step="any" placeholder="ej: 5">
+          <select id="drop-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="drop-l">Longitud de cable (un solo conductor)</label>
+        <div class="input-wrap"><input id="drop-l" type="number" step="any" placeholder="ej: 10">
+          <select id="drop-lu" class="unit-sel"><option value="1" selected>m</option><option value="0.001">mm</option><option value="0.3048">ft</option></select></div></div>
+      <div class="input-group"><label for="drop-awg2">AWG del cable</label>
+        <div class="input-wrap"><input id="drop-awg2" type="number" step="1" min="0" max="40" placeholder="ej: 18"><span style="padding:0 10px;color:var(--text-sub);align-self:center">AWG</span></div></div>
+      <div class="input-group"><label for="drop-mm2">O sección directa (mm²)</label>
+        <div class="input-wrap"><input id="drop-mm2" type="number" step="any" placeholder="ej: 1.5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">mm²</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="drop-calc" class="btn btn-primary">Calcular</button>
+      <button id="drop-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="drop-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Caída de tensión</div><div class="res-value" id="drop-rvd">—</div></div>
+      <div class="result-item"><div class="res-label">% de caída</div><div class="res-value" id="drop-rpct">—</div></div>
+      <div class="result-item"><div class="res-label">Tensión en carga (Vout)</div><div class="res-value" id="drop-rvout">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia perdida en cable</div><div class="res-value" id="drop-rpd">—</div></div>
+      <div class="result-item"><div class="res-label">Resistencia total (A+R)</div><div class="res-value" id="drop-rtot">—</div></div>
+    </div>
+    <div id="drop-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-cab-size" class="tab-panel">
+  <div class="formula-box">Selecciona el cable mínimo para no exceder la caída de tensión ni la temperatura.</div>
+  <div class="card">
+    <div class="card-title">¿Qué sección necesito?</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="size-i">Corriente</label>
+        <div class="input-wrap"><input id="size-i" type="number" step="any" placeholder="ej: 10">
+          <select id="size-iu" class="unit-sel"><option value="1" selected>A</option><option value="0.001">mA</option></select></div></div>
+      <div class="input-group"><label for="size-l">Longitud</label>
+        <div class="input-wrap"><input id="size-l" type="number" step="any" placeholder="ej: 5">
+          <select id="size-lu" class="unit-sel"><option value="1" selected>m</option><option value="0.3048">ft</option></select></div></div>
+      <div class="input-group"><label for="size-vin">Tensión</label>
+        <div class="input-wrap"><input id="size-vin" type="number" step="any" placeholder="ej: 12"><span style="padding:0 10px;color:var(--text-sub);align-self:center">V</span></div></div>
+      <div class="input-group"><label for="size-pct">Caída máxima admisible (%)</label>
+        <div class="input-wrap"><input id="size-pct" type="number" step="0.5" min="0.5" max="10" placeholder="ej: 3" value="3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">%</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="size-calc" class="btn btn-primary">Buscar sección</button>
+      <button id="size-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="size-result" class="result-panel hidden">
+    <div class="result-title">Cable recomendado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Sección mínima (mm²)</div><div class="res-value" id="size-rmm">—</div></div>
+      <div class="result-item"><div class="res-label">AWG equivalente</div><div class="res-value" id="size-rawg">—</div></div>
+      <div class="result-item"><div class="res-label">Sección comercial recomendada</div><div class="res-value" id="size-rstd">—</div></div>
+      <div class="result-item"><div class="res-label">Caída real con cable std</div><div class="res-value" id="size-rdrop">—</div></div>
+    </div>
+  </div>
+</div>

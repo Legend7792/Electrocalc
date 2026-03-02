@@ -1,0 +1,195 @@
+<div class="view-header">
+  <h2>🔵 Código de Condensadores</h2>
+  <p>Decodifica y codifica condensadores cerámicos, película y electrolíticos. Incluye códigos EIA, temperatura y tolerancia.</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="cc-eia">Código EIA (3 dígitos)</button>
+  <button class="tab-btn" data-tab="cc-enc">Codificar valor</button>
+  <button class="tab-btn" data-tab="cc-temp">Coef. Temperatura</button>
+  <button class="tab-btn" data-tab="cc-tol">Códigos de Tolerancia</button>
+  <button class="tab-btn" data-tab="cc-vol">Códigos de Tensión</button>
+</div>
+
+<!-- TAB: Decode EIA -->
+<div id="tab-cc-eia" class="tab-panel active">
+  <div class="formula-box">Código 3 dígitos: XYZ → XY × 10^Z pF    ej: 104 = 10 × 10⁴ pF = 100 nF = 0.1 μF
+Código 2 dígitos: XY → valor directo en pF    ej: 47 = 47 pF
+Con letra: 104K → 100nF ±10%    104M → 100nF ±20%    104J → 100nF ±5%
+Valor con R: 4R7 = 4.7 pF</div>
+  <div class="card">
+    <div class="card-title">Decodificador — ingresa el código impreso</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="cc-code">Código del condensador</label>
+        <div class="input-wrap">
+          <input id="cc-code" type="text" placeholder="ej: 104, 473, 4R7, 100n, 0.1u" style="font-family:monospace;font-size:1.1rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase">
+        </div>
+      </div>
+      <div class="input-group"><label for="cc-tol-code">Letra de tolerancia (opcional)</label>
+        <div class="input-wrap">
+          <select id="cc-tol-code" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="">— Sin letra —</option>
+            <option value="B">B — ±0.1 pF</option>
+            <option value="C">C — ±0.25 pF</option>
+            <option value="D">D — ±0.5 pF</option>
+            <option value="F">F — ±1%</option>
+            <option value="G">G — ±2%</option>
+            <option value="J">J — ±5%</option>
+            <option value="K">K — ±10%</option>
+            <option value="M">M — ±20%</option>
+            <option value="Z">Z — +80% / −20%</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="cc-dec-btn" class="btn btn-primary">Decodificar</button>
+      <button id="cc-dec-clr" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="cc-dec-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big"><div class="res-label">Capacidad</div><div class="res-value" id="cc-rval">—</div></div>
+    <div class="result-grid" style="margin-top:12px">
+      <div class="result-item"><div class="res-label">En pF</div><div class="res-value" id="cc-rpf">—</div></div>
+      <div class="result-item"><div class="res-label">En nF</div><div class="res-value" id="cc-rnf">—</div></div>
+      <div class="result-item"><div class="res-label">En μF</div><div class="res-value" id="cc-ruf">—</div></div>
+      <div class="result-item"><div class="res-label">Tolerancia</div><div class="res-value" id="cc-rtol">—</div></div>
+      <div class="result-item"><div class="res-label">Rango mínimo</div><div class="res-value" id="cc-rmin">—</div></div>
+      <div class="result-item"><div class="res-label">Rango máximo</div><div class="res-value" id="cc-rmax">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card">
+    <div class="card-title">📋 Valores EIA comunes</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Código</th><th>pF</th><th>nF</th><th>μF</th><th>Uso típico</th></tr></thead>
+      <tbody>
+        <tr><td style="font-family:monospace;font-weight:700">101</td><td>100</td><td>0.1</td><td>—</td><td>Desacoplo RF</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">102</td><td>1000</td><td>1</td><td>0.001</td><td>Desacoplo HF</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">103</td><td>10000</td><td>10</td><td>0.01</td><td>Filtro bypass</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">104</td><td>100000</td><td>100</td><td>0.1</td><td>Desacoplo general ⭐</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">105</td><td>1000000</td><td>1000</td><td>1</td><td>Filtro alimentación</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">224</td><td>220000</td><td>220</td><td>0.22</td><td>Audio, temporización</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">474</td><td>470000</td><td>470</td><td>0.47</td><td>Audio, filtros</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">225</td><td>2200000</td><td>2200</td><td>2.2</td><td>Alimentación</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">475</td><td>4700000</td><td>4700</td><td>4.7</td><td>Alimentación</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">47</td><td>47</td><td>0.047</td><td>—</td><td>RF, osciladores</td></tr>
+        <tr><td style="font-family:monospace;font-weight:700">100</td><td>10</td><td>—</td><td>—</td><td>RF, bucles de fase</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- TAB: Encode -->
+<div id="tab-cc-enc" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Valor → Código EIA</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="cc-enc-val">Valor de capacidad</label>
+        <div class="input-wrap">
+          <input id="cc-enc-val" type="number" step="any" placeholder="ej: 100">
+          <select id="cc-enc-u" class="unit-sel">
+            <option value="1e-12">pF</option>
+            <option value="1e-9">nF</option>
+            <option value="1e-6" selected>μF</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group"><label for="cc-enc-tol">Tolerancia</label>
+        <div class="input-wrap">
+          <select id="cc-enc-tol" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="">— Sin letra —</option>
+            <option value="J">J — ±5%</option>
+            <option value="K" selected>K — ±10%</option>
+            <option value="M">M — ±20%</option>
+            <option value="G">G — ±2%</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="cc-enc-btn" class="btn btn-primary">Codificar</button>
+      <button id="cc-enc-clr" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="cc-enc-result" class="result-panel hidden">
+    <div class="result-title">Código EIA</div>
+    <div class="result-big"><div class="res-label">Código</div><div class="res-value" id="cc-ecode" style="font-family:monospace;letter-spacing:.2em;font-size:2.2rem">—</div></div>
+    <div id="cc-enc-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<!-- TAB: Temperatura -->
+<div id="tab-cc-temp" class="tab-panel">
+  <div class="alert alert-info">El código de temperatura define el rango de operación y la variación máxima de capacidad. Crítico para osciladores, filtros de precisión y aplicaciones industriales.</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Código</th><th>Nombre</th><th>Rango temp.</th><th>ΔC máx.</th><th>Clase</th><th>Aplicación</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--success)">C0G / NP0</td><td>Clase I</td><td>−55 a +125°C</td><td>±30 ppm/°C</td><td>Alta estabilidad</td><td>Osciladores, filtros RF, resonadores</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--success)">C0H</td><td>Clase I</td><td>−55 a +125°C</td><td>±60 ppm/°C</td><td>Alta estabilidad</td><td>Circuitos de precisión</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--success)">C0K</td><td>Clase I</td><td>−55 a +125°C</td><td>±120 ppm/°C</td><td>Alta estabilidad</td><td>Filtros</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--primary)">X5R</td><td>Clase II</td><td>−55 a +85°C</td><td>±15%</td><td>Estabilidad media</td><td>Desacoplo, alimentación</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--primary)">X7R</td><td>Clase II</td><td>−55 a +125°C</td><td>±15%</td><td>Estabilidad media</td><td>Desacoplo industrial ⭐ más usado</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--primary)">X8R</td><td>Clase II</td><td>−55 a +150°C</td><td>±15%</td><td>Estabilidad media</td><td>Automoción</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--warning)">Y5V</td><td>Clase III</td><td>−30 a +85°C</td><td>+22% / −82%</td><td>Alta densidad</td><td>Desacoplo no crítico</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--warning)">Z5U</td><td>Clase III</td><td>+10 a +85°C</td><td>+22% / −56%</td><td>Alta densidad</td><td>Desacoplo general</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--warning)">Y5U</td><td>Clase III</td><td>−30 a +85°C</td><td>+22% / −56%</td><td>Alta densidad</td><td>Desacoplo</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">F</td><td>Clase I (NF)</td><td>0 a +70°C</td><td>±30 ppm/°C</td><td>Alta estabilidad</td><td>Osciladores a temperatura ambiente</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Cómo leer el código EIA de temperatura</div>
+    <div class="formula-box">Letra 1 (T mínima):  X=−55°C  Y=−30°C  Z=+10°C
+Número (T máxima):   4=+65°C  5=+85°C  6=+105°C  7=+125°C  8=+150°C
+Letra 2 (ΔC máx):   P=±10%  R=±15%  S=±22%  T=+22/−33%  U=+22/−56%  V=+22/−82%
+
+Ejemplo: X7R = −55°C a +125°C con ΔC ≤ ±15%</div>
+  </div>
+</div>
+
+<!-- TAB: Tolerancia -->
+<div id="tab-cc-tol" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Letra</th><th>Tolerancia</th><th>Para valores</th><th>Aplicación</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">A</td><td>±0.05 pF</td><td>≤ 10 pF</td><td>RF de precisión</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">B</td><td>±0.1 pF</td><td>≤ 10 pF</td><td>RF</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">C</td><td>±0.25 pF</td><td>≤ 10 pF</td><td>RF, osciladores</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">D</td><td>±0.5 pF</td><td>≤ 10 pF</td><td>Precisión</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">F</td><td>±1%</td><td>> 10 pF</td><td>Audio, filtros</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">G</td><td>±2%</td><td>> 10 pF</td><td>Uso general</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">H</td><td>±3%</td><td>> 10 pF</td><td>Uso general</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--success)">J</td><td>±5%</td><td>> 10 pF</td><td>Estándar ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--success)">K</td><td>±10%</td><td>> 10 pF</td><td>Desacoplo ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--primary)">M</td><td>±20%</td><td>> 10 pF</td><td>Desacoplo general ⭐</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">N</td><td>±30%</td><td>> 10 pF</td><td>Filtros no críticos</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;color:var(--warning)">Z</td><td>+80% / −20%</td><td>> 10 pF</td><td>Clase III (Y5V tipo)</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- TAB: Tensión -->
+<div id="tab-cc-vol" class="tab-panel">
+  <div class="alert alert-info">Los códigos de tensión son usados principalmente en condensadores de película y electrolíticos SMD.</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Código</th><th>Tensión</th><th>Código</th><th>Tensión</th><th>Código</th><th>Tensión</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">0G</td><td>4 V</td><td style="font-family:monospace;font-weight:700">1A</td><td>10 V</td><td style="font-family:monospace;font-weight:700">2A</td><td>100 V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">0J</td><td>6.3 V</td><td style="font-family:monospace;font-weight:700">1C</td><td>16 V</td><td style="font-family:monospace;font-weight:700">2D</td><td>200 V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1A</td><td>10 V</td><td style="font-family:monospace;font-weight:700">1E</td><td>25 V</td><td style="font-family:monospace;font-weight:700">2E</td><td>250 V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1C</td><td>16 V</td><td style="font-family:monospace;font-weight:700">1H</td><td>50 V</td><td style="font-family:monospace;font-weight:700">2W</td><td>450 V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1E</td><td>25 V</td><td style="font-family:monospace;font-weight:700">1V</td><td>35 V</td><td style="font-family:monospace;font-weight:700">2H</td><td>500 V</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">1H</td><td>50 V</td><td style="font-family:monospace;font-weight:700">2A</td><td>100 V</td><td style="font-family:monospace;font-weight:700">3A</td><td>1000 V</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Condensadores electrolíticos — bandas de color en el cuerpo</div>
+    <div class="formula-box">Los electrolíticos axiales usan:
+  Banda dorada o plateada: indica el terminal positivo (+)
+  Sin banda o marcado con −: terminal negativo (cátodo)
+  SMD electrolítico: barra o marca indica el terminal NEGATIVO
+  
+Tensión nominal: siempre imprimir el valor. Nunca operar > 80% Vmax.
+Temperatura: 85°C estándar / 105°C alta calidad / 125°C industrial</div>
+  </div>
+</div>

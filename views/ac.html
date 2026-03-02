@@ -1,0 +1,176 @@
+<div class="view-header">
+  <h2>〜 AC & Potencia</h2>
+  <p>Conversión RMS/Pico, factor de potencia, potencia activa/reactiva/aparente.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="ac-rms">RMS ↔ Pico</button>
+  <button class="tab-btn" data-tab="ac-pow">Triángulo de Potencia</button>
+  <button class="tab-btn" data-tab="ac-imp">Impedancia Z</button>
+</div>
+
+<!-- RMS ↔ Pico -->
+<div id="tab-ac-rms" class="tab-panel active">
+  <div class="formula-box">
+    Vpp = 2 × Vpico &nbsp;|&nbsp; Vrms = Vpico / √2 ≈ Vpico × 0.7071
+    Vpico = Vrms × √2 ≈ Vrms × 1.4142
+  </div>
+  <div class="card">
+    <div class="card-title">Conversión de valores AC</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="rms-vrms">Tensión RMS (Vrms)</label>
+        <div class="input-wrap">
+          <input id="rms-vrms" type="number" step="any" placeholder="ej: 220">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rms-vpk">Tensión Pico (Vpico)</label>
+        <div class="input-wrap">
+          <input id="rms-vpk" type="number" step="any" placeholder="ej: 311">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="rms-vpp">Tensión Pico a Pico (Vpp)</label>
+        <div class="input-wrap">
+          <input id="rms-vpp" type="number" step="any" placeholder="ej: 622">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">V</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:10px;">Ingresa cualquiera de los tres valores.</p>
+    <div class="btn-group">
+      <button id="rms-calc"  class="btn btn-primary">Calcular</button>
+      <button id="rms-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="rms-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Vrms</div><div class="res-value" id="rms-res-vrms">—</div></div>
+      <div class="result-item"><div class="res-label">Vpico</div><div class="res-value" id="rms-res-vpk">—</div></div>
+      <div class="result-item"><div class="res-label">Vpp</div><div class="res-value" id="rms-res-vpp">—</div></div>
+      <div class="result-item"><div class="res-label">Factor de forma</div><div class="res-value" id="rms-res-ff">1.1107</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Triángulo de potencia -->
+<div id="tab-ac-pow" class="tab-panel">
+  <div class="formula-box">
+    S = V × I &nbsp;(VA) &nbsp;|&nbsp; P = S × cos(φ) &nbsp;(W) &nbsp;|&nbsp; Q = S × sin(φ) &nbsp;(VAR)
+    fp = cos(φ) = P / S &nbsp;|&nbsp; S² = P² + Q²
+  </div>
+  <div class="card">
+    <div class="card-title">Triángulo de potencia — completa 2 campos</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="pow-p">Potencia Activa (P)</label>
+        <div class="input-wrap">
+          <input id="pow-p" type="number" step="any" placeholder="ej: 1000">
+          <select id="pow-p-u" class="unit-sel">
+            <option value="1" selected>W</option>
+            <option value="1000">kW</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="pow-q">Potencia Reactiva (Q)</label>
+        <div class="input-wrap">
+          <input id="pow-q" type="number" step="any" placeholder="ej: 500">
+          <select id="pow-q-u" class="unit-sel">
+            <option value="1" selected>VAR</option>
+            <option value="1000">kVAR</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="pow-s">Potencia Aparente (S)</label>
+        <div class="input-wrap">
+          <input id="pow-s" type="number" step="any" placeholder="ej: 1118">
+          <select id="pow-s-u" class="unit-sel">
+            <option value="1" selected>VA</option>
+            <option value="1000">kVA</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="pow-fp">Factor de Potencia (fp)</label>
+        <div class="input-wrap">
+          <input id="pow-fp" type="number" step="any" min="0" max="1" placeholder="ej: 0.89">
+          <span style="padding:0 10px;color:var(--text-sub);font-size:0.85rem;align-self:center;">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="pow-calc"  class="btn btn-primary">Calcular</button>
+      <button id="pow-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="pow-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">P — Potencia Activa</div><div class="res-value" id="pow-res-p">—</div></div>
+      <div class="result-item"><div class="res-label">Q — Potencia Reactiva</div><div class="res-value" id="pow-res-q">—</div></div>
+      <div class="result-item"><div class="res-label">S — Potencia Aparente</div><div class="res-value" id="pow-res-s">—</div></div>
+      <div class="result-item"><div class="res-label">Factor de Potencia</div><div class="res-value" id="pow-res-fp">—</div></div>
+      <div class="result-item"><div class="res-label">Ángulo φ</div><div class="res-value" id="pow-res-phi">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Impedancia Z -->
+<div id="tab-ac-imp" class="tab-panel">
+  <div class="formula-box">Z = √(R² + X²) &nbsp;|&nbsp; φ = arctan(X/R)
+  X = XL − Xc &nbsp;(reactancia neta)</div>
+  <div class="card">
+    <div class="card-title">Impedancia de un circuito RLC serie</div>
+    <div class="calc-grid">
+      <div class="input-group">
+        <label for="imp-r">Resistencia (R)</label>
+        <div class="input-wrap">
+          <input id="imp-r" type="number" step="any" placeholder="ej: 100">
+          <select id="imp-r-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="imp-xl">Reactancia Inductiva (XL)</label>
+        <div class="input-wrap">
+          <input id="imp-xl" type="number" step="any" placeholder="ej: 200">
+          <select id="imp-xl-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="imp-xc">Reactancia Capacitiva (Xc)</label>
+        <div class="input-wrap">
+          <input id="imp-xc" type="number" step="any" placeholder="ej: 50">
+          <select id="imp-xc-u" class="unit-sel">
+            <option value="1" selected>Ω</option>
+            <option value="1000">kΩ</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="imp-calc"  class="btn btn-primary">Calcular</button>
+      <button id="imp-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="imp-result" class="result-panel hidden">
+    <div class="result-title">Resultados</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Impedancia (Z)</div><div class="res-value" id="imp-res-z">—</div></div>
+      <div class="result-item"><div class="res-label">Reactancia neta (X)</div><div class="res-value" id="imp-res-x">—</div></div>
+      <div class="result-item"><div class="res-label">Ángulo de fase (φ)</div><div class="res-value" id="imp-res-phi">—</div></div>
+      <div class="result-item"><div class="res-label">Factor de potencia</div><div class="res-value" id="imp-res-fp">—</div></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="ElectroCalc — Calculadora electrónica profesional offline. Más de 40 módulos: Ohm, SMPS, PCB, filtros, BJT, Op-Amp, transformadores y mucho más.">
+  <meta name="theme-color" content="#0e1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ElectroCalc">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <title>ElectroCalc — Calculadora Electrónica</title>
+  <link rel="stylesheet" href="./css/theme.css">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/components.css">
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <button id="menu-toggle" aria-label="Menú">☰</button>
+  <a id="topbar-logo" href="#home">
+    <span>⚡</span>ElectroCalc
+  </a>
+
+  <!-- Búsqueda global -->
+  <div id="search-container">
+    <span class="search-icon">🔍</span>
+    <input id="global-search" type="search" placeholder="Buscar calculadora…" autocomplete="off" spellcheck="false">
+    <div id="search-results"></div>
+  </div>
+
+  <div id="topbar-actions">
+    <button class="topbar-btn" id="favs-btn"    title="Favoritos">⭐</button>
+    <button class="topbar-btn" id="history-btn" title="Historial">🕐</button>
+    <button class="topbar-btn" id="theme-toggle" title="Tema">☀️</button>
+  </div>
+</header>
+
+<!-- OVERLAY -->
+<div id="overlay" class="hidden"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-head">
+    <div class="sidebar-logo"><span>⚡</span> ElectroCalc</div>
+    <button id="close-sidebar" aria-label="Cerrar menú">✕</button>
+  </div>
+  <div id="sidebar-search-wrap">
+    <span class="sidebar-search-icon">🔍</span>
+    <input id="sidebar-search" type="search" placeholder="Filtrar…" autocomplete="off">
+  </div>
+  <div id="sidebar-nav"></div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main-wrap">
+  <div id="content">
+    <div class="loading-spinner"><div class="spinner"></div></div>
+  </div>
+</main>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav id="bottom-nav"></nav>
+
+<!-- HISTORY PANEL -->
+<aside id="history-panel" class="hidden">
+  <div id="history-head">
+    <h3>🕐 Historial</h3>
+    <button class="topbar-btn" id="close-history">✕</button>
+  </div>
+  <div id="history-list"></div>
+  <div id="history-actions">
+    <button id="clear-history" class="btn btn-secondary" style="width:100%;justify-content:center">🗑 Borrar historial</button>
+  </div>
+</aside>
+
+<!-- FAVORITES PANEL -->
+<aside id="favs-panel" class="hidden">
+  <div id="favs-head">
+    <h3>⭐ Favoritos</h3>
+    <button class="topbar-btn" id="close-favs">✕</button>
+  </div>
+  <div id="favs-list"><div style="padding:20px;text-align:center;color:var(--text-dim);font-size:0.85rem">Sin favoritos aún.<br>Usa ⭐ en cualquier calculadora.</div></div>
+</aside>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

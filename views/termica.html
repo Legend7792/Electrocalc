@@ -1,0 +1,131 @@
+<div class="view-header"><h2>🌡️ Gestión Térmica</h2><p>Temperatura de juntura, resistencia térmica, disipador necesario y derating de potencia.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="th-tj">Temperatura juntura</button>
+  <button class="tab-btn" data-tab="th-hs">Disipador necesario</button>
+  <button class="tab-btn" data-tab="th-der">Derating</button>
+  <button class="tab-btn" data-tab="th-ref">Resistencias térmicas</button>
+</div>
+
+<div id="tab-th-tj" class="tab-panel active">
+  <div class="formula-box">Tj = Tamb + P × Rθja
+Rθja = Rθjc + Rθcs + Rθsa
+Tj máx típico: 125°C (silicon) / 150°C (SiC) / 175°C (GaN)</div>
+  <div class="card"><div class="card-title">Cálculo de Tj — bidireccional</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="th-tamb">Temperatura ambiente (Tamb)</label>
+        <div class="input-wrap"><input id="th-tamb" type="number" step="any" placeholder="ej: 25" value="25"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+      <div class="input-group"><label for="th-p">Potencia disipada (P)</label>
+        <div class="input-wrap"><input id="th-p" type="number" step="any" placeholder="ej: 2.5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">W</span></div></div>
+      <div class="input-group"><label for="th-rjc">Rθjc (junction-case)</label>
+        <div class="input-wrap"><input id="th-rjc" type="number" step="any" placeholder="ej: 4"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C/W</span></div></div>
+      <div class="input-group"><label for="th-rcs">Rθcs (case-sink — pasta térmica)</label>
+        <div class="input-wrap"><input id="th-rcs" type="number" step="any" placeholder="ej: 0.5" value="0.5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C/W</span></div></div>
+      <div class="input-group"><label for="th-rsa">Rθsa (sink-ambient — disipador)</label>
+        <div class="input-wrap"><input id="th-rsa" type="number" step="any" placeholder="ej: 10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C/W</span></div></div>
+      <div class="input-group"><label for="th-tjmax">Tj máxima permitida</label>
+        <div class="input-wrap"><input id="th-tjmax" type="number" step="any" placeholder="ej: 125" value="125"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="th-calc" class="btn btn-primary">Calcular Tj</button>
+      <button id="th-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="th-tj-result" class="result-panel hidden">
+    <div class="result-title">Resultados térmicos</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Tj (temperatura juntura)</div><div class="res-value" id="th-rtj">—</div></div>
+      <div class="result-item"><div class="res-label">Rθja total</div><div class="res-value" id="th-rrja">—</div></div>
+      <div class="result-item"><div class="res-label">Margen de temperatura</div><div class="res-value" id="th-rmargen">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia máxima posible</div><div class="res-value" id="th-rpmax">—</div></div>
+    </div>
+    <div id="th-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-th-hs" class="tab-panel">
+  <div class="formula-box">Rθsa = (Tj_max − Tamb) / P − Rθjc − Rθcs
+Con margen de seguridad: usar Tj = Tj_max − 20°C</div>
+  <div class="card"><div class="card-title">¿Qué disipador necesito?</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="hs-tamb">Temperatura ambiente</label>
+        <div class="input-wrap"><input id="hs-tamb" type="number" step="any" placeholder="ej: 40" value="40"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+      <div class="input-group"><label for="hs-p">Potencia a disipar (W)</label>
+        <div class="input-wrap"><input id="hs-p" type="number" step="any" placeholder="ej: 5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">W</span></div></div>
+      <div class="input-group"><label for="hs-tjmax">Tj máxima (del datasheet)</label>
+        <div class="input-wrap"><input id="hs-tjmax" type="number" step="any" placeholder="ej: 150" value="150"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+      <div class="input-group"><label for="hs-rjc">Rθjc (datasheet)</label>
+        <div class="input-wrap"><input id="hs-rjc" type="number" step="any" placeholder="ej: 3"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C/W</span></div></div>
+      <div class="input-group"><label for="hs-rcs">Rθcs (pasta térmica)</label>
+        <div class="input-wrap"><input id="hs-rcs" type="number" step="any" placeholder="ej: 0.5" value="0.5"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C/W</span></div></div>
+      <div class="input-group"><label for="hs-margin">Margen de seguridad</label>
+        <div class="input-wrap"><input id="hs-margin" type="number" step="any" placeholder="ej: 20" value="20"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="hs-calc" class="btn btn-primary">Calcular disipador</button>
+      <button id="hs-clr"  class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="hs-result" class="result-panel hidden">
+    <div class="result-title">Disipador necesario</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Rθsa máxima admisible</div><div class="res-value" id="hs-rrsa">—</div></div>
+      <div class="result-item"><div class="res-label">Tj de operación (con margen)</div><div class="res-value" id="hs-rtjop">—</div></div>
+      <div class="result-item"><div class="res-label">Sin disipador (Rθja típica)</div><div class="res-value" id="hs-rnohs">—</div></div>
+    </div>
+    <div id="hs-warn" class="alert alert-info" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<div id="tab-th-der" class="tab-panel">
+  <div class="formula-box">Derating (reducción de potencia por temperatura):
+P_max(T) = P_max_25°C × (Tj_max − T) / (Tj_max − 25°C)
+Recomendación: operar al 70% de P_max como máximo</div>
+  <div class="card"><div class="card-title">Curva de derating</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="der-pmax">Potencia máxima a 25°C (datasheet)</label>
+        <div class="input-wrap"><input id="der-pmax" type="number" step="any" placeholder="ej: 10"><span style="padding:0 10px;color:var(--text-sub);align-self:center">W</span></div></div>
+      <div class="input-group"><label for="der-tjmax">Tj máxima</label>
+        <div class="input-wrap"><input id="der-tjmax" type="number" step="any" placeholder="ej: 150" value="150"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+      <div class="input-group"><label for="der-top">Temperatura de operación</label>
+        <div class="input-wrap"><input id="der-top" type="number" step="any" placeholder="ej: 85"><span style="padding:0 10px;color:var(--text-sub);align-self:center">°C</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="der-calc" class="btn btn-primary">Calcular</button>
+    </div>
+  </div>
+  <div id="der-result" class="result-panel hidden">
+    <div class="result-title">Potencia máxima con derating</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">P_max a T_op</div><div class="res-value" id="der-rpmax">—</div></div>
+      <div class="result-item"><div class="res-label">P recomendada (70%)</div><div class="res-value" id="der-rp70">—</div></div>
+      <div class="result-item"><div class="res-label">Factor de reducción</div><div class="res-value" id="der-rfact">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-th-ref" class="tab-panel">
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Interfaz</th><th>Rθcs típica (°C/W)</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>Grasa térmica buena (AS5)</td><td>0.1–0.3</td><td>Espesor mínimo recomendado</td></tr>
+      <tr><td>Grasa térmica básica</td><td>0.4–0.8</td><td>Silicona blanca estándar</td></tr>
+      <tr><td>Almohadilla térmica 0.5mm</td><td>0.5–1.5</td><td>Fácil montaje, aislada</td></tr>
+      <tr><td>Almohadilla térmica 1mm</td><td>1.0–2.5</td><td>Para superficies irregulares</td></tr>
+      <tr><td>Sin interfaz (metal-metal)</td><td>0.05–0.15</td><td>Solo si superficies planas</td></tr>
+      <tr><td>Mica + grasa</td><td>0.5–1.0</td><td>Aislamiento eléctrico</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:12px"><div class="card-title">Resistencia térmica de disipadores típicos (sin ventilador)</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Tipo</th><th>Rθsa (°C/W)</th><th>Dimensiones aprox.</th></tr></thead>
+      <tbody>
+        <tr><td>TO-220 pequeño</td><td>15–25</td><td>30×25×10 mm</td></tr>
+        <tr><td>TO-220 mediano</td><td>8–15</td><td>50×50×20 mm</td></tr>
+        <tr><td>TO-220 grande</td><td>3–8</td><td>80×80×40 mm</td></tr>
+        <tr><td>Placa aluminio DIY</td><td>10–20</td><td>50×50×3 mm</td></tr>
+        <tr><td>Disipador CPU pequeño</td><td>1–3</td><td>100×100×50mm + ventil.</td></tr>
+        <tr><td>Sin disipador (encapsulado)</td><td>50–200</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>

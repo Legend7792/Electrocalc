@@ -1,0 +1,111 @@
+<div class="view-header"><h2>🔍 Resistencias SMD</h2><p>Identificación y codificación — 3 dígitos, 4 dígitos y EIA-96.</p></div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="smd-dec">Decodificar</button>
+  <button class="tab-btn" data-tab="smd-enc">Codificar</button>
+  <button class="tab-btn" data-tab="smd-ref">Tabla EIA-96</button>
+</div>
+
+<div id="tab-smd-dec" class="tab-panel active">
+  <div class="formula-box">3 dig: XYZ = XY x 10^Z    ej: 472 = 4.7kOhm
+4 dig: WXYZ = WXY x 10^Z  ej: 4702 = 47kOhm
+EIA-96: XXY  codigo+letra  ej: 01A = 1.00 Ohm</div>
+  <div class="card">
+    <div class="card-title">Decodificador — ingresa el marcado del componente</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="smd-code">Código impreso en SMD</label>
+        <div class="input-wrap"><input id="smd-code" type="text" placeholder="ej: 472, 4R7, 01A, 0R0" style="text-transform:uppercase;letter-spacing:.08em;font-family:monospace;font-size:1rem;font-weight:700;">
+        </div>
+      </div>
+      <div class="input-group"><label for="smd-sys">Sistema (auto-detecta)</label>
+        <div class="input-wrap">
+          <select id="smd-sys" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="auto" selected>Auto-detectar</option>
+            <option value="3d">3 dígitos</option>
+            <option value="4d">4 dígitos</option>
+            <option value="eia96">EIA-96</option>
+            <option value="r">Con R (ej: 4R7)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="smd-dec-btn" class="btn btn-primary">Decodificar</button>
+      <button id="smd-dec-clr" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="smd-dec-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-big"><div class="res-label">Resistencia</div><div class="res-value" id="smd-rval">—</div></div>
+    <div class="result-grid" style="margin-top:12px">
+      <div class="result-item"><div class="res-label">Sistema detectado</div><div class="res-value" id="smd-rsys">—</div></div>
+      <div class="result-item"><div class="res-label">Tolerancia típica</div><div class="res-value" id="smd-rtol">—</div></div>
+      <div class="result-item"><div class="res-label">Valor mínimo</div><div class="res-value" id="smd-rmin">—</div></div>
+      <div class="result-item"><div class="res-label">Valor máximo</div><div class="res-value" id="smd-rmax">—</div></div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="card">
+    <div class="card-title">Casos especiales</div>
+    <div class="table-wrap"><table class="ref-table">
+      <thead><tr><th>Código</th><th>Valor</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td>000 / 0000</td><td>0 Ω</td><td>Puente / jumper</td></tr>
+        <tr><td>0R0 / 0R00</td><td>0 Ω</td><td>Puente con notación R</td></tr>
+        <tr><td>R10</td><td>0.10 Ω</td><td>R como punto decimal</td></tr>
+        <tr><td>1R0</td><td>1.0 Ω</td><td>R como punto decimal</td></tr>
+        <tr><td>1K0</td><td>1.0 kΩ</td><td>K como punto decimal</td></tr>
+        <tr><td>2M2</td><td>2.2 MΩ</td><td>M como punto decimal</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="tab-smd-enc" class="tab-panel">
+  <div class="card">
+    <div class="card-title">Codificador — valor a código SMD</div>
+    <div class="calc-grid">
+      <div class="input-group"><label for="smd-enc-val">Valor de la resistencia</label>
+        <div class="input-wrap"><input id="smd-enc-val" type="number" step="any" placeholder="ej: 4700">
+          <select id="smd-enc-u" class="unit-sel"><option value="1" selected>Ω</option><option value="1000">kΩ</option><option value="1000000">MΩ</option></select></div></div>
+      <div class="input-group"><label for="smd-enc-sys">Sistema de codificación</label>
+        <div class="input-wrap">
+          <select id="smd-enc-sys" class="unit-sel" style="flex:1;padding:8px 10px;">
+            <option value="3d" selected>3 dígitos (±5%)</option>
+            <option value="4d">4 dígitos (±1%)</option>
+            <option value="r">Con R (baja impedancia)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button id="smd-enc-btn" class="btn btn-primary">Codificar</button>
+      <button id="smd-enc-clr" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="smd-enc-result" class="result-panel hidden">
+    <div class="result-title">Código SMD</div>
+    <div class="result-big"><div class="res-label">Código</div><div class="res-value" id="smd-ecode" style="font-family:monospace;letter-spacing:.15em;font-size:2rem">—</div></div>
+    <div id="smd-enc-warn" class="alert alert-warning" style="margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="tab-smd-ref" class="tab-panel">
+  <div class="alert alert-info">EIA-96 se usa para resistencias de 1% (4 bandas equivalente). El código de 2 dígitos selecciona el valor base y la letra define el multiplicador.</div>
+  <div class="card-title" style="padding:0 0 10px">Multiplicadores EIA-96</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Letra</th><th>Multiplicador</th><th>Resultado ej. (código 01)</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:monospace;font-weight:700">A / X</td><td>×1</td><td>1.00 Ω</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">B / H</td><td>×10</td><td>10.0 Ω</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">C / Y</td><td>×100</td><td>100 Ω</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">D</td><td>×1000</td><td>1.00 kΩ</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">E</td><td>×10000</td><td>10.0 kΩ</td></tr>
+      <tr><td style="font-family:monospace;font-weight:700">F</td><td>×100000</td><td>100 kΩ</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card-title" style="padding:16px 0 10px">Primeros 20 valores EIA-96</div>
+  <div class="table-wrap"><table class="ref-table">
+    <thead><tr><th>Cód.</th><th>Valor</th><th>Cód.</th><th>Valor</th><th>Cód.</th><th>Valor</th><th>Cód.</th><th>Valor</th></tr></thead>
+    <tbody id="eia96-body"></tbody>
+  </table></div>
+</div>

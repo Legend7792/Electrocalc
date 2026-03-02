@@ -1,0 +1,38 @@
+<div class="view-header"><h2>⚖️ Conversor de Unidades</h2><p>Electrónica completa — selecciona categoría y convierte al instante.</p></div>
+<div class="card">
+  <div class="calc-grid">
+    <div class="input-group"><label for="unit-cat">Categoría</label>
+      <div class="input-wrap">
+        <select id="unit-cat" class="unit-sel" style="flex:1;padding:8px 10px;">
+          <option value="voltage">Tensión / Voltaje</option>
+          <option value="current">Corriente</option>
+          <option value="resistance">Resistencia / Impedancia</option>
+          <option value="power">Potencia</option>
+          <option value="energy">Energía</option>
+          <option value="capacitance">Capacidad</option>
+          <option value="inductance">Inductancia</option>
+          <option value="frequency">Frecuencia</option>
+          <option value="time">Tiempo</option>
+          <option value="temperature">Temperatura</option>
+          <option value="db">Decibelios (dB)</option>
+          <option value="data">Datos (bits/bytes)</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-group"><label for="unit-from">Unidad origen</label>
+      <div class="input-wrap">
+        <select id="unit-from" class="unit-sel" style="flex:1;padding:8px 10px;"></select>
+      </div>
+    </div>
+    <div class="input-group"><label for="unit-val">Valor a convertir</label>
+      <div class="input-wrap"><input id="unit-val" type="number" step="any" placeholder="ej: 1"><span id="unit-from-label" style="padding:0 10px;color:var(--text-sub);align-self:center;font-size:0.8rem;white-space:nowrap;min-width:40px"></span></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="unit-calc" class="btn btn-primary">Convertir todo</button>
+    <button id="unit-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+<div id="unit-result" class="result-panel hidden">
+  <div class="result-title">Conversiones</div>
+  <div id="unit-grid" class="result-grid"></div>
+</div>
