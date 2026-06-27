@@ -1,0 +1,192 @@
+<div class="view-header">
+  <h2>🏠 Asistente de Instalación Solar Domiciliaria</h2>
+  <p>Ingresa tu consumo y en segundos obtienes el diseño completo: paneles, baterías, inversor, cables, protecciones y lista de materiales.</p>
+</div>
+
+<!-- ENTRADAS -->
+<div class="card">
+  <div class="card-title">Datos de tu instalación</div>
+  <div class="calc-grid">
+
+    <div class="input-group">
+      <label>⚡ Consumo diario total de tu casa</label>
+      <div class="input-wrap">
+        <input id="isol-consumo" type="number" step="any" placeholder="ej: 3000">
+        <span class="unit-lbl">Wh/día</span>
+      </div>
+      <span class="field-hint">No sabes cuánto consumes — ver la calculadora de consumo abajo ↓</span>
+    </div>
+
+    <div class="input-group">
+      <label>🌤 Tipo de instalación</label>
+      <div class="input-wrap">
+        <select id="isol-tipo" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="basico">Básica — focos, TV, cargadores, ventiladores</option>
+          <option value="medio">Media — + nevera doméstica, lavadora</option>
+          <option value="completo">Completa — + AC pequeño (1 ton), bomba de agua</option>
+          <option value="personalizado">Personalizado — consumo calculado abajo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>☀️ HSP — Horas Sol Pico</label>
+      <div class="input-wrap">
+        <input id="isol-hsp" type="number" step="0.1" value="5.0" placeholder="5.0">
+        <span class="unit-lbl">h/día</span>
+      </div>
+      <span class="field-hint">Cuba: 4.5 conservador · 5.0 típico · 5.5 óptimo (sur/oriente)</span>
+    </div>
+
+    <div class="input-group">
+      <label>🔋 Tipo de batería</label>
+      <div class="input-wrap">
+        <select id="isol-battipo" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="lifepo4">LiFePO4 — Recomendada (DoD 90%, 10–15 años)</option>
+          <option value="agm">AGM sellada (DoD 50%, 3–5 años)</option>
+          <option value="gel">GEL (DoD 60%, 4–6 años)</option>
+          <option value="plomo">Plomo húmedo (DoD 50%, 2–4 años)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>🌙 Días de autonomía sin sol</label>
+      <div class="input-wrap">
+        <input id="isol-autonomia" type="number" step="0.5" value="1.5" placeholder="1.5">
+        <span class="unit-lbl">días</span>
+      </div>
+      <span class="field-hint">1.5 días típico. Más días = más batería = más costo.</span>
+    </div>
+
+    <div class="input-group">
+      <label>🔌 ¿Tienes conexión a la red eléctrica?</label>
+      <div class="input-wrap">
+        <select id="isol-red" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="si">Sí — inversor híbrido usa la red de respaldo</option>
+          <option value="no">No — sistema off-grid completamente autónomo</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+  <div class="btn-group">
+    <button id="isol-calcular" class="btn btn-primary" style="font-size:1rem;padding:12px 24px">⚡ Diseñar instalación completa</button>
+    <button id="isol-limpiar" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+
+<!-- Calculadora de consumo ayuda -->
+<details style="margin-bottom:14px">
+  <summary style="cursor:pointer;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.85rem;font-weight:600;color:var(--text-sub)">
+    📊 ¿Cómo calcular mi consumo diario? — Haz clic para expandir
+  </summary>
+  <div class="card" style="margin-top:8px;border-radius:0 0 10px 10px">
+    <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:10px">Multiplica la potencia de cada equipo (en Watts) × las horas que lo usas al día. Suma todo.</p>
+    <div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Equipo</th><th>Potencia típica</th><th>Horas/día ejemplo</th><th>Wh/día ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Foco LED 9W</td><td>9W</td><td>6h</td><td>54 Wh</td></tr>
+        <tr><td>TV LED 32"</td><td>60W</td><td>5h</td><td>300 Wh</td></tr>
+        <tr><td>TV LED 55"</td><td>120W</td><td>4h</td><td>480 Wh</td></tr>
+        <tr><td>Nevera doméstica eficiente</td><td>150W promedio</td><td>24h (cicla ~40%)</td><td>~1,440 Wh</td></tr>
+        <tr><td>Nevera vieja ineficiente</td><td>300W promedio</td><td>24h</td><td>~2,160 Wh</td></tr>
+        <tr><td>Ventilador de pie</td><td>50W</td><td>8h</td><td>400 Wh</td></tr>
+        <tr><td>Lavadora (ciclo)</td><td>500W</td><td>1h</td><td>500 Wh</td></tr>
+        <tr><td>Cargador celular</td><td>10W</td><td>3h</td><td>30 Wh</td></tr>
+        <tr><td>Computadora laptop</td><td>45W</td><td>6h</td><td>270 Wh</td></tr>
+        <tr><td>PC de escritorio</td><td>200W</td><td>4h</td><td>800 Wh</td></tr>
+        <tr><td>Router WiFi</td><td>12W</td><td>24h</td><td>288 Wh</td></tr>
+        <tr><td>AC ventana 1 ton</td><td>1000W</td><td>6h</td><td>6,000 Wh</td></tr>
+        <tr><td>AC split 1.5 ton</td><td>1400W</td><td>6h</td><td>8,400 Wh</td></tr>
+        <tr><td>Bomba de agua 0.5HP</td><td>373W</td><td>2h</td><td>746 Wh</td></tr>
+        <tr><td>Plancha de ropa</td><td>1200W</td><td>0.5h</td><td>600 Wh</td></tr>
+        <tr><td>Microondas</td><td>1000W</td><td>0.25h</td><td>250 Wh</td></tr>
+      </tbody>
+    </table></div>
+    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:8px">⚡ Ejemplo casa típica Cuba (sin AC): nevera + TV + 8 focos + ventilador + cargadores ≈ 2,500–3,500 Wh/día</p>
+  </div>
+</details>
+
+<!-- RESULTADO -->
+<div id="isol-resultado" class="hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+    <h3 style="margin:0;font-size:1.1rem">📊 Diseño de instalación</h3>
+    <button id="isol-copiar" class="btn btn-secondary" style="padding:7px 14px;font-size:0.82rem">📋 Copiar resumen</button>
+  </div>
+
+  <!-- Resumen ejecutivo -->
+  <div class="card" style="border-left:4px solid var(--accent)">
+    <div class="card-title">✅ Resumen ejecutivo</div>
+    <div id="isol-res-resumen"></div>
+  </div>
+
+  <!-- Paneles -->
+  <div class="card"><div id="isol-res-paneles"></div></div>
+
+  <!-- Baterías -->
+  <div class="card"><div id="isol-res-bat"></div></div>
+
+  <!-- MPPT / Inversor -->
+  <div class="card"><div id="isol-res-mppt"></div></div>
+
+  <!-- Cables -->
+  <div class="card"><div id="isol-res-cables"></div></div>
+
+  <!-- Protecciones -->
+  <div class="card"><div id="isol-res-prot"></div></div>
+
+  <!-- Lista de materiales -->
+  <div class="card"><div id="isol-res-materiales"></div></div>
+
+  <!-- Consejos Cuba -->
+  <div class="card" style="border-left:4px solid #28a745"><div id="isol-res-consejos"></div></div>
+</div>
+
+<!-- TABLAS DE REFERENCIA -->
+<div style="margin-top:20px">
+  <h3 style="font-size:1rem;margin-bottom:12px;color:var(--text-sub)">📚 Tablas de referencia — componentes recomendados</h3>
+
+  <details style="margin-bottom:10px">
+    <summary style="cursor:pointer;padding:9px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.85rem;font-weight:600">⚙️ Inversores híbridos recomendados</summary>
+    <div class="card" style="margin-top:6px"><div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Marca</th><th>Modelo</th><th>Potencia</th><th>Voltaje</th><th>MPPT</th><th>Efic.</th><th>Nota</th></tr></thead>
+      <tbody id="isol-tab-inv-tbody"></tbody>
+    </table></div></div>
+  </details>
+
+  <details style="margin-bottom:10px">
+    <summary style="cursor:pointer;padding:9px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.85rem;font-weight:600">🔋 Baterías recomendadas</summary>
+    <div class="card" style="margin-top:6px"><div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Marca</th><th>Modelo</th><th>Tipo</th><th>V</th><th>Ah</th><th>Nota</th></tr></thead>
+      <tbody id="isol-tab-bat-tbody"></tbody>
+    </table></div></div>
+  </details>
+
+  <details style="margin-bottom:10px">
+    <summary style="cursor:pointer;padding:9px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.85rem;font-weight:600">📡 Controladores MPPT independientes</summary>
+    <div class="card" style="margin-top:6px"><div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Marca</th><th>Modelo</th><th>Vmax PV</th><th>I max</th><th>V bat</th><th>Precio</th><th>Nota</th></tr></thead>
+      <tbody id="isol-tab-mppt-tbody"></tbody>
+    </table></div></div>
+  </details>
+
+  <details style="margin-bottom:10px">
+    <summary style="cursor:pointer;padding:9px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.85rem;font-weight:600">🛡️ Guía de protecciones eléctricas</summary>
+    <div class="card" style="margin-top:6px"><div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Elemento</th><th>Cómo calcular</th><th>Tipo</th><th>Notas</th></tr></thead>
+      <tbody id="isol-tab-prot-tbody"></tbody>
+    </table></div></div>
+  </details>
+</div>
+
+<style>
+  .install-section h4 { font-size:0.95rem; margin:0 0 10px; color:var(--text); }
+  .install-section h5 { font-size:0.82rem; color:var(--text-sub); margin:10px 0 6px; }
+  .install-note { margin-top:10px; padding:9px 12px; background:rgba(var(--primary-rgb,59,130,246),0.08); border-left:3px solid var(--primary,#3b82f6); border-radius:0 7px 7px 0; font-size:0.82rem; color:var(--text-sub); line-height:1.6; }
+  .install-list { padding-left:1.1rem; font-size:0.84rem; line-height:1.9; color:var(--text-sub); }
+  .install-list li { margin-bottom:4px; }
+  .field-hint { font-size:0.78rem; color:var(--text-dim); margin-top:2px; display:block; }
+  .unit-lbl { padding:0 10px; color:var(--text-sub); align-self:center; font-size:0.82rem; white-space:nowrap; }
+  details summary::-webkit-details-marker { color:var(--text-sub); }
+</style>

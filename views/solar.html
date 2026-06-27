@@ -1,0 +1,243 @@
+<div class="view-header">
+  <h2>☀️ Calculadoras Solar Fotovoltaica</h2>
+  <p>Array de paneles, baterías, calibre de cable, identificación visual, strings y tablas de referencia.</p>
+</div>
+<div id="sol-tabs" class="tab-bar">
+  <button class="tab-btn active" data-tab="array">Array</button>
+  <button class="tab-btn" data-tab="bat">Baterías</button>
+  <button class="tab-btn" data-tab="cable">Cable</button>
+  <button class="tab-btn" data-tab="vis">ID Visual</button>
+  <button class="tab-btn" data-tab="isc">String</button>
+  <button class="tab-btn" data-tab="colores">Colores</button>
+  <button class="tab-btn" data-tab="tabla">Tabla</button>
+</div>
+
+<!-- ARRAY -->
+<div id="sol-tab-array" class="sol-panel active">
+  <div class="formula-box">N_paneles = ⌈(Consumo/día ÷ Eficiencia) ÷ (HSP × Wp_panel)⌉
+HSP Cuba típico: Norte 4.5–5.0 h/día · Sur/Oriente 5.0–5.5 h/día
+Eficiencia sistema: 75–85% (pérdidas calor + cables + batería + controlador)</div>
+  <div class="card"><div class="card-title">Dimensionar array de paneles</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Consumo diario total</label>
+        <div class="input-wrap"><input id="sol-consumo" type="number" step="any" placeholder="ej: 3000"><span class="unit-lbl">Wh/día</span></div>
+        <span class="field-hint">Suma: W × h/día de cada equipo</span></div>
+      <div class="input-group"><label>Horas Sol Pico (HSP)</label>
+        <div class="input-wrap"><input id="sol-hsp" type="number" step="0.1" placeholder="4.5"><span class="unit-lbl">h/día</span></div>
+        <span class="field-hint">Cuba: usa 4.5 para diseño conservador</span></div>
+      <div class="input-group"><label>Eficiencia del sistema</label>
+        <div class="input-wrap"><input id="sol-efic" type="number" step="1" value="80" placeholder="80"><span class="unit-lbl">%</span></div></div>
+      <div class="input-group"><label>Potencia por panel</label>
+        <div class="input-wrap"><input id="sol-ppanel" type="number" step="any" placeholder="ej: 450"><span class="unit-lbl">Wp</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="sol-panel-calc" class="btn btn-primary">Calcular</button>
+      <button id="sol-panel-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="sol-p-result" class="result-panel hidden">
+    <div class="result-title">Resultado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Energía bruta necesaria</div><div class="res-value" id="sol-p-energia">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia mínima array</div><div class="res-value" id="sol-p-potarray">—</div></div>
+      <div class="result-item"><div class="res-label">Número de paneles</div><div class="res-value" id="sol-p-npaneles" style="font-size:1.4rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">Potencia real del array</div><div class="res-value" id="sol-p-potreal">—</div></div>
+      <div class="result-item"><div class="res-label">Energía generada/día</div><div class="res-value" id="sol-p-energreal">—</div></div>
+      <div class="result-item"><div class="res-label">Margen de generación</div><div class="res-value" id="sol-p-margen">—</div></div>
+    </div>
+    <div id="sol-p-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- BATERÍAS -->
+<div id="sol-tab-bat" class="sol-panel">
+  <div class="formula-box">Capacidad_Wh = (Consumo × Días_autonomía) ÷ DoD
+Capacidad_Ah = Capacidad_Wh ÷ Voltaje_sistema
+DoD: LiFePO4=90% · AGM=50% · GEL=60% · Plomo=50%</div>
+  <div class="card"><div class="card-title">Dimensionar banco de baterías</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Consumo diario</label>
+        <div class="input-wrap"><input id="sol-bat-consumo" type="number" step="any" placeholder="ej: 3000"><span class="unit-lbl">Wh/día</span></div></div>
+      <div class="input-group"><label>Días de autonomía</label>
+        <div class="input-wrap"><input id="sol-bat-dias" type="number" step="0.5" value="1.5" placeholder="1.5"><span class="unit-lbl">días</span></div>
+        <span class="field-hint">Sin sol — 1–2 días típico</span></div>
+      <div class="input-group"><label>Tipo de batería</label>
+        <div class="input-wrap"><select id="sol-bat-tipo" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="lifepo4">LiFePO4 — DoD 90%</option>
+          <option value="agm">AGM — DoD 50%</option>
+          <option value="gel">GEL — DoD 60%</option>
+          <option value="plomo">Plomo húmedo — DoD 50%</option>
+        </select></div></div>
+      <div class="input-group"><label>DoD personalizado (opcional)</label>
+        <div class="input-wrap"><input id="sol-bat-dod" type="number" step="1" placeholder="90"><span class="unit-lbl">%</span></div></div>
+      <div class="input-group"><label>Voltaje del sistema</label>
+        <div class="input-wrap"><select id="sol-bat-v" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="12">12V</option><option value="24">24V</option><option value="48" selected>48V</option>
+        </select></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="sol-bat-calc" class="btn btn-primary">Calcular</button>
+      <button id="sol-bat-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="sol-bat-result" class="result-panel hidden">
+    <div class="result-title">Banco de baterías</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Capacidad necesaria</div><div class="res-value" id="sol-bat-wh">—</div></div>
+      <div class="result-item"><div class="res-label">Capacidad en Ah</div><div class="res-value" id="sol-bat-ah">—</div></div>
+      <div class="result-item"><div class="res-label">Capacidad comercial recomendada</div><div class="res-value" id="sol-bat-std" style="font-size:1.3rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">Energía total del banco</div><div class="res-value" id="sol-bat-whstd">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente de carga máxima</div><div class="res-value" id="sol-bat-icarga">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CABLE -->
+<div id="sol-tab-cable" class="sol-panel">
+  <div class="formula-box">I_diseño = Isc × N_strings × 1.56  ← factor NEC 690 (1.25×1.25)
+mm²_mín = MAX(por_caída, por_corriente)   Caída recomendada ≤ 2%</div>
+  <div class="card"><div class="card-title">Seleccionar calibre cable solar DC</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Isc del panel (datasheet)</label>
+        <div class="input-wrap"><input id="sol-cab-isc" type="number" step="any" placeholder="ej: 13.85"><span class="unit-lbl">A</span></div></div>
+      <div class="input-group"><label>Strings en paralelo</label>
+        <div class="input-wrap"><input id="sol-cab-nstr" type="number" step="1" min="1" value="1"><span class="unit-lbl">strings</span></div></div>
+      <div class="input-group"><label>Longitud cable (un conductor)</label>
+        <div class="input-wrap"><input id="sol-cab-l" type="number" step="any" placeholder="ej: 10"><span class="unit-lbl">m</span></div>
+        <span class="field-hint">Solo ida — el cálculo multiplica ×2</span></div>
+      <div class="input-group"><label>Voltaje del sistema</label>
+        <div class="input-wrap"><input id="sol-cab-v" type="number" step="any" placeholder="ej: 48"><span class="unit-lbl">V</span></div></div>
+      <div class="input-group"><label>Caída máxima admisible</label>
+        <div class="input-wrap"><input id="sol-cab-pct" type="number" step="0.5" value="2" placeholder="2"><span class="unit-lbl">%</span></div></div>
+    </div>
+    <div class="btn-group">
+      <button id="sol-cable-calc" class="btn btn-primary">Calcular</button>
+      <button id="sol-cable-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="sol-cab-result" class="result-panel hidden">
+    <div class="result-title">Cable recomendado</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Corriente de diseño</div><div class="res-value" id="sol-cab-idis">—</div></div>
+      <div class="result-item"><div class="res-label">mm² mínimo por caída</div><div class="res-value" id="sol-cab-mm2drop">—</div></div>
+      <div class="result-item"><div class="res-label">mm² mínimo por corriente</div><div class="res-value" id="sol-cab-mm2curr">—</div></div>
+      <div class="result-item"><div class="res-label">🔌 Cable recomendado</div><div class="res-value" id="sol-cab-mm2rec" style="font-size:1.3rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">Caída real</div><div class="res-value" id="sol-cab-vd">—</div></div>
+      <div class="result-item"><div class="res-label">Fusible recomendado</div><div class="res-value" id="sol-cab-fus">—</div></div>
+      <div class="result-item"><div class="res-label">Uso típico</div><div class="res-value" id="sol-cab-uso" style="font-size:0.83rem">—</div></div>
+    </div>
+    <div id="sol-cab-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- ID VISUAL -->
+<div id="sol-tab-vis" class="sol-panel">
+  <div class="formula-box">mm² = π/4 × d²   donde d = diámetro del cobre en mm (sin aislamiento)
+Regla de campo: 4mm² es el cable estándar de MC4. Calibrador sobre el cobre puro.</div>
+  <div class="card"><div class="card-title">🔍 Identificar calibre por diámetro</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Diámetro del conductor de cobre</label>
+        <div class="input-wrap"><input id="sol-vis-diam" type="number" step="0.01" placeholder="ej: 2.25"><span class="unit-lbl">mm</span></div>
+        <span class="field-hint">Mide el cobre con calibrador, sin el aislamiento</span></div>
+    </div>
+    <div class="btn-group"><button id="sol-vis-calc" class="btn btn-primary">Identificar</button></div>
+    <div id="sol-vis-result" class="result-panel hidden" style="margin-top:12px">
+      <div class="result-grid">
+        <div class="result-item"><div class="res-label">Sección</div><div class="res-value" id="sol-vis-mm2">—</div></div>
+        <div class="result-item"><div class="res-label">AWG equivalente</div><div class="res-value" id="sol-vis-awg">—</div></div>
+        <div class="result-item"><div class="res-label">Corriente máx. DC solar</div><div class="res-value" id="sol-vis-imax">—</div></div>
+        <div class="result-item"><div class="res-label">Uso típico</div><div class="res-value" id="sol-vis-uso" style="font-size:0.83rem">—</div></div>
+        <div class="result-item" style="grid-column:1/-1"><div class="res-label">Referencia táctil</div><div class="res-value" id="sol-vis-ref" style="font-size:0.85rem">—</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="card-title">📏 Guía visual de calibres (escala real aproximada)</div>
+    <div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Sección</th><th>Ø cobre</th><th>Referencia visual y táctil</th></tr></thead>
+      <tbody id="sol-vis-tbody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- STRING -->
+<div id="sol-tab-isc" class="sol-panel">
+  <div class="formula-box">Voc_string = Voc × N_serie × (1 + CoefVoc%/100 × (T°C−25))
+Isc_array  = Isc × N_paralelo     I_diseño = Isc_array × 1.56</div>
+  <div class="card"><div class="card-title">Calcular parámetros del string completo</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Isc del panel</label>
+        <div class="input-wrap"><input id="sol-isc-isc1" type="number" step="any" placeholder="ej: 13.85"><span class="unit-lbl">A</span></div></div>
+      <div class="input-group"><label>Voc del panel</label>
+        <div class="input-wrap"><input id="sol-isc-voc1" type="number" step="any" placeholder="ej: 41.8"><span class="unit-lbl">V</span></div></div>
+      <div class="input-group"><label>Vmp del panel</label>
+        <div class="input-wrap"><input id="sol-isc-vmp1" type="number" step="any" placeholder="ej: 34.9"><span class="unit-lbl">V</span></div></div>
+      <div class="input-group"><label>Paneles en serie</label>
+        <div class="input-wrap"><input id="sol-isc-nser" type="number" step="1" min="1" value="1"><span class="unit-lbl">pnls</span></div></div>
+      <div class="input-group"><label>Strings en paralelo</label>
+        <div class="input-wrap"><input id="sol-isc-npar" type="number" step="1" min="1" value="1"><span class="unit-lbl">str</span></div></div>
+      <div class="input-group"><label>Coef. temp. Voc</label>
+        <div class="input-wrap"><input id="sol-isc-coefv" type="number" step="0.01" value="-0.35"><span class="unit-lbl">%/°C</span></div></div>
+      <div class="input-group"><label>Temperatura de celda</label>
+        <div class="input-wrap"><input id="sol-isc-tcel" type="number" step="1" value="45"><span class="unit-lbl">°C</span></div>
+        <span class="field-hint">Cuba sol directo: 55–65°C</span></div>
+    </div>
+    <div class="btn-group">
+      <button id="sol-isc-calc" class="btn btn-primary">Calcular</button>
+      <button id="sol-isc-clear" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+  <div id="sol-isc-result" class="result-panel hidden">
+    <div class="result-title">Parámetros del array</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Voc del string</div><div class="res-value" id="sol-isc-vocstring">—</div></div>
+      <div class="result-item"><div class="res-label">Vmp del string</div><div class="res-value" id="sol-isc-vmpstring">—</div></div>
+      <div class="result-item"><div class="res-label">Isc total del array</div><div class="res-value" id="sol-isc-iscstring">—</div></div>
+      <div class="result-item"><div class="res-label">Corriente de diseño</div><div class="res-value" id="sol-isc-idis">—</div></div>
+      <div class="result-item"><div class="res-label">Fusible por string</div><div class="res-value" id="sol-isc-fus">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Para el MPPT</div><div class="res-value" id="sol-isc-mppt" style="font-size:0.82rem">—</div></div>
+    </div>
+    <div id="sol-isc-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- COLORES -->
+<div id="sol-tab-colores" class="sol-panel">
+  <div class="card"><div class="card-title">🎨 Código de colores — cables solares (IEC 60446 / NEC)</div>
+    <div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Conductor</th><th>Color y regla</th></tr></thead>
+      <tbody id="sol-color-tbody"></tbody>
+    </table></div>
+    <div style="margin-top:12px;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.82rem;color:var(--text-sub);line-height:1.8">
+      <strong>⚠ Reglas críticas:</strong><br>
+      • Nunca invertir positivo/negativo — destruye el controlador o inversor.<br>
+      • La tierra (verde/amarillo) es obligatoria en sistemas >50V.<br>
+      • MC4 rojo = positivo (+) · MC4 negro = negativo (−). No hay excepciones.<br>
+      • Etiquetar todos los conductores aunque el color sea evidente.
+    </div>
+  </div>
+</div>
+
+<!-- TABLA CALIBRES -->
+<div id="sol-tab-tabla" class="sol-panel">
+  <div class="card"><div class="card-title">📋 Calibres para sistemas solares DC (Cu 90°C, USE-2/PV Wire)</div>
+    <div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>mm²</th><th>AWG</th><th>I máx DC</th><th>Aplicación</th></tr></thead>
+      <tbody id="sol-cal-tbody"></tbody>
+    </table></div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="card-title">🔩 MC4 — referencia rápida</div>
+    <ul style="font-size:0.84rem;line-height:1.9;padding-left:1.1rem;color:var(--text-sub)">
+      <li>MC4 estándar: 2.5 a 6mm². Corriente máxima nominal: <strong>30A a 1000V DC</strong>.</li>
+      <li>MC4-Evo 2 / Pro: hasta 10mm². Para strings de alta corriente.</li>
+      <li>Siempre usar herramienta de crimpado MC4 — nunca alicates genéricos ni soldadura.</li>
+      <li>Verificar polaridad con multímetro antes de conectar al controlador.</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .sol-panel{display:none} .sol-panel.active{display:block}
+  .field-hint{font-size:0.78rem;color:var(--text-dim);margin-top:2px;display:block}
+  .unit-lbl{padding:0 10px;color:var(--text-sub);align-self:center;font-size:0.82rem;white-space:nowrap}
+</style>
