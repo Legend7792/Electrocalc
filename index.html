@@ -90,5 +90,18 @@
 <div id="toast"></div>
 
 <script type="module" src="./js/main.js"></script>
+<script>
+  // Solicitar persistencia de caché al navegador
+  // Esto evita que Chrome/Android elimine la caché de la PWA automáticamente
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().then(granted => {
+      if (granted) console.log('[ElectroCalc] Almacenamiento persistente concedido ✓');
+      else console.warn('[ElectroCalc] Almacenamiento NO persistente — posible limpieza automática');
+    });
+  }
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-/* sw.js — ElectroCalc v2.3 — Cache-First permanente (offline robusto) */
-const CACHE = 'ec-v2.3';
+/* sw.js — ElectroCalc v2.4 — Cache-First + persistencia robusta */
+const CACHE = 'ec-v2.4';
 
 const PRECACHE = [
   './', './index.html', './manifest.json',
@@ -45,14 +45,20 @@ const PRECACHE = [
   './views/zener.html'
 ];
 
+// ── INSTALL: Promise.allSettled — no falla si un recurso no está disponible ──
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(PRECACHE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then(cache =>
+      Promise.allSettled(
+        PRECACHE.map(url =>
+          cache.add(url).catch(err => console.warn('[SW] No se pudo cachear:', url, err))
+        )
+      )
+    ).then(() => self.skipWaiting())
   );
 });
 
+// ── ACTIVATE: limpiar versiones anteriores y tomar control ──────────────────
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
@@ -61,26 +67,26 @@ self.addEventListener('activate', e => {
   );
 });
 
+// ── FETCH: Cache-First — sirve siempre desde caché ──────────────────────────
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Navegación: siempre servir index.html desde caché
   if (e.request.mode === 'navigate') {
     e.respondWith(
       caches.match('./index.html')
         .then(r => r || fetch(e.request))
-        .catch(() => new Response('<h1>Sin conexión</h1>', { headers: {'Content-Type':'text/html'} }))
+        .catch(() => new Response('<h1>Sin conexión</h1><p>Reconecta para reinstalar.</p>',
+          { headers: { 'Content-Type': 'text/html' } }))
     );
     return;
   }
 
-  // Cache-first con actualización silenciosa en background
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) {
-        // revalidar en background sin bloquear
+        // Actualizar en background sin bloquear
         fetch(e.request).then(res => {
           if (res && res.status === 200)
             caches.open(CACHE).then(c => c.put(e.request, res));
@@ -94,7 +100,7 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => new Response('{"error":"offline"}', {
-        status: 503, headers: {'Content-Type':'application/json'}
+        status: 503, headers: { 'Content-Type': 'application/json' }
       }));
     })
   );
