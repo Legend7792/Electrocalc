@@ -51,6 +51,8 @@ const ROUTES = [
   { id:'referencia',    icon:'📚', title:'Referencia General',       cat:'Referencia',      calc:'ref/referencia'      },
   { id:'semiconductores',icon:'🔬',title:'Semiconductores',          cat:'Referencia',      calc:'ref/semiconductores' },
   { id:'conectores',    icon:'🔌', title:'Pinouts Conectores',       cat:'Referencia',      calc:'ref/conectores'      },
+  { id:'solar',           icon:'☀️',  title:'Solar Fotovoltaica',       cat:'Energía Solar',   calc:'calcs/solar'         },
+  { id:'instalacion_solar',icon:'🏠', title:'Asistente Instalación Solar',cat:'Energía Solar',  calc:'calcs/instalacion_solar'},
 ];
 
 const SIDEBAR_GROUPS = [
@@ -64,6 +66,7 @@ const SIDEBAR_GROUPS = [
   { label:'Identificación',   ids:['colores','smd','capcode','inductorcode'] },
   { label:'Herramientas',     ids:['units','estandares','logica','numbase','freq','energia','cientifica'] },
   { label:'Referencia',       ids:['referencia','semiconductores','conectores'] },
+  { label:'Energía Solar',    ids:['solar','instalacion_solar'] },
 ];
 
 const BOTTOM_QUICK = ['ohm','colores','smps','units','referencia'];
