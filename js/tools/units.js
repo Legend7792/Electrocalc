@@ -22,6 +22,14 @@ const UNITS = {
   temperature: [{l:'°C',f:null},{l:'°F',f:null},{l:'K',f:null},{l:'°R',f:null}],
   db:          [{l:'dB (tensión)',f:null},{l:'dB (potencia)',f:null},{l:'veces (V)',f:null},{l:'veces (P)',f:null}],
   data:        [{l:'bit',f:1},{l:'byte',f:8},{l:'KB',f:8e3},{l:'KiB',f:8*1024},{l:'MB',f:8e6},{l:'MiB',f:8*1024*1024},{l:'GB',f:8e9},{l:'GiB',f:8*1024*1024*1024},{l:'Kbps',f:1e3},{l:'Mbps',f:1e6},{l:'Gbps',f:1e9}],
+  length:   [{l:'m',f:1},{l:'cm',f:0.01},{l:'mm',f:0.001},{l:'km',f:1000},{l:'ft',f:0.3048},{l:'in',f:0.0254},{l:'yd',f:0.9144},{l:'mi',f:1609.344},{l:'nmi',f:1852}],
+  area:     [{l:'m²',f:1},{l:'cm²',f:1e-4},{l:'mm²',f:1e-6},{l:'km²',f:1e6},{l:'ft²',f:0.092903},{l:'in²',f:6.4516e-4},{l:'ha',f:1e4},{l:'acre',f:4046.86}],
+  volume:   [{l:'m³',f:1},{l:'cm³',f:1e-6},{l:'L',f:0.001},{l:'mL',f:1e-6},{l:'ft³',f:0.028317},{l:'in³',f:1.63871e-5},{l:'gal_us',f:0.003785},{l:'fl_oz',f:2.9574e-5}],
+  mass:     [{l:'kg',f:1},{l:'g',f:0.001},{l:'mg',f:1e-6},{l:'t',f:1000},{l:'lb',f:0.453592},{l:'oz',f:0.028350}],
+  pressure: [{l:'Pa',f:1},{l:'kPa',f:1000},{l:'MPa',f:1e6},{l:'bar',f:1e5},{l:'mbar',f:100},{l:'psi',f:6894.76},{l:'atm',f:101325},{l:'mmHg',f:133.322}],
+  speed:    [{l:'m/s',f:1},{l:'km/h',f:0.27778},{l:'mph',f:0.44704},{l:'ft/s',f:0.3048},{l:'knot',f:0.514444}],
+  angle:    [{l:'°',f:1},{l:'rad',f:180/Math.PI},{l:'grad',f:0.9},{l:'rev',f:360}],
+  torque:   [{l:'N·m',f:1},{l:'kN·m',f:1000},{l:'N·cm',f:0.01},{l:'lbf·ft',f:1.35582},{l:'kgf·m',f:9.80665}],
 };
 
 function updateFromSelect() {
