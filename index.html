@@ -2,6 +2,7 @@
 <html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-store">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="ElectroCalc — Calculadora electrónica profesional offline. Más de 40 módulos: Ohm, SMPS, PCB, filtros, BJT, Op-Amp, transformadores y mucho más.">
   <meta name="theme-color" content="#0e1117">
@@ -91,17 +92,52 @@
 
 <script type="module" src="./js/main.js"></script>
 <script>
-  // Solicitar persistencia de caché al navegador
-  // Esto evita que Chrome/Android elimine la caché de la PWA automáticamente
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  }
-  if (navigator.storage && navigator.storage.persist) {
-    navigator.storage.persist().then(granted => {
-      if (granted) console.log('[ElectroCalc] Almacenamiento persistente concedido ✓');
-      else console.warn('[ElectroCalc] Almacenamiento NO persistente — posible limpieza automática');
-    });
-  }
+  // ── Service Worker + Persistencia (fix definitivo offline) ─────────────────
+  // CAUSA DEL BUG: Chrome servía index.html desde el HTTP cache (bypass del SW).
+  // Sin el SW controlando la página, los fetch() a los módulos .js/.html van
+  // directo a la red y fallan offline → "visualizando copia sin conexión".
+  // FIX: no-store en el HTML + registro inmediato + auto-reload UNA VEZ si el
+  // SW aún no controla la página, para que tome control real.
+  (async () => {
+    if (!('serviceWorker' in navigator)) return;
+
+    if (navigator.storage?.persist) {
+      const granted = await navigator.storage.persist();
+      console.log('[EC] Persistencia:', granted ? '✓ concedida' : '⚠ no concedida');
+    }
+
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+      console.log('[EC] SW registrado:', reg.scope);
+      if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        nw?.addEventListener('statechange', () => {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            nw.postMessage('SKIP_WAITING');
+          }
+        });
+      });
+    } catch (e) {
+      console.warn('[EC] SW registration failed:', e);
+    }
+
+    // Si la página no está controlada por el SW, recargar UNA VEZ para activarlo
+    if (!navigator.serviceWorker.controller) {
+      const key = 'ec_sw_reload';
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        navigator.serviceWorker.ready.then(() => {
+          console.log('[EC] Recargando para activar control offline');
+          window.location.reload();
+        });
+      } else {
+        sessionStorage.removeItem(key);
+      }
+    } else {
+      sessionStorage.removeItem('ec_sw_reload');
+    }
+  })();
 </script>
 </body>
 </html>
