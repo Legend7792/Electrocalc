@@ -53,6 +53,11 @@ const ROUTES = [
   { id:'conectores',    icon:'🔌', title:'Pinouts Conectores',       cat:'Referencia',      calc:'ref/conectores'      },
   { id:'solar',           icon:'☀️',  title:'Solar Fotovoltaica',       cat:'Energía Solar',   calc:'calcs/solar'         },
   { id:'instalacion_solar',icon:'🏠', title:'Asistente Instalación Solar',cat:'Energía Solar',  calc:'calcs/instalacion_solar'},
+  { id:'filtros_fuente',  icon:'🔋', title:'Fuentes — Rizado y Diseño',   cat:'Fuentes',      calc:'calcs/filtros_fuente'   },
+  { id:'mecanica',        icon:'⚙️',  title:'Mecánica de Motores',         cat:'Mecánica',     calc:'calcs/mecanica'         },
+  { id:'consumo',         icon:'💡', title:'Consumo Eléctrico Doméstico',  cat:'Herramientas', calc:'calcs/consumo'          },
+  { id:'inclinometro',    icon:'📐', title:'Inclinómetro',                 cat:'Herramientas', calc:'tools/inclinometro'     },
+  { id:'antena_dir',      icon:'📡', title:'Apuntador de Antena',          cat:'Herramientas', calc:'tools/antena_dir'       },
 ];
 
 const SIDEBAR_GROUPS = [
