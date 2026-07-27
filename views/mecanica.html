@@ -1,0 +1,92 @@
+<div class="view-header">
+  <h2>⚙️ Mecánica de Motores</h2>
+  <p>Cilindrada, relación de compresión, velocidad por transmisión y conversión HP/kW.</p>
+</div>
+<div id="mec-tabs" class="tab-bar" style="flex-wrap:wrap;gap:4px">
+  <button class="tab-btn active" data-tab="cil">Cilindrada</button>
+  <button class="tab-btn" data-tab="comp">Compresión</button>
+  <button class="tab-btn" data-tab="vel">Velocidad</button>
+  <button class="tab-btn" data-tab="hp">HP ↔ kW</button>
+</div>
+
+<div id="mec-tab-cil" class="mec-panel active">
+  <div class="formula-box">Vt = (π/4) × B² × S × N  —  B,S en mm → resultado mm³÷1000 = cc</div>
+  <div class="card"><div class="card-title">Cilindrada total</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Diámetro cilindro (B)</label><div class="input-wrap"><input id="mec-c-b" type="number" step="any" placeholder="56"><span class="unit-lbl">mm</span></div></div>
+      <div class="input-group"><label>Carrera (S)</label><div class="input-wrap"><input id="mec-c-s" type="number" step="any" placeholder="49"><span class="unit-lbl">mm</span></div></div>
+      <div class="input-group"><label>N° cilindros</label><div class="input-wrap"><input id="mec-c-n" type="number" step="1" min="1" value="1"><span class="unit-lbl">cil.</span></div></div>
+    </div>
+    <div class="btn-group"><button id="mec-cil-calc" class="btn btn-primary">Calcular</button><button id="mec-cil-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="mec-cil-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Cilindrada</div><div class="res-value" id="mec-c-vt-cc" style="font-size:1.4rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">Litros</div><div class="res-value" id="mec-c-vt-l">—</div></div>
+      <div class="result-item"><div class="res-label">Clasificación</div><div class="res-value" id="mec-c-clase">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Fórmula</div><div class="res-value" id="mec-c-formula" style="font-size:.82rem;font-family:monospace">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="mec-tab-comp" class="mec-panel">
+  <div class="formula-box">Rc = (Vd+Vc)/Vc — ingresa 2 de los 3 valores</div>
+  <div class="card"><div class="card-title">Relación de compresión</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Vd (desplazado)</label><div class="input-wrap"><input id="mec-r-vd" type="number" step="any" placeholder="124"><span class="unit-lbl">cc</span></div></div>
+      <div class="input-group"><label>Vc (cámara)</label><div class="input-wrap"><input id="mec-r-vc" type="number" step="any" placeholder="11.2"><span class="unit-lbl">cc</span></div></div>
+      <div class="input-group"><label>Rc</label><div class="input-wrap"><input id="mec-r-rc" type="number" step="0.1" placeholder="10.5"><span class="unit-lbl">:1</span></div></div>
+    </div>
+    <div class="btn-group"><button id="mec-comp-calc" class="btn btn-primary">Calcular</button><button id="mec-comp-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="mec-comp-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Rc</div><div class="res-value" id="mec-r-rc-out" style="font-size:1.3rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">Vd</div><div class="res-value" id="mec-r-vd-out">—</div></div>
+      <div class="result-item"><div class="res-label">Vc</div><div class="res-value" id="mec-r-vc-out">—</div></div>
+      <div class="result-item"><div class="res-label">Tipo</div><div class="res-value" id="mec-r-tipo">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Fórmula</div><div class="res-value" id="mec-r-formula" style="font-size:.82rem;font-family:monospace">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="mec-tab-vel" class="mec-panel">
+  <div class="formula-box">v(km/h) = π × d_rueda(m) × (rpm/i) × 60/1000</div>
+  <div class="card"><div class="card-title">Velocidad por transmisión</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>RPM motor</label><div class="input-wrap"><input id="mec-v-rpm" type="number" step="any" placeholder="8000"><span class="unit-lbl">RPM</span></div></div>
+      <div class="input-group"><label>Relación transmisión (i)</label><div class="input-wrap"><input id="mec-v-i" type="number" step="any" placeholder="8.5"><span class="unit-lbl">adim.</span></div></div>
+      <div class="input-group"><label>Diámetro llanta+neumático</label><div class="input-wrap"><input id="mec-v-d" type="number" step="any" placeholder="18"><span class="unit-lbl">pulg.</span></div></div>
+    </div>
+    <div class="btn-group"><button id="mec-vel-calc" class="btn btn-primary">Calcular</button><button id="mec-vel-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="mec-vel-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">RPM rueda</div><div class="res-value" id="mec-v-nrueda">—</div></div>
+      <div class="result-item"><div class="res-label">Diámetro</div><div class="res-value" id="mec-v-dmetros">—</div></div>
+      <div class="result-item"><div class="res-label">Velocidad</div><div class="res-value" id="mec-v-vel" style="font-size:1.4rem;color:var(--accent)">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Fórmula</div><div class="res-value" id="mec-v-formula" style="font-size:.78rem;font-family:monospace">—</div></div>
+    </div>
+    <div id="mec-v-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<div id="mec-tab-hp" class="mec-panel">
+  <div class="formula-box">1 HP (SAE) = 0.7457 kW</div>
+  <div class="card"><div class="card-title">Conversión HP ↔ kW</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Dirección</label><div class="input-wrap"><select id="mec-hp-modo" class="unit-sel" style="flex:1;padding:8px 10px"><option value="hp2kw">HP → kW</option><option value="kw2hp">kW → HP</option></select></div></div>
+      <div class="input-group"><label>Valor</label><div class="input-wrap"><input id="mec-hp-val" type="number" step="any" placeholder="15"><span class="unit-lbl">HP/kW</span></div></div>
+    </div>
+    <div class="btn-group"><button id="mec-hp-calc" class="btn btn-primary">Convertir</button><button id="mec-hp-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="mec-hp-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">kW</div><div class="res-value" id="mec-hp-kw" style="font-size:1.3rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">HP</div><div class="res-value" id="mec-hp-hp" style="font-size:1.3rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">Watts</div><div class="res-value" id="mec-hp-w">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Fórmula</div><div class="res-value" id="mec-hp-formula" style="font-size:.82rem;font-family:monospace">—</div></div>
+    </div>
+  </div>
+</div>
+<style>.mec-panel{display:none}.mec-panel.active{display:block}.unit-lbl{padding:0 10px;color:var(--text-sub);align-self:center;font-size:.82rem;white-space:nowrap}</style>

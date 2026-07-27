@@ -1,0 +1,73 @@
+<div class="view-header">
+  <h2>📡 Apuntador de Antena</h2>
+  <p>Calcula el rumbo exacto hacia una torre 4G/LTE o WiFi. Para apuntar una antena Yagi-UDA o panel.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">📍 Mi posición</div>
+  <div id="ant-gps-status" style="font-size:.83rem;color:var(--text-sub);margin-bottom:10px">⚫ Sin posición.</div>
+  <div class="btn-group" style="margin-bottom:12px">
+    <button id="ant-btn-gps" class="btn btn-primary">📡 Obtener GPS</button>
+    <button id="ant-btn-manual" class="btn btn-secondary">✏️ Usar coordenadas</button>
+  </div>
+  <div class="calc-grid">
+    <div class="input-group"><label>Mi latitud</label><div class="input-wrap"><input id="ant-mi-lat" type="number" step="any" placeholder="23.135000"><span class="unit-lbl">°N</span></div></div>
+    <div class="input-group"><label>Mi longitud</label><div class="input-wrap"><input id="ant-mi-lon" type="number" step="any" placeholder="-82.359000"><span class="unit-lbl">°</span></div></div>
+    <div class="input-group"><label>Mi altitud (opcional)</label><div class="input-wrap"><input id="ant-mi-alt" type="number" step="any" placeholder="0"><span class="unit-lbl">m</span></div></div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <div class="card-title">🗼 Torre objetivo</div>
+  <p style="font-size:.8rem;color:var(--text-dim);margin-bottom:10px">Busca las coordenadas en <strong>cellmapper.net</strong>, <strong>opencellid.org</strong> o pregunta a ETECSA.</p>
+  <div class="calc-grid">
+    <div class="input-group"><label>Latitud torre</label><div class="input-wrap"><input id="ant-tor-lat" type="number" step="any" placeholder="23.145000"><span class="unit-lbl">°N</span></div></div>
+    <div class="input-group"><label>Longitud torre</label><div class="input-wrap"><input id="ant-tor-lon" type="number" step="any" placeholder="-82.340000"><span class="unit-lbl">°</span></div></div>
+    <div class="input-group"><label>Altura antena en torre</label><div class="input-wrap"><input id="ant-tor-alt" type="number" step="any" placeholder="30"><span class="unit-lbl">m</span></div></div>
+    <div class="input-group"><label>Frecuencia</label><div class="input-wrap"><select id="ant-freq" class="unit-sel" style="flex:1;padding:8px 10px">
+      <option value="700">700 MHz — LTE Band 28</option>
+      <option value="850">850 MHz — LTE Band 5</option>
+      <option value="1800" selected>1800 MHz — LTE Band 3 (ETECSA 4G)</option>
+      <option value="2100">2100 MHz — LTE Band 1</option>
+      <option value="2400">2400 MHz — WiFi 2.4GHz</option>
+      <option value="2600">2600 MHz — LTE Band 7</option>
+      <option value="5800">5800 MHz — WiFi 5GHz</option>
+    </select></div></div>
+  </div>
+  <div class="btn-group">
+    <button id="ant-btn-calc" class="btn btn-primary" style="font-size:1rem;padding:12px 20px">🧭 Calcular rumbo</button>
+    <button id="ant-btn-clear" class="btn btn-secondary">Limpiar</button>
+  </div>
+</div>
+
+<div id="ant-result" class="hidden" style="margin-top:12px">
+  <div class="card" style="border-left:4px solid #3b82f6">
+    <div class="card-title">🧭 Resultado</div>
+    <div style="text-align:center;margin-bottom:16px">
+      <canvas id="ant-canvas" width="240" height="240" style="border-radius:50%;border:2px solid var(--border);max-width:200px"></canvas>
+    </div>
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">🌍 Rumbo geográfico</div><div class="res-value" id="ant-rumbo" style="font-size:1.4rem;color:#3b82f6;font-weight:800">—</div></div>
+      <div class="result-item"><div class="res-label">🧲 Rumbo de brújula</div><div class="res-value" id="ant-rumbo-mag" style="font-size:1.1rem;color:var(--accent)">—</div></div>
+      <div class="result-item"><div class="res-label">📏 Distancia</div><div class="res-value" id="ant-dist">—</div></div>
+      <div class="result-item"><div class="res-label">📐 Elevación</div><div class="res-value" id="ant-elev">—</div></div>
+      <div class="result-item"><div class="res-label">📶 Radio Fresnel</div><div class="res-value" id="ant-fresnel">—</div></div>
+      <div class="result-item"><div class="res-label">Despeje mínimo</div><div class="res-value" id="ant-fresnel60">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">🧲 Declinación magnética</div><div class="res-value" id="ant-decl" style="font-size:.82rem;color:var(--text-sub)">—</div></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-title">📋 Cómo apuntar tu Yagi-UDA</div>
+    <ol style="font-size:.84rem;line-height:1.95;padding-left:1.2rem;color:var(--text-sub)">
+      <li>Usa el rumbo de brújula mostrado — apunta el elemento activo (dipolo) en esa dirección, reflector hacia atrás.</li>
+      <li>Ajusta la elevación calculada — para &lt;20km suele ser casi horizontal (0°–2°).</li>
+      <li>Verifica señal con el teléfono en modo ingeniería (<em>*#0011#</em> Samsung, <em>*#*#4636#*#*</em> Android genérico) para ver RSRP en dBm.</li>
+      <li>Gira la antena en incrementos de 2°–3° hasta encontrar el máximo de señal.</li>
+      <li>Fija con tornillos de acero inoxidable.</li>
+    </ol>
+    <div style="padding:8px 12px;background:var(--surface2);border-radius:7px;font-size:.78rem;color:var(--text-dim);margin-top:8px">
+      <strong>Zona Fresnel:</strong> si hay obstáculos dentro del 60% del radio calculado, la señal se degrada. Despeja ese espacio para máximo rendimiento.
+    </div>
+  </div>
+</div>
+<style>.unit-lbl{padding:0 10px;color:var(--text-sub);align-self:center;font-size:.82rem;white-space:nowrap}</style>

@@ -1,0 +1,51 @@
+<div class="view-header">
+  <h2>📐 Inclinómetro</h2>
+  <p>Mide el ángulo de inclinación de cualquier superficie con el acelerómetro del teléfono. Útil para paneles solares y techos.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">Cómo usar</div>
+  <ul style="font-size:.84rem;line-height:1.9;padding-left:1.1rem;color:var(--text-sub)">
+    <li>Apoya el teléfono acostado sobre la superficie, pantalla hacia arriba.</li>
+    <li>El eje largo debe ir en la dirección de la pendiente (cuesta arriba).</li>
+    <li>Usa <strong>Calibrar</strong> para fijar la posición actual como referencia 0°.</li>
+  </ul>
+</div>
+
+<div id="incl-status" style="text-align:center;font-size:.85rem;color:var(--text-sub);padding:8px;margin:10px 0">⚫ Sensor no iniciado.</div>
+
+<div class="btn-group" style="justify-content:center;gap:10px">
+  <button id="incl-btn-start" class="btn btn-primary" style="font-size:1rem;padding:12px 24px">▶ Iniciar</button>
+  <button id="incl-btn-pausa" class="btn btn-secondary" disabled>⏸ Pausar</button>
+  <button id="incl-btn-calibrar" class="btn btn-secondary" disabled>🎯 Calibrar</button>
+</div>
+
+<div id="incl-result" class="hidden" style="margin-top:16px">
+  <div style="text-align:center;margin-bottom:12px">
+    <canvas id="incl-canvas" width="300" height="120" style="border-radius:12px;border:1px solid var(--border);max-width:100%"></canvas>
+  </div>
+  <div class="card" style="border-left:4px solid var(--accent)">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ángulo</div><div class="res-value" id="incl-tilt" style="font-size:2.2rem;color:var(--accent);font-weight:800">—</div></div>
+      <div class="result-item"><div class="res-label">Promedio (5 lect.)</div><div class="res-value" id="incl-prom" style="font-size:1.3rem">—</div></div>
+      <div class="result-item"><div class="res-label">β longitudinal</div><div class="res-value" id="incl-beta">—</div></div>
+      <div class="result-item"><div class="res-label">γ lateral</div><div class="res-value" id="incl-gamma">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Clasificación</div><div class="res-value" id="incl-clase">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Para instalación solar</div><div class="res-value" id="incl-rec-solar" style="font-size:.85rem;color:var(--text-sub)">—</div></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-title">📋 Referencia de inclinaciones</div>
+    <div style="overflow-x:auto"><table class="ref-table">
+      <thead><tr><th>Ángulo</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>0°</td><td>Horizontal perfecto</td></tr>
+        <tr><td>10°–15°</td><td>✅ Óptimo Cuba — baja carga de viento</td></tr>
+        <tr><td>15°–20°</td><td>✅ Óptimo Cuba — mejor captación anual</td></tr>
+        <tr><td>20°–30°</td><td>Buena captación, más carga de viento</td></tr>
+        <tr><td>30°+</td><td>No recomendado en Cuba sin anclaje especial</td></tr>
+        <tr><td>90°</td><td>Vertical — paredes, fachadas</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
