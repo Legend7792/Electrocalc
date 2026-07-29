@@ -69,9 +69,11 @@ const SIDEBAR_GROUPS = [
   { label:'Sensores',         ids:['sensores','termistor'] },
   { label:'Infraestructura',  ids:['pcb','cable','fusibles','audio','timer555'] },
   { label:'Identificación',   ids:['colores','smd','capcode','inductorcode'] },
-  { label:'Herramientas',     ids:['units','estandares','logica','numbase','freq','energia','cientifica'] },
+  { label:'Herramientas',     ids:['units','estandares','logica','numbase','freq','energia','cientifica','consumo','inclinometro','antena_dir'] },
   { label:'Referencia',       ids:['referencia','semiconductores','conectores'] },
   { label:'Energía Solar',    ids:['solar','instalacion_solar'] },
+  { label:'Fuentes',          ids:['filtros_fuente'] },
+  { label:'Mecánica',         ids:['mecanica'] },
 ];
 
 const BOTTOM_QUICK = ['ohm','colores','smps','units','referencia'];
@@ -324,5 +326,6 @@ function setupListeners() {
     await clearHistory();
     const l=document.getElementById('history-list'); if(l) l.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-dim)">Borrado.</div>';
   });
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  // Nota: el registro del Service Worker se hace en index.html (con storage.persist()
+  // y lógica de auto-reload). No duplicar aquí para evitar confusión de versiones.
 }
