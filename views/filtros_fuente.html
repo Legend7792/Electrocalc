@@ -1,0 +1,136 @@
+<div class="view-header">
+  <h2>🔋 Fuentes de Alimentación — Diseño</h2>
+  <p>Rizado, capacitor de filtro, regulación del transformador, Flyback y sección del núcleo.</p>
+</div>
+<div id="ff-tabs" class="tab-bar" style="flex-wrap:wrap;gap:4px">
+  <button class="tab-btn active" data-tab="rizado">Rizado ΔV</button>
+  <button class="tab-btn" data-tab="cmin">C mínimo</button>
+  <button class="tab-btn" data-tab="reg">Regulación</button>
+  <button class="tab-btn" data-tab="flyback">Flyback</button>
+  <button class="tab-btn" data-tab="nucleo">Núcleo</button>
+</div>
+
+<div id="ff-tab-rizado" class="ff-panel active">
+  <div class="formula-box">ΔV = I / (N × f × C)   —  N=2 onda completa, N=1 media onda</div>
+  <div class="card"><div class="card-title">Calcular rizado</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Tipo de rectificador</label>
+        <div class="input-wrap"><select id="ff-r-tipo" class="unit-sel" style="flex:1;padding:8px 10px">
+          <option value="fw">Onda completa (puente)</option><option value="hw">Media onda</option>
+        </select></div></div>
+      <div class="input-group"><label>Corriente de carga (I)</label>
+        <div class="input-wrap"><input id="ff-r-i" type="number" step="any" placeholder="1.5"><span class="unit-lbl">A</span></div></div>
+      <div class="input-group"><label>Frecuencia (f)</label>
+        <div class="input-wrap"><input id="ff-r-f" type="number" step="any" value="60"><span class="unit-lbl">Hz</span></div></div>
+      <div class="input-group"><label>Capacitor (C)</label>
+        <div class="input-wrap"><input id="ff-r-c" type="number" step="any" placeholder="2200"><span class="unit-lbl">µF</span></div></div>
+      <div class="input-group"><label>Voltaje DC (opcional)</label>
+        <div class="input-wrap"><input id="ff-r-v" type="number" step="any" placeholder="12"><span class="unit-lbl">V</span></div></div>
+    </div>
+    <div class="btn-group"><button id="ff-rizado-calc" class="btn btn-primary">Calcular</button><button id="ff-rizado-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ff-rizado-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">ΔV pico a pico</div><div class="res-value" id="ff-r-dv-out" style="color:var(--accent);font-size:1.3rem">—</div></div>
+      <div class="result-item"><div class="res-label">V rms</div><div class="res-value" id="ff-r-vrms">—</div></div>
+      <div class="result-item"><div class="res-label">Tipo</div><div class="res-value" id="ff-r-n">—</div></div>
+      <div class="result-item"><div class="res-label">% rizado</div><div class="res-value" id="ff-r-pct">—</div></div>
+    </div>
+    <div id="ff-r-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<div id="ff-tab-cmin" class="ff-panel">
+  <div class="formula-box">C_mín = I / (N × f × ΔV_máx)</div>
+  <div class="card"><div class="card-title">Capacitor mínimo requerido</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Tipo</label>
+        <div class="input-wrap"><select id="ff-c-tipo" class="unit-sel" style="flex:1;padding:8px 10px"><option value="fw">Onda completa</option><option value="hw">Media onda</option></select></div></div>
+      <div class="input-group"><label>Corriente (I)</label>
+        <div class="input-wrap"><input id="ff-c-i" type="number" step="any" placeholder="2.0"><span class="unit-lbl">A</span></div></div>
+      <div class="input-group"><label>Frecuencia (f)</label>
+        <div class="input-wrap"><input id="ff-c-f" type="number" step="any" value="60"><span class="unit-lbl">Hz</span></div></div>
+      <div class="input-group"><label>ΔV máximo permitido</label>
+        <div class="input-wrap"><input id="ff-c-dv" type="number" step="any" placeholder="0.5"><span class="unit-lbl">V pp</span></div></div>
+    </div>
+    <div class="btn-group"><button id="ff-cmin-calc" class="btn btn-primary">Calcular</button><button id="ff-cmin-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ff-cmin-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">C mínimo</div><div class="res-value" id="ff-c-cmin">—</div></div>
+      <div class="result-item"><div class="res-label">Valor comercial</div><div class="res-value" id="ff-c-cstd" style="color:var(--accent);font-size:1.3rem">—</div></div>
+      <div class="result-item"><div class="res-label">Rizado real</div><div class="res-value" id="ff-c-dv-real">—</div></div>
+    </div>
+    <div id="ff-c-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<div id="ff-tab-reg" class="ff-panel">
+  <div class="formula-box">%Reg = (Vnl − Vfl) / Vfl × 100   —   &lt;10% bueno, &gt;20% malo</div>
+  <div class="card"><div class="card-title">Regulación del transformador</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Voltaje sin carga</label>
+        <div class="input-wrap"><input id="ff-re-vnl" type="number" step="any" placeholder="13.5"><span class="unit-lbl">V</span></div></div>
+      <div class="input-group"><label>Voltaje con carga</label>
+        <div class="input-wrap"><input id="ff-re-vfl" type="number" step="any" placeholder="12.0"><span class="unit-lbl">V</span></div></div>
+    </div>
+    <div class="btn-group"><button id="ff-reg-calc" class="btn btn-primary">Calcular</button><button id="ff-reg-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ff-reg-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">% Regulación</div><div class="res-value" id="ff-re-reg" style="color:var(--accent);font-size:1.3rem">—</div></div>
+      <div class="result-item"><div class="res-label">Caída</div><div class="res-value" id="ff-re-caida">—</div></div>
+      <div class="result-item"><div class="res-label">Calidad</div><div class="res-value" id="ff-re-calidad">—</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="ff-tab-flyback" class="ff-panel">
+  <div class="formula-box">n = Ns/Np = Vout×(1−D) / (Vin×D)   —   Vsw = Vin + Vout/n</div>
+  <div class="card"><div class="card-title">Diseño Flyback SMPS</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Vin (DC rectificado)</label>
+        <div class="input-wrap"><input id="ff-fb-vin" type="number" step="any" placeholder="311"><span class="unit-lbl">V</span></div>
+        <span class="field-hint">220Vac×√2=311V · 110Vac×√2=155V</span></div>
+      <div class="input-group"><label>Vout deseado</label>
+        <div class="input-wrap"><input id="ff-fb-vout" type="number" step="any" placeholder="12"><span class="unit-lbl">V</span></div></div>
+      <div class="input-group"><label>Duty Cycle</label>
+        <div class="input-wrap"><input id="ff-fb-d" type="number" step="any" placeholder="45"><span class="unit-lbl">%</span></div></div>
+    </div>
+    <div class="btn-group"><button id="ff-flyback-calc" class="btn btn-primary">Calcular</button><button id="ff-flyback-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ff-flyback-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Relación Ns/Np</div><div class="res-value" id="ff-fb-n" style="color:var(--accent);font-size:1.3rem">—</div></div>
+      <div class="result-item"><div class="res-label">Vpico en switch</div><div class="res-value" id="ff-fb-vsw">—</div></div>
+      <div class="result-item"><div class="res-label">V reset núcleo</div><div class="res-value" id="ff-fb-vrest">—</div></div>
+    </div>
+    <div id="ff-fb-warn" class="alert alert-warning" style="display:none;margin-top:8px"></div>
+  </div>
+</div>
+
+<div id="ff-tab-nucleo" class="ff-panel">
+  <div class="formula-box">Ae = V / (4.44 × f × N × Bmax)   —   Ferrita 0.2–0.35T · Hierro 1.0–1.2T</div>
+  <div class="card"><div class="card-title">Sección mínima del núcleo</div>
+    <div class="calc-grid">
+      <div class="input-group"><label>Voltaje primario</label>
+        <div class="input-wrap"><input id="ff-nuc-v" type="number" step="any" placeholder="220"><span class="unit-lbl">V</span></div></div>
+      <div class="input-group"><label>Frecuencia</label>
+        <div class="input-wrap"><input id="ff-nuc-f" type="number" step="any" value="60"><span class="unit-lbl">Hz</span></div></div>
+      <div class="input-group"><label>Vueltas primario (N)</label>
+        <div class="input-wrap"><input id="ff-nuc-n" type="number" step="any" placeholder="500"><span class="unit-lbl">vueltas</span></div></div>
+      <div class="input-group"><label>Bmax</label>
+        <div class="input-wrap"><input id="ff-nuc-b" type="number" step="any" placeholder="1.1"><span class="unit-lbl">Tesla</span></div></div>
+    </div>
+    <div class="btn-group"><button id="ff-nucleo-calc" class="btn btn-primary">Calcular</button><button id="ff-nucleo-clear" class="btn btn-secondary">Limpiar</button></div>
+  </div>
+  <div id="ff-nucleo-result" class="result-panel hidden">
+    <div class="result-grid">
+      <div class="result-item"><div class="res-label">Ae mínima</div><div class="res-value" id="ff-nuc-ae" style="color:var(--accent);font-size:1.3rem">—</div></div>
+      <div class="result-item"><div class="res-label">Verificación</div><div class="res-value" id="ff-nuc-check">—</div></div>
+      <div class="result-item" style="grid-column:1/-1"><div class="res-label">Tipo de núcleo</div><div class="res-value" id="ff-nuc-tipo">—</div></div>
+    </div>
+  </div>
+</div>
+
+<style>.ff-panel{display:none}.ff-panel.active{display:block}.field-hint{font-size:.78rem;color:var(--text-dim);margin-top:2px;display:block}.unit-lbl{padding:0 10px;color:var(--text-sub);align-self:center;font-size:.82rem;white-space:nowrap}</style>
