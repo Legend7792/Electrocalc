@@ -5,7 +5,7 @@ export function init() {
   const btnCal = document.getElementById('incl-btn-calibrar');
   const status = document.getElementById('incl-status');
   const canvas = document.getElementById('incl-canvas');
-  let activo = false, offset = {beta:0, gamma:0}, historial = [];
+  let activo = false, offset = {beta:0, gamma:0}, historial = [], avisoNulo = false;
 
   if (typeof DeviceOrientationEvent === 'undefined') {
     if (status) status.textContent = '⚠ Este dispositivo no tiene sensor de orientación.';
@@ -15,6 +15,14 @@ export function init() {
 
   function handler(e) {
     if (!activo) return;
+    if (e.beta === null || e.gamma === null) {
+      if (!avisoNulo) {
+        avisoNulo = true;
+        if (status) status.textContent = '⚠ El sensor no está entregando datos reales (beta/gamma = null). Revisa: conexión HTTPS, permiso de "sensores de movimiento" del navegador, o que el equipo tenga giroscopio/acelerómetro.';
+      }
+      return;
+    }
+    avisoNulo = false;
     let beta = (e.beta||0) - offset.beta, gamma = (e.gamma||0) - offset.gamma;
     while (beta>180) beta-=360; while (beta<-180) beta+=360;
     const br = beta*Math.PI/180, gr = gamma*Math.PI/180;
@@ -86,9 +94,12 @@ export function init() {
   });
   btnCal?.addEventListener('click', () => {
     const tmp = e => {
-      offset.beta = e.beta||0; offset.gamma = e.gamma||0; historial=[];
+      if (e.beta === null || e.gamma === null) {
+        if (status) status.textContent = '⚠ No se pudo calibrar — el sensor no está entregando datos reales.';
+        return;
+      }
+      offset.beta = e.beta||0; offset.gamma = e.gamma||0; historial=[]; avisoNulo = false;
       if (status) status.textContent = '✅ Calibrado — posición actual = 0°.';
-      window.removeEventListener('deviceorientation', tmp, true);
     };
     window.addEventListener('deviceorientation', tmp, {once:true});
   });
