@@ -1,5 +1,5 @@
-/* sw.js — ElectroCalc v2.6 — Cache-First + storage.persist() */
-const CACHE = 'ec-v2.6';
+/* sw.js — ElectroCalc v2.7 — Cache-First + storage.persist() */
+const CACHE = 'ec-v2.7';
 const PRECACHE = [
   './', './index.html', './manifest.json',
   './css/components.css', './css/main.css', './css/theme.css',
@@ -22,6 +22,7 @@ const PRECACHE = [
   './js/ref/conectores.js','./js/ref/referencia.js','./js/ref/semiconductores.js',
   './js/tools/antena_dir.js','./js/tools/cientifica.js','./js/tools/energia.js',
   './js/tools/estandares.js','./js/tools/freq.js','./js/tools/inclinometro.js',
+  './js/tools/diag_sensores.js',
   './js/tools/logica.js','./js/tools/numbase.js','./js/tools/units.js',
   './views/ac.html','./views/antena.html','./views/antena_dir.html','./views/audio.html',
   './views/batteries.html','./views/bjt.html','./views/cable.html',
@@ -31,6 +32,7 @@ const PRECACHE = [
   './views/factorpotencia.html','./views/filtros_fuente.html','./views/filters.html',
   './views/freq.html','./views/fusibles.html','./views/ganancia.html',
   './views/home.html','./views/inclinometro.html','./views/inductorcode.html',
+  './views/diag_sensores.html',
   './views/inductors.html','./views/kirchhoff.html','./views/leds.html',
   './views/logica.html','./views/mecanica.html','./views/mosfet.html',
   './views/motor.html','./views/motortrifasico.html','./views/numbase.html',
