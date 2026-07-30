@@ -1,0 +1,28 @@
+<div style="padding:12px; font-family:monospace;">
+  <h2 style="margin-top:0;">🛠️ Diagnóstico de Sensores</h2>
+  <p style="color:#888; font-size:13px;">Herramienta temporal para depurar el inclinómetro. Bórrala del proyecto cuando termines.</p>
+
+  <p>Contexto seguro (HTTPS): <b id="diag-https">—</b></p>
+
+  <button id="diag-btn" style="padding:12px 20px; font-size:16px;">▶ Iniciar prueba (10s)</button>
+
+  <div style="border:1px solid #ccc; border-radius:6px; padding:10px; margin-top:12px;">
+    <b>deviceorientation</b> (relativo)<br>
+    <span id="diag-do-status">esperando…</span><br>
+    alpha: <span id="diag-do-a">—</span> · beta: <span id="diag-do-b">—</span> · gamma: <span id="diag-do-g">—</span> · absolute: <span id="diag-do-abs">—</span>
+  </div>
+
+  <div style="border:1px solid #ccc; border-radius:6px; padding:10px; margin-top:12px;">
+    <b>deviceorientationabsolute</b> (brújula)<br>
+    <span id="diag-doa-status">esperando…</span><br>
+    alpha: <span id="diag-doa-a">—</span> · beta: <span id="diag-doa-b">—</span> · gamma: <span id="diag-doa-g">—</span>
+  </div>
+
+  <div style="border:1px solid #ccc; border-radius:6px; padding:10px; margin-top:12px;">
+    <b>devicemotion</b> (acelerómetro crudo)<br>
+    <span id="diag-dm-status">esperando…</span><br>
+    x: <span id="diag-dm-x">—</span> · y: <span id="diag-dm-y">—</span> · z: <span id="diag-dm-z">—</span>
+  </div>
+
+  <p id="diag-resumen" style="margin-top:12px; font-weight:bold;"></p>
+</div>
