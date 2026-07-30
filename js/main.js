@@ -58,6 +58,7 @@ const ROUTES = [
   { id:'consumo',         icon:'💡', title:'Consumo Eléctrico Doméstico',  cat:'Herramientas', calc:'calcs/consumo'          },
   { id:'inclinometro',    icon:'📐', title:'Inclinómetro',                 cat:'Herramientas', calc:'tools/inclinometro'     },
   { id:'antena_dir',      icon:'📡', title:'Apuntador de Antena',          cat:'Herramientas', calc:'tools/antena_dir'       },
+  { id:'diag_sensores',   icon:'🛠️', title:'Diagnóstico de Sensores',      cat:'Herramientas', calc:'tools/diag_sensores'    },
 ];
 
 const SIDEBAR_GROUPS = [
@@ -69,7 +70,7 @@ const SIDEBAR_GROUPS = [
   { label:'Sensores',         ids:['sensores','termistor'] },
   { label:'Infraestructura',  ids:['pcb','cable','fusibles','audio','timer555'] },
   { label:'Identificación',   ids:['colores','smd','capcode','inductorcode'] },
-  { label:'Herramientas',     ids:['units','estandares','logica','numbase','freq','energia','cientifica','consumo','inclinometro','antena_dir'] },
+  { label:'Herramientas',     ids:['units','estandares','logica','numbase','freq','energia','cientifica','consumo','inclinometro','antena_dir','diag_sensores'] },
   { label:'Referencia',       ids:['referencia','semiconductores','conectores'] },
   { label:'Energía Solar',    ids:['solar','instalacion_solar'] },
   { label:'Fuentes',          ids:['filtros_fuente'] },
