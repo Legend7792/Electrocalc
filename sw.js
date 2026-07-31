@@ -1,5 +1,5 @@
-/* sw.js — ElectroCalc v2.7 — Cache-First + storage.persist() */
-const CACHE = 'ec-v2.7';
+/* sw.js — ElectroCalc v2.8 — Cache-First + storage.persist() */
+const CACHE = 'ec-v2.8';
 const PRECACHE = [
   './', './index.html', './manifest.json',
   './css/components.css', './css/main.css', './css/theme.css',
