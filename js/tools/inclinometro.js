@@ -1,45 +1,68 @@
-/* inclinometro.js — Inclinómetro usando el acelerómetro del dispositivo */
+/* inclinometro.js — Inclinómetro usando el acelerómetro (devicemotion + accelerationIncludingGravity)
+   Reescrito: el diagnóstico confirmó que deviceorientation/deviceorientationabsolute
+   devuelven null en este equipo (sin giroscopio o sin fusión de sensores), pero
+   devicemotion sí entrega accelerationIncludingGravity real (~94 eventos/seg).
+   Fórmulas verificadas de forma independiente en Python antes de escribir esto:
+   tiltAbs = acos(z/|g|) · pitch = atan2(y,z) · roll = atan2(-x,z)
+   Calibración: ángulo entre el vector de referencia y el vector actual (robusto
+   para cualquier orientación de referencia, no solo superficies planas). */
 export function init() {
   const btn = document.getElementById('incl-btn-start');
   const btnPar = document.getElementById('incl-btn-pausa');
   const btnCal = document.getElementById('incl-btn-calibrar');
   const status = document.getElementById('incl-status');
   const canvas = document.getElementById('incl-canvas');
-  let activo = false, offset = {beta:0, gamma:0}, historial = [], avisoNulo = false;
+  let activo = false, refVec = null, historial = [], avisoNulo = false, ultimoRender = 0;
 
-  if (typeof DeviceOrientationEvent === 'undefined') {
-    if (status) status.textContent = '⚠ Este dispositivo no tiene sensor de orientación.';
+  if (typeof DeviceMotionEvent === 'undefined') {
+    if (status) status.textContent = '⚠ Este dispositivo no tiene sensor de movimiento.';
     btn?.setAttribute('disabled', true);
     return;
   }
 
+  function anguloEntreVectores(v1, v2) {
+    const dot = v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
+    const m1 = Math.hypot(v1.x, v1.y, v1.z), m2 = Math.hypot(v2.x, v2.y, v2.z);
+    if (m1 === 0 || m2 === 0) return 0;
+    return Math.acos(Math.max(-1, Math.min(1, dot/(m1*m2)))) * 180/Math.PI;
+  }
+
   function handler(e) {
     if (!activo) return;
-    if (e.beta === null || e.gamma === null) {
+    const g = e.accelerationIncludingGravity;
+    if (!g || g.x === null || g.y === null || g.z === null) {
       if (!avisoNulo) {
         avisoNulo = true;
-        if (status) status.textContent = '⚠ El sensor no está entregando datos reales (beta/gamma = null). Revisa: conexión HTTPS, permiso de "sensores de movimiento" del navegador, o que el equipo tenga giroscopio/acelerómetro.';
+        if (status) status.textContent = '⚠ El acelerómetro no está entregando datos (x/y/z = null). Revisa conexión HTTPS o permisos del navegador.';
       }
       return;
     }
     avisoNulo = false;
-    let beta = (e.beta||0) - offset.beta, gamma = (e.gamma||0) - offset.gamma;
-    while (beta>180) beta-=360; while (beta<-180) beta+=360;
-    const br = beta*Math.PI/180, gr = gamma*Math.PI/180;
-    const cosVal = Math.cos(br)*Math.cos(gr);
-    const tilt = Math.acos(Math.max(-1,Math.min(1,cosVal))) * 180/Math.PI;
-    render(tilt, beta, gamma);
+
+    // el acelerómetro dispara muy rápido (~90-100 Hz) — limitamos el refresco
+    // visual para no saturar el DOM, sin perder precisión en el cálculo
+    const ahora = Date.now();
+    if (ahora - ultimoRender < 100) return;
+    ultimoRender = ahora;
+
+    const mag = Math.hypot(g.x, g.y, g.z);
+    const tiltAbs = Math.acos(Math.max(-1, Math.min(1, g.z/mag))) * 180/Math.PI;
+    const pitch = Math.atan2(g.y, g.z) * 180/Math.PI;   // adelante-atrás
+    const roll  = Math.atan2(-g.x, g.z) * 180/Math.PI;  // izquierda-derecha
+    const tilt = refVec ? anguloEntreVectores(refVec, g) : tiltAbs;
+
+    render(tilt, pitch, roll);
     draw(tilt, canvas);
     historial.push(tilt); if (historial.length>5) historial.shift();
     const prom = historial.reduce((a,b)=>a+b,0)/historial.length;
-    const el = document.getElementById('incl-prom'); if (el) el.textContent = prom.toFixed(1)+'°';
+    const elp = document.getElementById('incl-prom'); if (elp) elp.textContent = prom.toFixed(1)+'°';
   }
 
-  function render(tilt, beta, gamma) {
+  function render(tilt, pitch, roll) {
     const sv = (id,v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
     sv('incl-tilt', tilt.toFixed(1)+'°');
-    sv('incl-beta', beta.toFixed(1)+'°');
-    sv('incl-gamma', gamma.toFixed(1)+'°');
+    sv('incl-beta', pitch.toFixed(1)+'°');
+    sv('incl-gamma', roll.toFixed(1)+'°');
     let clase = tilt<2?'🟢 Superficie plana': tilt<8?'🟡 Inclinación leve': tilt<18?'🟠 Rango solar (10–15° óptimo Cuba)': tilt<35?'🔵 Pronunciada': tilt<60?'🔴 Muy inclinada':'⛔ Casi vertical';
     sv('incl-clase', clase);
     let rec = tilt<10?'Baja para paneles — menor captación en invierno.': tilt<=20?'✓ Rango óptimo Cuba (10°–20°).': tilt<=30?'Aceptable, mayor carga de viento.':'Alta para Cuba — considera reducir.';
@@ -65,13 +88,13 @@ export function init() {
   }
 
   async function start() {
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
       try {
-        const p = await DeviceOrientationEvent.requestPermission();
+        const p = await DeviceMotionEvent.requestPermission();
         if (p !== 'granted') { if (status) status.textContent = '⚠ Permiso denegado.'; return; }
       } catch(e) { if (status) status.textContent = '⚠ Error: '+e.message; return; }
     }
-    window.addEventListener('deviceorientation', handler, true);
+    window.addEventListener('devicemotion', handler, true);
     activo = true;
     if (status) status.textContent = '🟢 Sensor activo — apoya el teléfono sobre la superficie.';
     if (btn) { btn.textContent = '⏹ Detener'; }
@@ -80,7 +103,7 @@ export function init() {
   }
 
   function stop() {
-    window.removeEventListener('deviceorientation', handler, true);
+    window.removeEventListener('devicemotion', handler, true);
     activo = false;
     if (status) status.textContent = '⚫ Detenido.';
     if (btn) btn.textContent = '▶ Iniciar';
@@ -94,13 +117,15 @@ export function init() {
   });
   btnCal?.addEventListener('click', () => {
     const tmp = e => {
-      if (e.beta === null || e.gamma === null) {
-        if (status) status.textContent = '⚠ No se pudo calibrar — el sensor no está entregando datos reales.';
+      const g = e.accelerationIncludingGravity;
+      if (!g || g.x === null || g.y === null || g.z === null) {
+        if (status) status.textContent = '⚠ No se pudo calibrar — el acelerómetro no está entregando datos.';
         return;
       }
-      offset.beta = e.beta||0; offset.gamma = e.gamma||0; historial=[]; avisoNulo = false;
+      refVec = { x:g.x, y:g.y, z:g.z };
+      historial = []; avisoNulo = false;
       if (status) status.textContent = '✅ Calibrado — posición actual = 0°.';
     };
-    window.addEventListener('deviceorientation', tmp, {once:true});
+    window.addEventListener('devicemotion', tmp, {once:true});
   });
 }
