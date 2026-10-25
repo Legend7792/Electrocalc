@@ -16,6 +16,21 @@
   <link rel="stylesheet" href="./css/theme.css">
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/components.css">
+  <style id="ec-offline-style">
+    /* Aviso de estado "uso sin conexión" (lo gestiona el script al final del body) */
+    #ec-offline-pill { position: fixed; top: calc(var(--topbar-h, 56px) + 8px); left: 50%; transform: translateX(-50%);
+      width: max-content; max-width: min(92vw, 520px); z-index: 120; padding: 7px 14px; border-radius: 20px; cursor: pointer;
+      font: 600 0.74rem/1.35 system-ui, -apple-system, 'Segoe UI', sans-serif; text-align: center;
+      background: var(--surface, #161b27); color: var(--text, #e6e9f2);
+      border: 1px solid var(--border-strong, rgba(255,255,255,.15)); box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+    #ec-offline-pill[hidden] { display: none; }
+    #ec-offline-pill.ok   { border-color: var(--success, #34c784); color: var(--success, #34c784); }
+    #ec-offline-pill.warn { border-color: var(--warning, #f5a623); color: var(--warning, #f5a623); }
+    #ec-offline-pill.bad  { border-color: var(--danger, #ff4d4f);  color: var(--danger, #ff4d4f); }
+    #ec-offline-pill .d { display: none; margin-top: 6px; font-weight: 400; text-align: left; white-space: pre-line;
+      color: var(--text, #e6e9f2); }
+    #ec-offline-pill.open .d { display: block; }
+  </style>
 </head>
 <body>
 
@@ -90,44 +105,197 @@
 <!-- TOAST -->
 <div id="toast"></div>
 
+<div id="ec-offline-pill" role="status" aria-live="polite" hidden><span class="t"></span><div class="d"></div></div>
+
 <script type="module" src="./js/main.js"></script>
 <script>
-  // ── Service Worker + Persistencia (fix definitivo offline) ─────────────────
-  // CAUSA DEL BUG: Chrome servía index.html desde el HTTP cache (bypass del SW).
-  // Sin el SW controlando la página, los fetch() a los módulos .js/.html van
-  // directo a la red y fallan offline → "visualizando copia sin conexión".
-  // FIX: no-store en el HTML + registro inmediato + auto-reload UNA VEZ si el
-  // SW aún no controla la página, para que tome control real.
-  (async () => {
-    if (!('serviceWorker' in navigator)) return;
+(function () {
+  'use strict';
+  // ── Service Worker + estado REAL de "uso sin conexión" ─────────────────────────
+  // La copia sin conexión la crea sw.js con instalación atómica: o queda completa, o
+  // no reemplaza a la versión anterior. Esta parte de la página:
+  //   1) registra el SW y busca una versión nueva en cada carga y al volver a la app;
+  //   2) pide almacenamiento persistente;
+  //   3) muestra un aviso con el estado real (descargando n/N · listo · fallo);
+  //   4) si la descarga quedó incompleta la reintenta sola (y al tocar el aviso).
+  var pill = document.getElementById('ec-offline-pill');
+  var tEl = pill && pill.querySelector('.t');
+  var dEl = pill && pill.querySelector('.d');
+  var READY_URL = './__ec_ready.json';
+  var PROGRESS_URL = './__ec_progress.json';
 
-    if (navigator.storage?.persist) {
-      const granted = await navigator.storage.persist();
-      console.log('[EC] Persistencia:', granted ? '✓ concedida' : '⚠ no concedida');
+  var supported = ('serviceWorker' in navigator) && !!window.caches;
+  var persisted = null;                       // resultado de storage.persist()
+  var hadController = supported && !!navigator.serviceWorker.controller;
+  var updateReady = false;                    // un SW nuevo tomó el control con la página abierta
+  var started = false;                        // true cuando register() ya respondió
+  var detailsOpen = false;
+  var lastKind = '';
+  var hideTimer = null, pollTimer = null, retryTimer = null, retryDelay = 15000;
+
+  // ── lectura del estado (directo del Cache API; no depende de mensajes al SW) ──
+  async function readState() {
+    var st = { ready: null, building: null, installing: false };
+    try {
+      var r = await caches.match(READY_URL);
+      if (r) st.ready = await r.json();
+    } catch (e) {}
+    try {
+      var p = await caches.match(PROGRESS_URL);
+      if (p) {
+        var pj = await p.json();
+        var n = 0;
+        if (pj.name && await caches.has(pj.name)) n = (await (await caches.open(pj.name)).keys()).length - 1;
+        st.building = { version: pj.version, total: pj.total, done: Math.max(0, n) };
+      }
+    } catch (e) {}
+    try {
+      var reg = await navigator.serviceWorker.getRegistration();
+      st.installing = !!(reg && reg.installing);
+    } catch (e) {}
+    return st;
+  }
+
+  function details(st, online) {
+    var l = [];
+    l.push('Copia sin conexión: ' + (st.ready ? 'versión ' + st.ready.version + ' · ' + st.ready.total + ' archivos' : 'no disponible todavía'));
+    if (st.building) l.push('Descargando versión ' + st.building.version + ': ' + st.building.done + '/' + st.building.total);
+    l.push('Almacenamiento protegido: ' + (persisted === true ? 'sí' : persisted === false ? 'no (instalar la app en la pantalla de inicio suele protegerlo)' : 'sin confirmar'));
+    l.push('Red: ' + (online ? 'con conexión' : 'sin conexión'));
+    return l.join('\n');
+  }
+
+  // ── aviso en pantalla ──
+  function render(kind, cls, text, det) {
+    if (!pill) return;
+    var changed = kind !== lastKind;
+    lastKind = kind;
+    tEl.textContent = text;
+    dEl.textContent = det;
+    pill.className = cls + (detailsOpen ? ' open' : '');
+    if (!changed) return;                      // mismo estado: solo se actualiza el texto
+    pill.hidden = false;
+    clearTimeout(hideTimer);
+    if (kind === 'ready' || kind === 'offline-ready') {
+      hideTimer = setTimeout(function () {
+        if (!detailsOpen && (lastKind === 'ready' || lastKind === 'offline-ready')) pill.hidden = true;
+      }, 6000);
     }
+  }
+
+  async function evaluate() {
+    if (!supported) { render('unsupported', 'bad', '⚠ Este navegador no admite el modo sin conexión', ''); return; }
+    var st = await readState();
+    var online = navigator.onLine;
+    var det = details(st, online);
+    if (updateReady)                       render('update', 'warn', '↻ Nueva versión instalada — toca para recargar', det);
+    else if (st.ready && st.building)      render('ready-updating', 'ok', '✓ Disponible sin conexión · actualizando ' + st.building.done + '/' + st.building.total + '…', det);
+    else if (st.ready && !online)          render('offline-ready', 'ok', '📴 Sin conexión — usando la copia guardada', det);
+    else if (st.ready)                     render('ready', 'ok', '✓ Listo para usar sin conexión', det);
+    else if (st.building || st.installing) render('building', 'warn', '⏬ Descargando para usar sin conexión…' + (st.building ? ' ' + st.building.done + '/' + st.building.total : ''), det);
+    else if (!started)                     lastKind = 'checking';       // aún no hay veredicto: sin aviso
+    else render('failed', 'bad', online ? '⚠ Aún NO disponible sin conexión — reintentando…' : '⚠ Aún NO disponible sin conexión — abre la app con internet', det);
+  }
+
+  // Devuelve el registro del SW; si no existe lo vuelve a crear (si la PRIMERA instalación
+  // falla, Chrome borra el registro y sin esto nunca habría reintento).
+  async function ensureRegistration() {
+    var reg = await navigator.serviceWorker.getRegistration();
+    if (!reg) reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+    return reg;
+  }
+
+  // pedir al navegador que reintente la instalación / reparación
+  async function kick() {
+    try {
+      var reg = await ensureRegistration();
+      if (!reg.installing) await reg.update();
+      if (reg.active) reg.active.postMessage({ type: 'REPAIR' });
+    } catch (e) {}
+  }
+
+  function scheduleRetry() {
+    if (retryTimer) return;
+    retryTimer = setTimeout(async function () {
+      retryTimer = null;
+      if (lastKind !== 'failed') return;
+      if (navigator.onLine) await kick();
+      retryDelay = Math.min(retryDelay * 2, 300000);     // 15 s, 30 s, 1 min … máx. 5 min
+      scheduleRetry();
+    }, retryDelay);
+  }
+
+  async function tick() {
+    try { await evaluate(); } catch (e) {}
+    clearTimeout(pollTimer);
+    if (lastKind === 'failed') scheduleRetry();
+    else { clearTimeout(retryTimer); retryTimer = null; retryDelay = 15000; }
+    var quiet = lastKind === 'ready' || lastKind === 'offline-ready' || lastKind === 'update' || lastKind === 'unsupported';
+    // 1 s mientras hay descarga activa (para el contador); 3 s en el resto de estados no estables
+    var busy = lastKind === 'building' || lastKind === 'ready-updating';
+    if (!quiet) pollTimer = setTimeout(tick, busy ? 1000 : 3000);
+  }
+
+  if (pill) pill.addEventListener('click', function () {
+    if (lastKind === 'update') { location.reload(); return; }
+    detailsOpen = !detailsOpen;
+    pill.classList.toggle('open', detailsOpen);
+    if (detailsOpen) clearTimeout(hideTimer);
+    if (lastKind === 'failed') kick();
+  });
+
+  // ── arranque ──
+  async function start() {
+    if (!supported) { tick(); return; }
+
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().then(function (g) {
+        persisted = g;
+        console.log('[EC] Persistencia:', g ? '✓ concedida' : '⚠ no concedida');
+        tick();
+      }).catch(function () {});
+    }
+
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (hadController) updateReady = true;   // actualización con la app abierta: avisar, sin forzar recarga
+      hadController = true;
+      tick();
+    });
+    window.addEventListener('online', function () { tick(); if (lastKind === 'failed') kick(); });
+    window.addEventListener('offline', function () { tick(); });
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState !== 'visible') return;
+      tick();
+      ensureRegistration().then(function (r) { if (!r.installing) r.update().catch(function () {}); }).catch(function () {});
+    });
 
     try {
-      const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+      var reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
       console.log('[EC] SW registrado:', reg.scope);
+      started = true;
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
-      reg.addEventListener('updatefound', () => {
-        const nw = reg.installing;
-        nw?.addEventListener('statechange', () => {
-          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-            nw.postMessage('SKIP_WAITING');
-          }
+      reg.addEventListener('updatefound', function () {
+        var nw = reg.installing;
+        tick();
+        if (!nw) return;
+        nw.addEventListener('statechange', function () {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) nw.postMessage('SKIP_WAITING');
+          tick();                              // installed / activated / redundant (= falló)
         });
       });
+      reg.update().catch(function () {});      // buscar sw.js nuevo en cada carga
     } catch (e) {
+      started = true;
       console.warn('[EC] SW registration failed:', e);
     }
+    tick();
 
-    // Si la página no está controlada por el SW, recargar UNA VEZ para activarlo
+    // Si la página aún no está controlada por el SW, recargar UNA VEZ para que tome control real.
     if (!navigator.serviceWorker.controller) {
-      const key = 'ec_sw_reload';
+      var key = 'ec_sw_reload';
       if (!sessionStorage.getItem(key)) {
         sessionStorage.setItem(key, '1');
-        navigator.serviceWorker.ready.then(() => {
+        navigator.serviceWorker.ready.then(function () {
           console.log('[EC] Recargando para activar control offline');
           window.location.reload();
         });
@@ -137,7 +305,10 @@
     } else {
       sessionStorage.removeItem('ec_sw_reload');
     }
-  })();
+  }
+
+  start();
+})();
 </script>
 </body>
 </html>
