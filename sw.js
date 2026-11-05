@@ -1,229 +1,310 @@
-// sw.js — Gym Tracker v102
-//
-// Estrategia (cambió respecto a v95):
-//  * Los archivos de la app se guardan TODOS juntos al instalar una versión nueva (todo o nada).
-//    Antes cada archivo se actualizaba por separado en segundo plano, y se podía abrir la app
-//    con app.js de una versión y auth.js de otra (los módulos no encajaban entre sí).
-//  * Una versión nueva se instala en segundo plano y la app pregunta al usuario si actualiza.
-//  * IMPORTANTE para quien publique cambios: hay que subir CACHE_VERSION en cada despliegue;
-//    si no, los móviles seguirán con la versión guardada.
-//  * Supabase ya no se necesita para arrancar (se carga solo al usar la nube), así que no se
-//    precarga; si se descarga alguna vez se guarda para reutilizarlo.
+/* sw.js — ElectroCalc v3.0 — Offline-first con actualización ATÓMICA
+ *
+ * Qué garantiza este Service Worker:
+ *  1. Una versión nueva solo se activa si TODOS sus archivos se descargaron bien.
+ *     Si la red falla a mitad de la actualización, la versión anterior y su copia
+ *     sin conexión se conservan intactas; lo ya descargado se guarda y el siguiente
+ *     intento continúa desde ahí (no empieza de cero).
+ *  2. Los archivos se piden con cache:'no-cache' (siempre validados con el servidor),
+ *     así nunca se guardan copias viejas del caché HTTP del navegador.
+ *  3. Al terminar de descargar escribe el marcador __ec_ready.json; la página lo usa
+ *     para mostrar "Listo para usar sin conexión".
+ *  4. Si el SW sigue vivo pero su copia desapareció, se vuelve a descargar sola.
+ *
+ * AL SUBIR CAMBIOS A GITHUB: cambia VERSION (p. ej. '3.1'). Si no cambia ni un byte
+ * de este archivo, el navegador no instala la versión nueva.
+ */
+const VERSION = '3.0';
+const CACHE_PREFIX = 'ec-';                 // solo se tocan cachés que empiezan así
+const CACHE = CACHE_PREFIX + 'v' + VERSION;
+const READY_URL = './__ec_ready.json';      // marcador: "esta caché está completa"
+const PROGRESS_URL = './__ec_progress.json';
+const ERROR_CACHE = CACHE_PREFIX + 'lasterror';   // guarda el último fallo para mostrarlo en pantalla
+const ERROR_URL = './__ec_error.json';
 
-const CACHE_VERSION = "v102";
-const CACHE_NAME    = "gym-tracker-v102";
+const CONCURRENCY = 6;                      // descargas simultáneas (suave con redes malas)
+const ATTEMPTS = 3;                         // intentos por archivo
+const BACKOFF_MS = [700, 2000];             // espera entre intentos
+const TIMEOUT_MS = 45000;                   // tiempo máximo por intento
 
-const BASE = new URL("./", self.location.href).pathname;
-
-// Imprescindibles: si falla alguno, la instalación falla y se mantiene la versión anterior
-const APP_CRITICOS = [
-  BASE,
-  BASE + "index.html",
-  BASE + "app.js",
-  BASE + "auth.js",
-  BASE + "cloud.js",
-  BASE + "rutinaUsuario.js",
-  BASE + "userState.js",
-  BASE + "selectorRutinas.js",
-  BASE + "themes.js",
-  BASE + "editorRutinas.js",
-  BASE + "ordenar.js",
-  BASE + "ui.js",
-  BASE + "aiImport.js",
-  BASE + "nav.js",
-  BASE + "audioStore.js",
-  BASE + "plantillas.js",
-  BASE + "style.css",
-  BASE + "manifest.json"
+// Sin estos archivos la app no puede arrancar sin conexión: si faltan, la instalación falla.
+const CRITICAL = [
+  './', './index.html',
+  './css/components.css', './css/main.css', './css/theme.css',
+  './js/db.js', './js/main.js', './js/utils.js'
 ];
 
-// Opcionales: si alguno falla no se bloquea la instalación
-const APP_OPCIONALES = [
-  BASE + "beep.mp3",
-  BASE + "icons/icon-180.png",
-  BASE + "icons/icon-192.png",
-  BASE + "icons/icon-512.png",
-  BASE + "icons/icon-maskable-192.png",
-  BASE + "icons/icon-maskable-512.png"
+const PRECACHE = [
+  './', './index.html', './manifest.json',
+  './css/components.css', './css/main.css', './css/theme.css',
+  './icons/icon-192.png', './icons/icon-512.png', './icons/icon.svg',
+  './js/db.js', './js/main.js', './js/utils.js',
+  './js/calcs/ac.js','./js/calcs/antena.js','./js/calcs/audio.js',
+  './js/calcs/batteries.js','./js/calcs/bjt.js','./js/calcs/cable.js',
+  './js/calcs/capacitors.js','./js/calcs/capcode.js','./js/calcs/colores.js',
+  './js/calcs/consumo.js','./js/calcs/estrellaDelta.js','./js/calcs/factorpotencia.js',
+  './js/calcs/filters.js','./js/calcs/filtros_fuente.js','./js/calcs/fusibles.js',
+  './js/calcs/ganancia.js','./js/calcs/inductorcode.js','./js/calcs/inductors.js',
+  './js/calcs/kirchhoff.js','./js/calcs/leds.js','./js/calcs/mecanica.js',
+  './js/calcs/mosfet.js','./js/calcs/motor.js','./js/calcs/motortrifasico.js',
+  './js/calcs/ohm.js','./js/calcs/opamp.js','./js/calcs/pcb.js','./js/calcs/power.js',
+  './js/calcs/regulators.js','./js/calcs/resistors.js','./js/calcs/resonance.js',
+  './js/calcs/sensores.js','./js/calcs/skineffect.js','./js/calcs/smd.js',
+  './js/calcs/smps.js','./js/calcs/solar.js','./js/calcs/instalacion_solar.js',
+  './js/calcs/termica.js','./js/calcs/termistor.js','./js/calcs/timer555.js',
+  './js/calcs/transformers.js','./js/calcs/wheatstone.js','./js/calcs/zener.js',
+  './js/ref/conectores.js','./js/ref/referencia.js','./js/ref/semiconductores.js',
+  './js/tools/antena_dir.js','./js/tools/cientifica.js','./js/tools/energia.js',
+  './js/tools/estandares.js','./js/tools/freq.js','./js/tools/inclinometro.js',
+  './js/tools/diag_sensores.js',
+  './js/tools/logica.js','./js/tools/numbase.js','./js/tools/units.js',
+  './views/ac.html','./views/antena.html','./views/antena_dir.html','./views/audio.html',
+  './views/batteries.html','./views/bjt.html','./views/cable.html',
+  './views/capacitors.html','./views/capcode.html','./views/cientifica.html',
+  './views/colores.html','./views/conectores.html','./views/consumo.html',
+  './views/energia.html','./views/estandares.html','./views/estrellaDelta.html',
+  './views/factorpotencia.html','./views/filtros_fuente.html','./views/filters.html',
+  './views/freq.html','./views/fusibles.html','./views/ganancia.html',
+  './views/home.html','./views/inclinometro.html','./views/inductorcode.html',
+  './views/diag_sensores.html',
+  './views/inductors.html','./views/kirchhoff.html','./views/leds.html',
+  './views/logica.html','./views/mecanica.html','./views/mosfet.html',
+  './views/motor.html','./views/motortrifasico.html','./views/numbase.html',
+  './views/ohm.html','./views/opamp.html','./views/pcb.html','./views/power.html',
+  './views/referencia.html','./views/regulators.html','./views/resistors.html',
+  './views/resonance.html','./views/semiconductores.html','./views/sensores.html',
+  './views/skineffect.html','./views/smd.html','./views/smps.html',
+  './views/solar.html','./views/instalacion_solar.html',
+  './views/termica.html','./views/termistor.html','./views/timer555.html',
+  './views/transformers.html','./views/units.html','./views/wheatstone.html',
+  './views/zener.html'
 ];
 
-const APP_ASSETS = [...APP_CRITICOS, ...APP_OPCIONALES];
+/* ───────────────────────── utilidades ───────────────────────── */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// 'reload' evita que la caché HTTP del navegador/GitHub Pages nos entregue una copia vieja al instalar
-const pedir = url => new Request(url, { cache: "reload" });
-
-async function guardar(cache, url) {
-  const resp = await fetch(pedir(url));
-  if (!resp.ok) throw new Error(url + " → HTTP " + resp.status);
-  await cache.put(url, resp);
+function jsonResponse(obj) {
+  return new Response(JSON.stringify(obj), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
+}
+// 4xx (salvo 408/429) = el servidor contesta que no: reintentar no sirve.
+function isPermanent(status) {
+  return status >= 400 && status < 500 && status !== 408 && status !== 429;
 }
 
-// ─────────────────────────────────────────────────────────
-// INSTALL — todo o nada para lo crítico
-// ─────────────────────────────────────────────────────────
-self.addEventListener("install", event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    await Promise.all(APP_CRITICOS.map(u => guardar(cache, u)));          // si falla uno → falla la instalación
-    await Promise.allSettled(APP_OPCIONALES.map(u => guardar(cache, u)));
-    console.log("[SW] " + CACHE_VERSION + " instalado");
-  })());
-});
+async function recordError(item, where) {
+  try {
+    const c = await caches.open(ERROR_CACHE);
+    await c.put(ERROR_URL, jsonResponse({ version: VERSION, where, url: item.url, reason: item.reason, at: Date.now() }));
+  } catch (e) { /* diagnóstico opcional */ }
+}
+async function clearError() { try { await caches.delete(ERROR_CACHE); } catch (e) {} }
 
-// ─────────────────────────────────────────────────────────
-// ACTIVATE — limpieza de versiones antiguas
-// ─────────────────────────────────────────────────────────
-self.addEventListener("activate", event => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)));
-    await self.clients.claim();
-    console.log("[SW] " + CACHE_VERSION + " activado");
-  })());
-});
-
-// ─────────────────────────────────────────────────────────
-// FETCH
-// ─────────────────────────────────────────────────────────
-const PAGINA_OFFLINE = `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gym Tracker — Sin conexión</title>
-  <style>
-    *{box-sizing:border-box}
-    body{background:#121212;color:#fff;font-family:system-ui,sans-serif;
-         display:flex;align-items:center;justify-content:center;
-         height:100vh;margin:0;text-align:center;padding:20px}
-    .box{max-width:320px}
-    .icon{font-size:52px;margin-bottom:16px}
-    h2{font-size:20px;margin:0 0 12px}
-    p{color:#aaa;line-height:1.5;font-size:14px;margin-bottom:20px}
-    button{background:#4a9eff;color:#fff;border:none;padding:12px 28px;
-           border-radius:8px;font-size:15px;cursor:pointer;font-weight:600}
-  </style>
-</head>
-<body>
-  <div class="box">
-    <div class="icon">📴</div>
-    <h2>Sin conexión</h2>
-    <p>Abre la app con conexión al menos una vez para activar el modo offline completo.</p>
-    <button onclick="location.reload()">🔄 Reintentar</button>
-  </div>
-</body>
-</html>`;
-
-const respuestaOffline = () => new Response(PAGINA_OFFLINE, {
-  status: 200, headers: { "Content-Type": "text/html;charset=utf-8" }
-});
-
-self.addEventListener("fetch", event => {
-  const req = event.request;
-  const url = new URL(req.url);
-
-  // ── Supabase API y Anthropic → solo red, con respuesta JSON si no hay conexión ──
-  if (url.hostname.endsWith("supabase.co") || url.hostname.endsWith("anthropic.com")) {
-    event.respondWith(
-      fetch(req).catch(() =>
-        new Response(JSON.stringify({ error: "offline" }), {
-          status: 503, headers: { "Content-Type": "application/json" }
-        })
-      )
-    );
-    return;
-  }
-
-  // ── Librería de Supabase en jsDelivr (y sus dependencias): red primero, caché como respaldo ──
-  if (url.hostname === "cdn.jsdelivr.net" && url.pathname.includes("/@supabase/")) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      try {
-        const resp = await fetch(req);
-        if (resp.ok) event.waitUntil(cache.put(req, resp.clone()));
-        return resp;
-      } catch {
-        return (await cache.match(req)) || new Response("", { status: 503 });
-      }
-    })());
-    return;
-  }
-
-  // ── Otros orígenes → no se tocan ──
-  if (url.origin !== self.location.origin) return;
-  // ── Solo se cachean GET ──
-  if (req.method !== "GET") return;
-
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    const esNavegacion = req.mode === "navigate";
-
-    // Navegación: ignorar ?accion=… de los accesos directos para encontrar index.html en caché
-    const cached = await cache.match(req, { ignoreSearch: esNavegacion });
-    if (cached) return cached;
-
+/* Descarga UN archivo (siempre validado con el servidor) y lo guarda. Reintenta
+   errores de red / 5xx con espera; un 404 es definitivo. `cancelSignal` permite
+   abortar todo si otro archivo ya falló. */
+async function fetchAndStore(cache, url, cancelSignal) {
+  let lastErr;
+  for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
+    if (cancelSignal.aborted) throw new Error('cancelado');
+    if (attempt > 0) await sleep(BACKOFF_MS[attempt - 1] || 2000);
+    const ctrl = new AbortController();
+    const onCancel = () => ctrl.abort();
+    cancelSignal.addEventListener('abort', onCancel);
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);   // cubre cabecera Y cuerpo
     try {
-      const resp = await fetch(req);
-      if (resp && resp.status === 200) event.waitUntil(cache.put(req, resp.clone()));
-      return resp;
-    } catch {
-      if (esNavegacion) {
-        return (await cache.match(BASE + "index.html")) || respuestaOffline();
+      const res = await fetch(url, { cache: 'no-cache', signal: ctrl.signal });
+      if (!res.ok) {
+        const err = new Error('HTTP ' + res.status);
+        err.permanent = isPermanent(res.status);
+        throw err;
       }
-      return new Response("", { status: 503 });
+      await cache.put(url, res);      // lee el cuerpo completo; si se corta, rechaza
+      return;
+    } catch (err) {
+      if (err.permanent) throw err;
+      lastErr = err;
+    } finally {
+      clearTimeout(timer);
+      cancelSignal.removeEventListener('abort', onCancel);
     }
+  }
+  throw lastErr || new Error('fallo desconocido');
+}
+
+/* Descarga una lista con concurrencia limitada.
+   Devuelve { failed:[{url,reason}], skipped:[url] }.
+   - 404 en un archivo NO crítico → se omite (skipped), no bloquea la instalación.
+   - cualquier otro fallo (o 404 en crítico) → failed, y se corta todo enseguida. */
+async function precache(cache, urls, resume) {
+  const failed = [], skipped = [];
+  const queue = [];
+  // resume: salta lo ya descargado en un intento anterior (cada entrada guardada está completa)
+  for (const u of urls) { if (!(resume && await cache.match(u))) queue.push(u); }
+  const stop = new AbortController();
+  async function worker() {
+    while (queue.length && !stop.signal.aborted) {
+      const url = queue.shift();
+      try {
+        await fetchAndStore(cache, url, stop.signal);
+      } catch (err) {
+        if (stop.signal.aborted) return;                 // cancelación por un fallo anterior
+        if (err.permanent && !CRITICAL.includes(url)) { skipped.push(url); continue; }
+        failed.push({ url, reason: err.message });
+        stop.abort();
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(CONCURRENCY, urls.length) }, worker));
+  return { failed, skipped };
+}
+
+/* ───────────────────────── instalación (atómica) ───────────────────────── */
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    // Misma VERSION: si la caché ya está completa se refresca en sitio y NUNCA se borra;
+    // si quedó a medias de un intento anterior se CONSERVA y este intento continúa
+    // descargando solo lo que falta (cache.put es atómico: lo guardado está completo).
+    const cache = await caches.open(CACHE);
+    const wasReady = !!(await cache.match(READY_URL));
+    // Marcador de "descarga en curso" (la página lo lee para mostrar el progreso).
+    if (!wasReady) await cache.put(PROGRESS_URL, jsonResponse({ version: VERSION, name: CACHE, total: PRECACHE.length }));
+
+    const { failed, skipped } = await precache(cache, PRECACHE, !wasReady);
+    if (failed.length) {
+      await recordError(failed[0], 'install');
+      if (!wasReady) await cache.delete(PROGRESS_URL);   // lo descargado se conserva; la versión anterior sigue mandando
+      throw new Error('Instalación incompleta: ' + failed[0].url + ' (' + failed[0].reason + ')');
+    }
+    await cache.delete(PROGRESS_URL);                    // ya no está "en curso"
+    await cache.put(READY_URL, jsonResponse({
+      version: VERSION, total: PRECACHE.length - skipped.length, skipped, at: Date.now()
+    }));
+    await clearError();
+    await self.skipWaiting();
   })());
 });
 
-// ─────────────────────────────────────────────────────────
-// MESSAGE — comunicación app ↔ SW
-// ─────────────────────────────────────────────────────────
-async function avisarClientes(msg) {
-  const clients = await self.clients.matchAll();
-  clients.forEach(c => c.postMessage(msg));
-}
+/* ───────────────────────── activación ───────────────────────── */
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    // Solo se borran versiones viejas si ESTA quedó completa, y solo las nuestras (ec-*):
+    // el origen github.io lo comparten otros proyectos y no hay que tocar sus cachés.
+    if (await cache.match(READY_URL)) {
+      const names = await caches.keys();
+      await Promise.all(names
+        .filter(n => n.startsWith(CACHE_PREFIX) && n !== CACHE)
+        .map(n => caches.delete(n)));
+    }
+    await self.clients.claim();
+  })());
+});
 
-async function reconstruir(cache) {
-  await Promise.allSettled(APP_ASSETS.map(u => guardar(cache, u)));
-}
-
-self.addEventListener("message", event => {
-  const tipo = event.data?.type;
-
-  // Activar la versión nueva (el usuario aceptó actualizar)
-  if (tipo === "SKIP_WAITING") self.skipWaiting();
-
-  // Borrar toda la caché (botón "Actualizar app")
-  if (tipo === "CLEAR_CACHE") {
-    event.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))));
-  }
-
-  // Comprobar que los archivos principales siguen en caché; si faltan y hay red, se reponen
-  if (tipo === "HEALTH_CHECK") {
-    event.waitUntil((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const faltan = [];
-      for (const u of APP_CRITICOS) if (!(await cache.match(u))) faltan.push(u);
-      let reparado = false;
-      if (faltan.length) {
-        const resultados = await Promise.allSettled(faltan.map(u => guardar(cache, u)));
-        reparado = resultados.every(r => r.status === "fulfilled");
+/* ───────────────────────── reparación en segundo plano ─────────────────────────
+   Para el caso "SW vivo pero la copia desapareció" (caché borrada por otra app del
+   mismo origen, limpieza manual, etc.): vuelve a descargar lo que falte. */
+let repairing = null;
+function repair() {
+  if (!repairing) {
+    repairing = (async () => {
+      const cache = await caches.open(CACHE);
+      const hadReady = !!(await cache.match(READY_URL));
+      const have = new Set((await cache.keys()).map(r => r.url));
+      const base = self.location.href;
+      const missing = PRECACHE.filter(u => !have.has(new URL(u, base).href));
+      if (hadReady && !missing.length) return;            // todo en orden
+      if (!hadReady) await cache.put(PROGRESS_URL, jsonResponse({ version: VERSION, name: CACHE, total: PRECACHE.length }));
+      const { failed, skipped } = await precache(cache, missing);
+      await cache.delete(PROGRESS_URL);                   // la página verá "listo" o "fallo", nunca un progreso congelado
+      if (failed.length) {
+        await recordError(failed[0], 'repair');
+      } else {
+        await cache.put(READY_URL, jsonResponse({
+          version: VERSION, total: PRECACHE.length - skipped.length, skipped, at: Date.now(), repaired: true
+        }));
+        await clearError();
       }
-      await avisarClientes({
-        type: "HEALTH_RESULT",
-        healthy: faltan.length === 0 || reparado,
-        repaired: reparado,
-        version: CACHE_VERSION
-      });
-    })());
+    })().catch(() => {}).finally(() => { repairing = null; });
   }
+  return repairing;
+}
 
-  // Reconstruir la caché bajo demanda
-  if (tipo === "REBUILD_CACHE") {
-    event.waitUntil((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      await reconstruir(cache);
-      await avisarClientes({ type: "CACHE_REBUILT", version: CACHE_VERSION });
-    })());
+/* ───────────────────────── peticiones ───────────────────────── */
+function offlinePage() {
+  return new Response(
+    '<!doctype html><html lang="es"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1"><title>Sin conexión</title></head>' +
+    '<body style="font-family:system-ui,sans-serif;padding:1.5rem;background:#0e1117;color:#e6e9f2">' +
+    '<h1>Sin conexión</h1>' +
+    '<p>La copia sin conexión de ElectroCalc todavía no está completa en este dispositivo.</p>' +
+    '<p>Conéctate a internet y abre la app. Espera a ver el aviso <b>“Listo para usar sin conexión”</b> ' +
+    'antes de desconectarte.</p></body></html>',
+    { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+}
+function offlineAsset(pathname) {
+  if (pathname.endsWith('.js'))
+    return new Response('// módulo no disponible sin conexión', { status: 503, headers: { 'Content-Type': 'application/javascript; charset=utf-8' } });
+  if (pathname.endsWith('.html'))
+    return new Response('<p style="padding:1rem;color:#888">Módulo no disponible sin conexión. Abre la app una vez con internet.</p>', { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+  return new Response('{"error":"offline"}', { status: 503, headers: { 'Content-Type': 'application/json; charset=utf-8' } });
+}
+
+async function putInCache(req, res) {
+  const cache = await caches.open(CACHE);
+  await cache.put(req, res);
+}
+// Actualiza en segundo plano la copia guardada; sin red falla en silencio.
+async function revalidate(req) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 20000);
+  try {
+    // no-cache: nunca guardar una copia vieja que el navegador aún considere "fresca" (max-age)
+    const res = await fetch(req, { cache: 'no-cache', signal: ctrl.signal });
+    if (res && res.status === 200) await putInCache(req, res);
+  } catch (e) { /* sin red: se conserva la copia guardada */ }
+  finally { clearTimeout(timer); }
+}
+
+async function handleNavigation(event) {
+  const cached = await caches.match('./index.html');
+  if (cached) {
+    event.waitUntil(revalidate('./index.html'));  // la próxima apertura ya trae el index.html más nuevo
+    return cached;
   }
+  try {
+    const res = await fetch(event.request);       // con red: la app carga igual…
+    event.waitUntil(repair());                    // …y de paso se rehace la copia que falta
+    return res;
+  } catch (e) {
+    return offlinePage();
+  }
+}
+
+async function handleAsset(event) {
+  const req = event.request;
+  const cached = await caches.match(req);
+  if (cached) {
+    event.waitUntil(revalidate(req));
+    return cached;
+  }
+  try {
+    const res = await fetch(req);
+    if (res && res.status === 200) event.waitUntil(putInCache(req, res.clone()));
+    return res;
+  } catch (e) {
+    return offlineAsset(new URL(req.url).pathname);
+  }
+}
+
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  if (new URL(req.url).origin !== self.location.origin) return;
+  event.respondWith(req.mode === 'navigate' ? handleNavigation(event) : handleAsset(event));
+});
+
+self.addEventListener('message', event => {
+  const d = event.data;
+  if (d === 'SKIP_WAITING' || (d && d.type === 'SKIP_WAITING')) self.skipWaiting();
+  else if (d && d.type === 'REPAIR') event.waitUntil(repair());
 });
